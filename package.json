@@ -1,0 +1,39 @@
+{
+  "name": "mocbot-api",
+  "version": "1.0.0",
+  "description": "API for MOCBOT",
+  "main": "src/server.js",
+  "scripts": {
+    "test": "jest src",
+    "ts-node": "ts-node",
+    "tsc": "tsc --noEmit",
+    "lint": "eslint src/**.ts",
+    "lint-fix": "eslint --fix src/**.ts",
+    "start-dev": "nodemon src/server.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MasterOfCubesAU/mocbot-api.git"
+  },
+  "author": "MasterOfCubesAU, samiam",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MasterOfCubesAU/mocbot-api/issues"
+  },
+  "homepage": "https://github.com/MasterOfCubesAU/mocbot-api#readme",
+  "devDependencies": {
+    "@types/cors": "^2.8.13",
+    "@types/express": "^4.17.14",
+    "@types/morgan": "^1.9.3",
+    "eslint": "^8.29.0",
+    "jest": "^29.3.1",
+    "nodemon": "^2.0.20",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.4"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "morgan": "^1.10.0"
+  }
+}
