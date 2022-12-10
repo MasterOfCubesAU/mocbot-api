@@ -14,7 +14,6 @@
 
 
 ## XP
----
 
 ### Read XP Data
 ```html
@@ -35,7 +34,6 @@ This route fetches all XP data for a given guild and optionally, the XP for a us
 
 
 ## Guild Settings
----
 
 ### Create Guild Settings
 ```html
@@ -74,7 +72,6 @@ This route updates an existing configuration for the given guild.
 | `guild_id` | `int` | True     | The Guild ID you would like to create settings for. |
 
 ## Warnings
----
 
 ### Read Warning Data
 ```html
