@@ -3,6 +3,7 @@
 
 - [MOCBOT API](#mocbot-api)
 - [API Versioning](#api-versioning)
+- [API Reference](#api-reference)
   - [XP](#xp)
     - [Read XP Data](#read-xp-data)
   - [Guild Settings](#guild-settings)
@@ -23,6 +24,8 @@ An example request may be
 ```http
 GET /v1/settings/231230403053092864
 ```
+
+# API Reference
 
 ## XP
 
