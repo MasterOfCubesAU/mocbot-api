@@ -6,5 +6,8 @@
         "resolveJsonModule": true,
         "allowJs": true,
         "suppressImplicitAnyIndexErrors": true
-    }
+    },
+    "include": [
+        "src/**/*.ts"
+    ]
 }
