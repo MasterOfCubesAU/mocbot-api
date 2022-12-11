@@ -12,7 +12,7 @@ app.set('trust proxy', true);
 app.use(morgan((process.env.NODE_ENV !== 'production') ? 'dev' : 'common'));
 
 // Routes
-app.get("/", (req, res) => {
+app.get('/', (req, res) => {
   return res.json({ message: 'Welcome to the MOCBOT API. Visit https://github.com/MasterOfCubesAU/mocbot-api' });
 });
 
