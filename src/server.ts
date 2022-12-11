@@ -11,7 +11,7 @@ app.use(cors());
 app.use(morgan((process.env.NODE_ENV !== 'production') ? 'dev' : 'common'));
 
 // Routes
-app.get(CONFIG.BASE_URL, (req, res) => {
+app.get("/", (req, res) => {
   return res.json({ message: 'Welcome to the MOCBOT API. Visit https://github.com/MasterOfCubesAU/mocbot-api' });
 });
 
