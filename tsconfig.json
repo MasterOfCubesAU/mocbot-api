@@ -5,7 +5,8 @@
         "noEmit": true,
         "resolveJsonModule": true,
         "allowJs": true,
-        "suppressImplicitAnyIndexErrors": true
+        "suppressImplicitAnyIndexErrors": true,
+        "module": "CommonJS"
     },
     "include": [
         "src/**/*.ts"
