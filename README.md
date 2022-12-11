@@ -27,7 +27,7 @@ GET /v1/settings/231230403053092864
 ## XP
 
 ### Read XP Data
-```html
+```http
 GET /{API_VERSION}/xp/{guild_id}/{user_id}
 ```
 
@@ -47,7 +47,7 @@ This route fetches all XP data for a given guild and optionally, the XP for a us
 ## Guild Settings
 
 ### Create Guild Settings
-```html
+```http
 POST /{API_VERSION}/settings/{guild_id}
 ```
 **Description**:
@@ -59,7 +59,7 @@ This route creates a configuration for the given guild.
 | `guild_id` | `int` | True     | The Guild ID you would like to create settings for. |
 
 ### Read Guild Settings
-```html
+```http
 GET /{API_VERSION}/settings/{guild_id}
 ```
 **Description**:
@@ -71,7 +71,7 @@ This route fetches the current configuration for the given guild.
 | `guild_id` | `int` | True     | The Guild ID you would like to fetch the settings for. |
 
 ### Update Guild Settings
-```html
+```http
 PATCH /{API_VERSION}/settings/{guild_id}
 ```
 **Description**:
@@ -85,7 +85,7 @@ This route updates an existing configuration for the given guild.
 ## Warnings
 
 ### Read Warning Data
-```html
+```http
 GET /{API_VERSION}/warnings/{guild_id}/{user_id}
 ```
 
@@ -102,7 +102,7 @@ This route fetches all warnings for a given guild and optionally, the warnings f
 | `user_id`  | `int` | False    | The User ID you would like to fetch warning data for.  |
 
 ### Delete Warning
-```html
+```http
 DELETE /{API_VERSION}/warnings/{warning_id}
 ```
 
