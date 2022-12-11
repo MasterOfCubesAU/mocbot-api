@@ -2,6 +2,7 @@
 # MOCBOT API
 
 - [MOCBOT API](#mocbot-api)
+- [API Versioning](#api-versioning)
   - [XP](#xp)
     - [Read XP Data](#read-xp-data)
   - [Guild Settings](#guild-settings)
@@ -12,12 +13,22 @@
     - [Read Warning Data](#read-warning-data)
     - [Delete Warning](#delete-warning)
 
+# API Versioning
+
+| Version | Status  |
+| ------- | ------- |
+| v1      | Current |
+
+An example request may be
+```http
+GET /v1/settings/231230403053092864
+```
 
 ## XP
 
 ### Read XP Data
 ```html
-GET /api/xp/{guild_id}/{user_id}
+GET /{API_VERSION}/xp/{guild_id}/{user_id}
 ```
 
 **Description**:
@@ -37,7 +48,7 @@ This route fetches all XP data for a given guild and optionally, the XP for a us
 
 ### Create Guild Settings
 ```html
-POST /api/settings/{guild_id}
+POST /{API_VERSION}/settings/{guild_id}
 ```
 **Description**:
 
@@ -49,7 +60,7 @@ This route creates a configuration for the given guild.
 
 ### Read Guild Settings
 ```html
-GET /api/settings/{guild_id}
+GET /{API_VERSION}/settings/{guild_id}
 ```
 **Description**:
 
@@ -61,7 +72,7 @@ This route fetches the current configuration for the given guild.
 
 ### Update Guild Settings
 ```html
-PATCH /api/settings/{guild_id}
+PATCH /{API_VERSION}/settings/{guild_id}
 ```
 **Description**:
 
@@ -75,7 +86,7 @@ This route updates an existing configuration for the given guild.
 
 ### Read Warning Data
 ```html
-GET /api/warnings/{guild_id}/{user_id}
+GET /{API_VERSION}/warnings/{guild_id}/{user_id}
 ```
 
 **Description**:
@@ -92,7 +103,7 @@ This route fetches all warnings for a given guild and optionally, the warnings f
 
 ### Delete Warning
 ```html
-DELETE /api/warnings/{warning_id}
+DELETE /{API_VERSION}/warnings/{warning_id}
 ```
 
 **Description**:
