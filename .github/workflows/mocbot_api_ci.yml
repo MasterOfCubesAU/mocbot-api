@@ -1,0 +1,39 @@
+name: MOCBOT API
+
+# Controls when the workflow will run
+on: push
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  linting:
+    name: Linting
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.15.0]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
+      - run: npm run lint
+  typecheck:
+    name: Type Check
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.15.0]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
+      - run: npm run tsc
