@@ -9,7 +9,8 @@
     "tsc": "tsc --noEmit",
     "lint": "eslint src/**.ts",
     "lint-fix": "eslint --fix src/**.ts",
-    "start-dev": "nodemon src/server.ts"
+    "start:dev": "nodemon src/server.ts",
+    "start:prod": "ts-node src/server.ts"
   },
   "repository": {
     "type": "git",
@@ -35,6 +36,7 @@
   },
   "dependencies": {
     "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "morgan": "^1.10.0"
   }
