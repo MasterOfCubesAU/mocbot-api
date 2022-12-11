@@ -2,11 +2,12 @@
     "compilerOptions": {
         "esModuleInterop": true,
         "noImplicitAny": false,
-        "noEmit": true,
         "resolveJsonModule": true,
         "allowJs": true,
         "suppressImplicitAnyIndexErrors": true,
-        "module": "CommonJS"
+        "sourceMap": true,
+        "target": "es5",
+        "outDir": "dist"
     },
     "include": [
         "src/**/*.ts"
