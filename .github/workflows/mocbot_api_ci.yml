@@ -3,6 +3,10 @@ name: MOCBOT API
 # Controls when the workflow will run
 on: push
 
+env:
+  HOST: 127.0.0.1
+  PORT: 8000
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   linting:
@@ -37,3 +41,32 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: npm ci
       - run: npm run tsc
+  jest:
+    name: Unit Testing
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.15.0]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
+      - run: |
+          SERVER_LOG=$(mktemp)
+
+          # Start server in background and capture output in temp file
+          npm run start:dev &> $SERVER_LOG & pid=$!
+          sleep 2
+          ps -o pid | egrep -q "^\s*${pid}$" || (cat $SERVER_LOG && exit 1)
+
+          # Run test then kill server
+          npm test || (cat $SERVER_LOG && exit 1)
+          sleep 1
+          kill -SIGINT %1
+
+          cat $SERVER_LOG
