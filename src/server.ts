@@ -4,7 +4,7 @@ import morgan from 'morgan';
 import * as dotenv from 'dotenv';
 
 // Import API routes
-import v1Route from "./routes/v1"
+import v1Route from './routes/v1';
 
 // Init
 dotenv.config();
