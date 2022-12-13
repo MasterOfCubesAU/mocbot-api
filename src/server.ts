@@ -1,9 +1,9 @@
-import "dotenv/config"
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 
-import DB from "./utils/DBHandler";
+import DB from './utils/DBHandler';
 
 // Import API routes
 import v1Route from './routes/v1';
@@ -24,7 +24,7 @@ app.use('/v1', v1Route);
 
 // Listen
 const server = app.listen(parseInt(process.env.PORT), process.env.HOST, () => {
-  DB.connect()
+  DB.connect();
   console.log(`⚡️ Server listening on port ${process.env.PORT} at ${process.env.HOST}`);
 });
 
