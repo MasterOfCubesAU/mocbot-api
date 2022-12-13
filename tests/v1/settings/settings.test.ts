@@ -1,24 +1,24 @@
-import { http } from "./utils"
+import { http } from "../utils"
 
-const ROUTE = "/v1/settings/231230403053092864"
+const ROUTE = "/v1/settings"
 
-describe(`POST ${ROUTE}`, () => {
+describe(`POST`, () => {
     test('Valid', () => {
-        const request = http('POST', ROUTE, undefined);
+        const request = http('POST', `${ROUTE}/231230403053092864`, undefined);
         const response = JSON.parse(String(request.getBody() as string));
         expect(response).toStrictEqual({});
     });
 });
-describe(`GET ${ROUTE}`, () => {
+describe(`GET`, () => {
     test('Valid', () => {
-        const request = http('GET', ROUTE, undefined);
+        const request = http('GET', `${ROUTE}/231230403053092864`, undefined);
         const response = JSON.parse(String(request.getBody() as string));
         expect(response).toStrictEqual({});
     });
 });
-describe(`PATCH ${ROUTE}`, () => {
+describe(`PATCH`, () => {
     test('Valid', () => {
-        const request = http('PATCH', ROUTE, undefined);
+        const request = http('PATCH', `${ROUTE}/231230403053092864`, undefined);
         const response = JSON.parse(String(request.getBody() as string));
         expect(response).toStrictEqual({});
     });
