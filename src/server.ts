@@ -1,13 +1,14 @@
+import "dotenv/config"
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
-import * as dotenv from 'dotenv';
+
+import DB from "./utils/DBHandler";
 
 // Import API routes
 import v1Route from './routes/v1';
 
 // Init
-dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -23,6 +24,7 @@ app.use('/v1', v1Route);
 
 // Listen
 const server = app.listen(parseInt(process.env.PORT), process.env.HOST, () => {
+  DB.connect()
   console.log(`⚡️ Server listening on port ${process.env.PORT} at ${process.env.HOST}`);
 });
 
