@@ -28,4 +28,3 @@ const server = app.listen(parseInt(process.env.PORT), process.env.HOST, async ()
 process.on('SIGINT', () => {
   server.close(() => console.log('Shutting down server gracefully.'));
 });
-
