@@ -3,8 +3,6 @@ import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 
-import DB from './utils/DBHandler';
-
 // Import API routes
 import v1Route from './routes/v1';
 
@@ -23,11 +21,11 @@ app.get('/', (req, res) => {
 app.use('/v1', v1Route);
 
 // Listen
-const server = app.listen(parseInt(process.env.PORT), process.env.HOST, () => {
-  DB.connect();
+const server = app.listen(parseInt(process.env.PORT), process.env.HOST, async () => {
   console.log(`⚡️ Server listening on port ${process.env.PORT} at ${process.env.HOST}`);
 });
 
 process.on('SIGINT', () => {
   server.close(() => console.log('Shutting down server gracefully.'));
 });
+
