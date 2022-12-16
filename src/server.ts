@@ -2,6 +2,8 @@ import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
+import swaggerUi from 'swagger-ui-express';
+import YAML from 'yamljs';
 
 // Import API routes
 import v1Route from './routes/v1';
@@ -15,9 +17,9 @@ app.use(morgan(process.env.NODE_ENV !== 'production' ? 'dev' : 'common'));
 app.use('/docs', express.static('docs'));
 
 // Routes
-app.get('/', (req, res) => {
-  return res.json({ message: 'Welcome to the MOCBOT API. Visit https://github.com/MasterOfCubesAU/mocbot-api' });
-});
+app.use('/', swaggerUi.serve,
+  swaggerUi.setup(YAML.load('docs/api.yml'))
+);
 
 app.use('/v1', v1Route);
 
