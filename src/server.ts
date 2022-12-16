@@ -20,7 +20,7 @@ app.get('/', (req, res) => {
   res.redirect('/docs');
 });
 
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(YAML.load('docs/api.yml'), { explorer: true }));
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(YAML.load('docs/api.yml')));
 app.use('/v1', v1Route);
 
 // Listen
