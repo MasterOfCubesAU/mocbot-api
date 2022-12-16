@@ -1,0 +1,280 @@
+openapi: 3.0.0
+info:
+  title: MOCBOT API
+  description: |-
+    This document outlines the specifications behind the MOCBOT API.
+
+    Some useful links:
+    - The [MOCBOT API](https://github.com/MasterOfCubesAU/mocbot-api) repository.
+  contact:
+    email: masterofcubesau@gmail.com
+  version: 1.0.0
+externalDocs:
+  description: Find out more about MOCBOT
+  url: https://mocbot.masterofcubesau.com
+servers:
+  - url: https://api.masterofcubesau.com/v1
+tags:
+  - name: XP
+    description: Guild/User XP operations.
+  - name: Guild Settings
+    description: Guild settings operations.
+  - name: Warnings
+    description: Guild/User Warning operations.
+paths:
+  /xp/{guild_id}:
+    get:
+      tags:
+        - XP
+      summary: Returns XP data for a guild.
+      description: |-
+        This route fetches all XP data for a given guild
+      parameters:
+        - name: guild_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The Guild ID you would like to fetch XP data for.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GuildXP"
+        "404":
+          description: Guild ID not found.
+  /xp/{guild_id}/{user_id}:
+    get:
+      tags:
+        - XP
+      summary: Returns XP data for a user in a guild
+      description: |-
+        This route fetches XP data for a user in a guild.
+      parameters:
+        - name: guild_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The Guild ID you would like to fetch XP data from.
+        - name: user_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The User ID you would like to fetch XP data for.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserXP"
+        "404":
+          description: Guild/User ID not found.
+  /settings/{guild_id}:
+    post:
+      tags:
+        - Guild Settings
+      summary: Creates a configuration entry for a server
+      parameters:
+        - name: guild_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: This route creates a configuration for the given guild.
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Guild ID not found.
+    get:
+      tags:
+        - Guild Settings
+      summary: Fetches the current configuration for a server
+      parameters:
+        - name: guild_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: This route fetches the current configuration for the given guild.
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Guild ID not found.
+    patch:
+      tags:
+        - Guild Settings
+      summary: Updates an existing configuration for a server
+      parameters:
+        - name: guild_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: This route updates an existing configuration for the given guild.
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Guild ID not found.
+  /warnings/{guild_id}:
+    get:
+      tags:
+        - Warnings
+      summary: Returns server related warnings
+      description: |-
+        This route fetches all warnings for a given guild
+      parameters:
+        - name: guild_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The Guild ID you would like to fetch warning data for.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GuildWarnings"
+        "404":
+          description: Guild ID not found.
+  /warnings/{guild_id}/{user_id}:
+    get:
+      tags:
+        - Warnings
+      summary: Returns user warnings from a guild.
+      description: |-
+        This route fetches all warnings for a user in a given guild.
+      parameters:
+        - name: guild_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The Guild ID you would like to fetch warning data from.
+        - name: user_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The User ID you would like to fetch warning data for.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserWarnings"
+        "404":
+          description: Guild/User ID not found.
+  /warnings/{warning_id}:
+    delete:
+      tags:
+        - Warnings
+      summary: This route will delete a given warning.
+      parameters:
+        - name: warning_id
+          in: path
+          schema:
+            type: string
+          required: true
+          description: The Warning ID you would like to delete.
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Warning ID not found.
+components:
+  schemas:
+    GuildXP:
+      type: array
+      items:
+        type: object
+        properties:
+          UserGuildID:
+            type: integer
+            description: The UserGuildID.
+          XP:
+            type: integer
+            description: The current XP value.
+          Level:
+            type: integer
+            description: The current level.
+          XPLock:
+            type: string
+            format: date-time
+            description: The time until this user can gain XP from messages.
+          VoiceChannelXPLock:
+            type: string
+            format: date-time
+            description: The time until this user can gain XP from voice activity.
+    UserXP:
+      type: object
+      properties:
+        UserGuildID:
+          type: integer
+          description: The UserGuildID.
+        XP:
+          type: integer
+          description: The current XP value.
+        Level:
+          type: integer
+          description: The current level.
+        XPLock:
+          type: string
+          format: date-time
+          description: The time until this user can gain XP from messages.
+        VoiceChannelXPLock:
+          type: string
+          format: date-time
+          description: The time until this user can gain XP from voice activity.
+    GuildWarnings:
+      type: array
+      items:
+        type: object
+        properties:
+          WarningID:
+            type: string
+            format: uuid
+            description: The Warning ID.
+          UserGuildID:
+            type: integer
+            description: The UserGuildID.
+          Reason:
+            type: string
+            description: The reason behind the warning.
+          Time:
+            type: string
+            format: date-time
+            description: The time the user was warned.
+          AdminID:
+            type: integer
+            description: The ID of the administrator who distributed the warning.
+    UserWarnings:
+      type: object
+      properties:
+        WarningID:
+          type: string
+          format: uuid
+          description: The Warning ID.
+        UserGuildID:
+          type: integer
+          description: The UserGuildID.
+        Reason:
+          type: string
+          description: The reason behind the warning.
+        Time:
+          type: string
+          format: date-time
+          description: The time the user was warned.
+        AdminID:
+          type: integer
+          description: The ID of the administrator who distributed the warning.
