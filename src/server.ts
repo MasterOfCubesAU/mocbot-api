@@ -16,10 +16,11 @@ app.set('trust proxy', true);
 app.use(morgan(process.env.NODE_ENV !== 'production' ? 'dev' : 'common'));
 
 // Routes
-app.use('/', swaggerUi.serve,
-  swaggerUi.setup(YAML.load('docs/api.yml'))
-);
+app.get('/', (req, res) => {
+  res.redirect('/docs');
+});
 
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(YAML.load('docs/api.yml'), { explorer: true }));
 app.use('/v1', v1Route);
 
 // Listen
