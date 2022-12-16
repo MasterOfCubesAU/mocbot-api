@@ -12,6 +12,7 @@ app.use(express.json());
 app.use(cors());
 app.set('trust proxy', true);
 app.use(morgan(process.env.NODE_ENV !== 'production' ? 'dev' : 'common'));
+app.use('/docs', express.static('docs'))
 
 // Routes
 app.get('/', (req, res) => {
