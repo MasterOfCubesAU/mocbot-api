@@ -1,18 +1,17 @@
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
-import * as dotenv from 'dotenv';
 
 // Import API routes
 import v1Route from './routes/v1';
 
 // Init
-dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(cors());
 app.set('trust proxy', true);
-app.use(morgan((process.env.NODE_ENV !== 'production') ? 'dev' : 'common'));
+app.use(morgan(process.env.NODE_ENV !== 'production' ? 'dev' : 'common'));
 
 // Routes
 app.get('/', (req, res) => {
@@ -22,7 +21,7 @@ app.get('/', (req, res) => {
 app.use('/v1', v1Route);
 
 // Listen
-const server = app.listen(parseInt(process.env.PORT), process.env.HOST, () => {
+const server = app.listen(parseInt(process.env.PORT), process.env.HOST, async () => {
   console.log(`⚡️ Server listening on port ${process.env.PORT} at ${process.env.HOST}`);
 });
 
