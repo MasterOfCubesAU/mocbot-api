@@ -1,4 +1,4 @@
-import { http } from "../../utils"
+import { http } from "@test-utils/index";
 
 const ROUTE = "/v1/settings"
 
