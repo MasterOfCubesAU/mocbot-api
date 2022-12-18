@@ -9,13 +9,13 @@ class DatabaseHandler {
   });
 
   static async field(query: string, values?: any | any[] | { [param: string]: any }) {
-    const [result, field] = (await DatabaseHandler.pool.promise().query(query, values));
-    return (Array.isArray(result) && result.length > 0) ? result[0][field[0].name] : null;
+    const [result, field] = await DatabaseHandler.pool.promise().query(query, values);
+    return Array.isArray(result) && result.length > 0 ? result[0][field[0].name] : null;
   }
 
   static async record(query: string, values?: any | any[] | { [param: string]: any }) {
     const result = (await DatabaseHandler.pool.promise().query(query, values))[0];
-    return (Array.isArray(result) && result.length > 0) ? result[0] : {};
+    return Array.isArray(result) && result.length > 0 ? result[0] : {};
   }
 
   static async records(query: string, values?: any | any[] | { [param: string]: any }) {
@@ -23,8 +23,8 @@ class DatabaseHandler {
   }
 
   static async column(query: string, values?: any | any[] | { [param: string]: any }) {
-    const [result, field] = (await DatabaseHandler.pool.promise().query(query, values));
-    return (Array.isArray(result)) ? result.map(row => row[field[0].name]) : [];
+    const [result, field] = await DatabaseHandler.pool.promise().query(query, values);
+    return Array.isArray(result) ? result.map((row) => row[field[0].name]) : [];
   }
 
   static async execute(query: string, values?: any | any[] | { [param: string]: any }) {
