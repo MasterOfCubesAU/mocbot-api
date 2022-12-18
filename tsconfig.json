@@ -21,6 +21,9 @@
             ],
             "@test-utils/*": [
                 "./tests/http/utils/*"
+            ],
+            "@src/*": [
+                "./src/*"
             ]
         },
     },
