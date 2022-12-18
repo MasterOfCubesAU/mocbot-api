@@ -3,6 +3,8 @@ import DB from '@utils/DBHandler';
 
 const ROUTE = '/v1/settings';
 
+// Ensure DB is in a predictable state by clearing it initially, then again after every test
+// We then close the DB at the end to remove any open handles
 beforeAll(async () => {
   await DB.execute('DELETE FROM GuildSettings');
 });
@@ -23,7 +25,9 @@ describe('POST', () => {
     expect(request.statusCode).toStrictEqual(400);
   });
   test('Invalid (Already exists)', () => {
+    // Create an entry
     expect(http('POST', `${ROUTE}/1`, undefined, { setting1: true }).statusCode).toStrictEqual(200);
+    // See if duplicate will return HTTP 409
     const request = http('POST', `${ROUTE}/1`, undefined, { setting1: true });
     expect(request.statusCode).toStrictEqual(409);
   });

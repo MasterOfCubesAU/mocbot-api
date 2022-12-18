@@ -1,6 +1,8 @@
 import DB from '@utils/DBHandler';
 import { createSettings } from '@src/settings';
 
+// Ensure DB is in a predictable state by clearing it initially, then again after every test
+// We then close the DB at the end to remove any open handles
 beforeAll(async () => {
   await DB.execute('DELETE FROM GuildSettings');
 });
