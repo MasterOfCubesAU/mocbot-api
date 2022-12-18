@@ -1,6 +1,6 @@
 {
     "ignorePatterns": [
-        "build"
+        "dist"
     ],
     "parser": "@typescript-eslint/parser",
     "plugins": [
@@ -29,8 +29,7 @@
         "window": "readonly"
     },
     "rules": {
-        "no-unused-vars": "off",
-        "@typescript-eslint/no-unused-vars": [
+        "no-unused-vars": [
             "error",
             {
                 "args": "none",
@@ -39,11 +38,11 @@
                 "vars": "all"
             }
         ],
-        // Everything below here is standard 1531
         "@typescript-eslint/no-var-requires": 0,
+        "@typescript-eslint/no-unused-vars": 0,
         "@typescript-eslint/no-explicit-any": 0,
         "no-var": "warn",
-        "object-shorthand": 0, // ["warn", "properties"],
+        "object-shorthand": 0,
         "accessor-pairs": [
             "error",
             {
