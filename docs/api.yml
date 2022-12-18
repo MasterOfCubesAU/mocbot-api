@@ -2,10 +2,10 @@ openapi: 3.0.0
 info:
   title: MOCBOT API
   description: |-
-    This document outlines the specifications behind the MOCBOT API.
+    This document outlines the specifications behind the MOCBOT API
 
     Some useful links:
-    - The [MOCBOT API](https://github.com/MasterOfCubesAU/mocbot-api) repository.
+    - The [MOCBOT API](https://github.com/MasterOfCubesAU/mocbot-api) repository
   contact:
     email: masterofcubesau@gmail.com
   version: 1.0.0
@@ -15,18 +15,24 @@ externalDocs:
 servers:
   - url: https://api.masterofcubesau.com/v1
 tags:
-  - name: XP
-    description: Guild/User XP operations.
-  - name: Guild Settings
-    description: Guild settings operations.
+  - name: User XP
+    description: User XP operations
+  - name: Guild XP
+    description: Guild XP operations
+  - name: User Warnings
+    description: User Warning operations
+  - name: Guild Warnings
+    description: Guild Warning operations
+  - name: Settings
+    description: Guild Settings operations
   - name: Warnings
-    description: Guild/User Warning operations.
+    description: General Warning operations
 paths:
   /xp/{guild_id}:
     get:
       tags:
-        - XP
-      summary: Returns XP data for a guild.
+        - Guild XP
+      summary: Fetches XP data for a guild
       description: |-
         This route fetches all XP data for a given guild
       parameters:
@@ -35,7 +41,7 @@ paths:
           schema:
             type: integer
           required: true
-          description: The Guild ID you would like to fetch XP data for.
+          description: The Guild ID you would like to fetch XP data for
       responses:
         "200":
           description: OK
@@ -44,27 +50,67 @@ paths:
               schema:
                 $ref: "#/components/schemas/GuildXP"
         "404":
-          description: Guild ID not found.
-  /xp/{guild_id}/{user_id}:
-    get:
+          description: Guild ID not found
+    delete:
       tags:
-        - XP
-      summary: Returns XP data for a user in a guild
+        - Guild XP
+      summary: Remove all XP for a given guild
       description: |-
-        This route fetches XP data for a user in a guild.
+        This route removes all XP data for a given guild
       parameters:
         - name: guild_id
           in: path
           schema:
             type: integer
           required: true
-          description: The Guild ID you would like to fetch XP data from.
+          description: The Guild ID you would like to remove
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Guild ID not found
+  /xp/{guild_id}/{user_id}:
+    post:
+      tags:
+        - User XP
+      summary: Creates a new XP object
+      description: |-
+        This route creates a new XP object for a user
+      parameters:
+        - name: guild_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The Guild ID the user belongs to
         - name: user_id
           in: path
           schema:
             type: integer
           required: true
-          description: The User ID you would like to fetch XP data for.
+          description: The User ID of the new user
+      responses:
+        "200":
+          description: OK
+    get:
+      tags:
+        - User XP
+      summary: Fetches an existing XP object
+      description: |-
+        This route fetches XP data for a user in a guild
+      parameters:
+        - name: guild_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The Guild ID you would like to fetch XP data from
+        - name: user_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The User ID you would like to fetch XP data for
       responses:
         "200":
           description: OK
@@ -73,11 +119,59 @@ paths:
               schema:
                 $ref: "#/components/schemas/UserXP"
         "404":
-          description: Guild/User ID not found.
+          description: Guild/User ID not found
+    patch:
+      tags:
+        - User XP
+      summary: Updates an existing XP object
+      description: |-
+        This route updates an existing XP object for a user
+      parameters:
+        - name: guild_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The Guild ID the user belongs to
+        - name: user_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The User ID of the user
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Guild/User ID not found
+    delete:
+      tags:
+        - User XP
+      summary: Removes an existing XP object
+      description: |-
+        This route removes an existing XP object for a user
+      parameters:
+        - name: guild_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The Guild ID the user belongs to
+        - name: user_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The User ID of the user
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Guild/User ID not found
   /settings/{guild_id}:
     post:
       tags:
-        - Guild Settings
+        - Settings
       summary: Creates a configuration entry for a server
       parameters:
         - name: guild_id
@@ -85,15 +179,15 @@ paths:
           schema:
             type: integer
           required: true
-          description: This route creates a configuration for the given guild.
+          description: The Guild ID you would like to create settings for
       responses:
         "200":
           description: OK
         "404":
-          description: Guild ID not found.
+          description: Guild ID not found
     get:
       tags:
-        - Guild Settings
+        - Settings
       summary: Fetches the current configuration for a server
       parameters:
         - name: guild_id
@@ -101,15 +195,15 @@ paths:
           schema:
             type: integer
           required: true
-          description: This route fetches the current configuration for the given guild.
+          description: The Guild ID you would like to fetch settings for
       responses:
         "200":
           description: OK
         "404":
-          description: Guild ID not found.
+          description: Guild ID not found
     patch:
       tags:
-        - Guild Settings
+        - Settings
       summary: Updates an existing configuration for a server
       parameters:
         - name: guild_id
@@ -117,17 +211,33 @@ paths:
           schema:
             type: integer
           required: true
-          description: This route updates an existing configuration for the given guild.
+          description: The Guild ID you would like to update settings for
       responses:
         "200":
           description: OK
         "404":
-          description: Guild ID not found.
+          description: Guild ID not found
+    delete:
+      tags:
+        - Settings
+      summary: Removes a configuration entry for a server
+      parameters:
+        - name: guild_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The Guild ID you would like to remove settings for
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Guild ID not found
   /warnings/{guild_id}:
     get:
       tags:
-        - Warnings
-      summary: Returns server related warnings
+        - Guild Warnings
+      summary: Fetches server related warnings
       description: |-
         This route fetches all warnings for a given guild
       parameters:
@@ -136,7 +246,7 @@ paths:
           schema:
             type: integer
           required: true
-          description: The Guild ID you would like to fetch warning data for.
+          description: The Guild ID you would like to fetch warning data for
       responses:
         "200":
           description: OK
@@ -145,27 +255,69 @@ paths:
               schema:
                 $ref: "#/components/schemas/GuildWarnings"
         "404":
-          description: Guild ID not found.
-  /warnings/{guild_id}/{user_id}:
-    get:
+          description: Guild ID not found
+    delete:
       tags:
-        - Warnings
-      summary: Returns user warnings from a guild.
+        - Guild Warnings
+      summary: Removes all server related warnings
       description: |-
-        This route fetches all warnings for a user in a given guild.
+        This route removes all warnings for a given guild
       parameters:
         - name: guild_id
           in: path
           schema:
             type: integer
           required: true
-          description: The Guild ID you would like to fetch warning data from.
+          description: The Guild ID you would like to remove warning data for
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Guild ID not found
+  /warnings/{guild_id}/{user_id}:
+    post:
+      tags:
+        - User Warnings
+      summary: Creates a warning object
+      description: |-
+        This route creates a new warning for a user in a given guild
+      parameters:
+        - name: guild_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The Guild ID the user is from
         - name: user_id
           in: path
           schema:
             type: integer
           required: true
-          description: The User ID you would like to fetch warning data for.
+          description: The User ID of the user
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Guild/User ID not found
+    get:
+      tags:
+        - User Warnings
+      summary: Fetches user warnings from a guild
+      description: |-
+        This route fetches all warnings for a user in a given guild
+      parameters:
+        - name: guild_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The Guild ID you would like to fetch warning data from
+        - name: user_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The User ID you would like to fetch warning data for
       responses:
         "200":
           description: OK
@@ -174,24 +326,24 @@ paths:
               schema:
                 $ref: "#/components/schemas/UserWarnings"
         "404":
-          description: Guild/User ID not found.
+          description: Guild/User ID not found
   /warnings/{warning_id}:
     delete:
       tags:
         - Warnings
-      summary: This route will delete a given warning.
+      summary: This route will delete a given warning
       parameters:
         - name: warning_id
           in: path
           schema:
             type: string
           required: true
-          description: The Warning ID you would like to delete.
+          description: The Warning ID you would like to delete
       responses:
         "200":
           description: OK
         "404":
-          description: Warning ID not found.
+          description: Warning ID not found
 components:
   schemas:
     GuildXP:
@@ -201,41 +353,41 @@ components:
         properties:
           UserGuildID:
             type: integer
-            description: The UserGuildID.
+            description: The UserGuildID
           XP:
             type: integer
-            description: The current XP value.
+            description: The current XP value
           Level:
             type: integer
-            description: The current level.
+            description: The current level
           XPLock:
             type: string
             format: date-time
-            description: The time until this user can gain XP from messages.
+            description: The time until this user can gain XP from messages
           VoiceChannelXPLock:
             type: string
             format: date-time
-            description: The time until this user can gain XP from voice activity.
+            description: The time until this user can gain XP from voice activity
     UserXP:
       type: object
       properties:
         UserGuildID:
           type: integer
-          description: The UserGuildID.
+          description: The UserGuildID
         XP:
           type: integer
-          description: The current XP value.
+          description: The current XP value
         Level:
           type: integer
-          description: The current level.
+          description: The current level
         XPLock:
           type: string
           format: date-time
-          description: The time until this user can gain XP from messages.
+          description: The time until this user can gain XP from messages
         VoiceChannelXPLock:
           type: string
           format: date-time
-          description: The time until this user can gain XP from voice activity.
+          description: The time until this user can gain XP from voice activity
     GuildWarnings:
       type: array
       items:
@@ -244,37 +396,37 @@ components:
           WarningID:
             type: string
             format: uuid
-            description: The Warning ID.
+            description: The Warning ID
           UserGuildID:
             type: integer
-            description: The UserGuildID.
+            description: The UserGuildID
           Reason:
             type: string
-            description: The reason behind the warning.
+            description: The reason behind the warning
           Time:
             type: string
             format: date-time
-            description: The time the user was warned.
+            description: The time the user was warned
           AdminID:
             type: integer
-            description: The ID of the administrator who distributed the warning.
+            description: The ID of the administrator who distributed the warning
     UserWarnings:
       type: object
       properties:
         WarningID:
           type: string
           format: uuid
-          description: The Warning ID.
+          description: The Warning ID
         UserGuildID:
           type: integer
-          description: The UserGuildID.
+          description: The UserGuildID
         Reason:
           type: string
-          description: The reason behind the warning.
+          description: The reason behind the warning
         Time:
           type: string
           format: date-time
-          description: The time the user was warned.
+          description: The time the user was warned
         AdminID:
           type: integer
-          description: The ID of the administrator who distributed the warning.
+          description: The ID of the administrator who distributed the warning
