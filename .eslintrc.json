@@ -5,7 +5,8 @@
     "parser": "@typescript-eslint/parser",
     "plugins": [
         "@typescript-eslint",
-        "jest"
+        "jest",
+        "snakecasejs"
     ],
     "extends": [
         "eslint:recommended",
@@ -27,6 +28,10 @@
         "document": "readonly",
         "navigator": "readonly",
         "window": "readonly"
+    },
+    "settings": {
+        "snakecasejs/filter": ["ClassDeclaration", "NewExpression"],
+        "snakecasejs/whitelist": ["externalPath", "setNumber"]
     },
     "rules": {
         "no-unused-vars": [
@@ -79,17 +84,7 @@
                 "allowSingleLine": true
             }
         ],
-        "camelcase": [
-            "error",
-            {
-                "allow": [
-                    "^UNSAFE_"
-                ],
-                "properties": "never",
-                "ignoreGlobals": true,
-                "ignoreDestructuring": true
-            }
-        ],
+        "snakecasejs/snakecasejs": "error",
         "comma-dangle": [
             "error",
             {
