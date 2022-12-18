@@ -3,6 +3,6 @@ module.exports = {
     testEnvironment: 'node',
     maxWorkers: 1,
     setupFiles: ["dotenv/config"],
-    "testPathIgnorePatterns": ["dist"]
+    testPathIgnorePatterns: ["dist"]
 };
 
