@@ -2,10 +2,10 @@ import express from 'express'
 
 const router = express.Router()
 
-router.get('/:guild_id(\\d{18})', (req, res) => {
+router.get('/:guild_id', (req, res) => {
     return res.json({})
 })
-router.get('/:guild_id(\\d{18})/:user_id(\\d{18})', (req, res) => {
+router.get('/:guild_id/:user_id', (req, res) => {
     return res.json({});
 })
 
