@@ -7,8 +7,8 @@
     "test": "jest tests",
     "ts-node": "ts-node",
     "tsc": "tsc --noEmit",
-    "lint": "eslint src/**.ts",
-    "lint-fix": "eslint --fix src/**.ts",
+    "lint": "eslint src tests",
+    "lint-fix": "eslint --fix src tests",
     "start:dev": "nodemon src/server.ts",
     "start:prod": "ts-node src/server.ts",
     "build": "tsc --build && tsc-alias"
