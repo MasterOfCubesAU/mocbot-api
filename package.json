@@ -11,7 +11,8 @@
     "lint-fix": "eslint --fix src tests",
     "start:dev": "nodemon src/server.ts",
     "start:prod": "ts-node src/server.ts",
-    "build": "tsc --build && tsc-alias"
+    "build": "tsc --build && tsc-alias",
+    "jest": "jest"
   },
   "repository": {
     "type": "git",
