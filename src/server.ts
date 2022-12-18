@@ -6,7 +6,7 @@ import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
 
 // Import API routes
-import v1Route from './routes/v1';
+import v1Route from '@routes/v1';
 
 // Init
 const app = express();
