@@ -377,7 +377,7 @@ components:
             type: string
             format: date-time
             description: The time until this user can gain XP from messages
-          VoiceChannelXPLock:
+          VC_XPLock:
             type: string
             format: date-time
             description: The time until this user can gain XP from voice activity
