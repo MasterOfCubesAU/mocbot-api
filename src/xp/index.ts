@@ -9,7 +9,7 @@ import createErrors from 'http-errors';
  * @returns {object}
  */
 export async function fetchGuildXP(guildID: string): Promise<any> {
-  const result = await DB.records('SELECT x.UserGuildID, x.XP, x.Level, x.XPLock, x.VoiceChannelXPLock FROM XP AS x INNER JOIN UserInGuilds u ON u.UserGuildID = x.UserGuildID WHERE u.GuildID = ?', [guildID]);
+  const result = await DB.records('SELECT x.* FROM XP AS x INNER JOIN UserInGuilds u ON u.UserGuildID = x.UserGuildID WHERE u.GuildID = ?', [guildID]);
   if (result.length === 0) throw createErrors(404, 'Guild ID not found in database');
   return result;
 }
