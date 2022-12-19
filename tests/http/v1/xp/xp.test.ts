@@ -23,7 +23,6 @@ afterAll(async () => {
 describe('Guild XP Data', () => {
   test('Valid response', async () => {
     const request = http('GET', `${ROUTE}/789`, undefined);
-    const response = JSON.parse(String(request.getBody() as string));
     expect(request.statusCode).toStrictEqual(200);
   });
 
