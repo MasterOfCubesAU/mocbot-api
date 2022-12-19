@@ -7,8 +7,8 @@ import createErrors from 'http-errors';
  *
  * @param guildID The guild ID to create settings for
  * @param settings an object with key:value pairs of settings for this guild
- * @throws {createErrors<400>}
- * @throws {createErrors<409>}
+ * @throws {createErrors<400>} if settings not provided
+ * @throws {createErrors<409>} if settings already exist
  * @returns {object} Empty object
  */
 export async function createSettings(guildID: bigint | number, settings: object): Promise<any> {
@@ -27,6 +27,12 @@ export async function createSettings(guildID: bigint | number, settings: object)
   return {};
 }
 
+/**
+ * Fetches settings for the given guild
+ * @param guildID The guild ID to fetch
+ * @throws {createErrors<404>} if not found
+ * @returns {object}
+ */
 export async function getSettings(guildID: bigint | number): Promise<any> {
   const result = await DB.field('SELECT SettingsData FROM GuildSettings WHERE GuildID = ?', [guildID]);
   if (result === null) {
