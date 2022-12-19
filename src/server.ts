@@ -6,7 +6,7 @@ import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
 
 // Import API routes
-import v1_route from '@routes/v1';
+import v1Route from '@routes/v1';
 
 // Init
 const app = express();
@@ -21,7 +21,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(YAML.load('docs/api.yml')));
-app.use('/v1', v1_route);
+app.use('/v1', v1Route);
 
 // Listen
 const server = app.listen(parseInt(process.env.PORT), process.env.HOST, async () => {
