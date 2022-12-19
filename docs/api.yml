@@ -180,11 +180,24 @@ paths:
             type: integer
           required: true
           description: The Guild ID you would like to create settings for
+      requestBody:
+        description: The settings to add for this guild
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Settings"
       responses:
         "200":
           description: OK
-        "404":
-          description: Guild ID not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmptyObject"
+        "400":
+          description: Settings was not provided
+        "409":
+          description: Settings for the guild already exist
     get:
       tags:
         - Settings
@@ -430,3 +443,11 @@ components:
         AdminID:
           type: integer
           description: The ID of the administrator who distributed the warning
+    Settings:
+      type: object
+      example:
+        setting_1: true
+        setting_2: false
+        setting_3: {}
+    EmptyObject:
+      type: object
