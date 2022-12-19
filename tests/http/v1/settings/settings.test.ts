@@ -32,3 +32,17 @@ describe('POST', () => {
     expect(request.statusCode).toStrictEqual(409);
   });
 });
+describe('GET', () => {
+  test('Valid', () => {
+    // Create an entry
+    expect(http('POST', `${ROUTE}/1`, undefined, { setting1: true }).statusCode).toStrictEqual(200);
+    // We expect to fetch it with no issues
+    const request = http('GET', `${ROUTE}/1`);
+    expect(request.statusCode).toStrictEqual(200);
+    const response = JSON.parse(String(request.getBody() as string));
+    expect(response).toStrictEqual({ setting1: true });
+  });
+  test('Invalid (Guild does not exist)', () => {
+    expect(http('GET', `${ROUTE}/1`).statusCode).toStrictEqual(404);
+  });
+});
