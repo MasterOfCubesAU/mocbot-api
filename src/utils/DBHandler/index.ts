@@ -8,29 +8,62 @@ class DatabaseHandler {
     database: process.env.DB_NAME,
   });
 
-  static async field(query: string, values?: any | any[] | { [param: string]: any }) {
+  /**
+   * Fetches a single value from the database
+   * @param query SQL Query
+   * @param values Array of values to be substituted into SQL Query
+   * @returns {any | null}
+   */
+  static async field(query: string, values?: any | any[] | { [param: string]: any }): Promise<any> {
     const [result, field] = await DatabaseHandler.pool.promise().query(query, values);
     return Array.isArray(result) && result.length > 0 ? result[0][field[0].name] : null;
   }
 
-  static async record(query: string, values?: any | any[] | { [param: string]: any }) {
+  /**
+   * Fetches a single row from the database
+   * @param query SQL Query
+   * @param values Array of values to be substituted into SQL Query
+   * @returns {}
+   */
+  static async record(query: string, values?: any | any[] | { [param: string]: any }): Promise<any> {
     const result = (await DatabaseHandler.pool.promise().query(query, values))[0];
     return Array.isArray(result) && result.length > 0 ? result[0] : {};
   }
 
-  static async records(query: string, values?: any | any[] | { [param: string]: any }) {
+  /**
+   * Fetches a multiple rows from the database
+   * @param query SQL Query
+   * @param values Array of values to be substituted into SQL Query
+   * @returns {object[]}
+   */
+  static async records(query: string, values?: any | any[] | { [param: string]: any }): Promise<any> {
     return (await DatabaseHandler.pool.promise().query(query, values))[0];
   }
 
-  static async column(query: string, values?: any | any[] | { [param: string]: any }) {
+  /**
+   * Fetches columns from the database
+   * @param query SQL Query
+   * @param values Array of values to be substituted into SQL Query
+   * @returns {any[]}
+   */
+  static async column(query: string, values?: any | any[] | { [param: string]: any }): Promise<any> {
     const [result, field] = await DatabaseHandler.pool.promise().query(query, values);
     return Array.isArray(result) ? result.map((row) => row[field[0].name]) : [];
   }
 
-  static async execute(query: string, values?: any | any[] | { [param: string]: any }) {
+  /**
+   * Fetches a single value from the database
+   * @param query SQL Query
+   * @param values Array of values to be substituted into SQL Query
+   * @returns {void}
+   */
+  static async execute(query: string, values?: any | any[] | { [param: string]: any }): Promise<any> {
     await DatabaseHandler.pool.promise().execute(query, values);
   }
 
+  /**
+   * Allows remaining queries to execute then closes the connection pool
+   */
   static close() {
     DatabaseHandler.pool.end((err) => {
       if (err) throw err;

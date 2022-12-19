@@ -11,7 +11,8 @@
     "lint-fix": "eslint --fix src tests",
     "start:dev": "nodemon src/server.ts",
     "start:prod": "ts-node src/server.ts",
-    "build": "tsc --build && tsc-alias"
+    "build": "tsc --build && tsc-alias",
+    "jest": "jest"
   },
   "repository": {
     "type": "git",
@@ -46,6 +47,7 @@
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "http-errors": "^2.0.0",
+    "express-async-handler": "^1.2.0",
     "morgan": "^1.10.0",
     "mysql2": "^2.3.3",
     "swagger-ui-express": "^4.6.0",
