@@ -212,6 +212,10 @@ paths:
       responses:
         "200":
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Settings"
         "404":
           description: Guild ID not found
     patch:
