@@ -10,4 +10,3 @@ module.exports = {
         '@utils/(.*)': '<rootDir>/src/utils/$1',
     },
 };
-
