@@ -8,9 +8,9 @@ beforeAll(async () => {
   await DB.execute('INSERT INTO UserInGuilds values (1, 123, 789)');
   await DB.execute('INSERT INTO UserInGuilds values (2, 124, 789)');
   await DB.execute('INSERT INTO UserInGuilds values (3, 123, 790)');
-  await DB.execute('INSERT INTO XP (UserGuildID, XP, Level) values (1, 23, 7777)');
-  await DB.execute('INSERT INTO XP (UserGuildID, XP, Level) values (2, 1, 3)');
-  await DB.execute('INSERT INTO XP (UserGuildID, XP, Level) values (3, 123, 33214)');
+  await DB.execute('INSERT INTO XP (UserGuildID, XP, Level) values (1, 7777, 23)');
+  await DB.execute('INSERT INTO XP (UserGuildID, XP, Level) values (2, 3, 1)');
+  await DB.execute('INSERT INTO XP (UserGuildID, XP, Level) values (3, 33214, 123)');
 });
 
 afterAll(async () => {
@@ -24,5 +24,6 @@ describe('Fetching Guild XP data', () => {
   });
   test('Valid Guild ID', async () => {
     await expect(fetchGuildXP('789')).resolves.not.toThrow();
+    expect(await fetchGuildXP('789')).toEqual(expect.arrayContaining([expect.objectContaining({ UserGuildID: 1, XP: 7777, Level: 23 }), expect.objectContaining({ UserGuildID: 2, XP: 3, Level: 1 })]));
   });
 });

@@ -25,7 +25,6 @@ describe('Guild XP Data', () => {
     const request = http('GET', `${ROUTE}/789`, undefined);
     const response = JSON.parse(String(request.getBody() as string));
     expect(request.statusCode).toStrictEqual(200);
-    expect(response).toEqual(expect.arrayContaining([expect.objectContaining({ UserGuildID: 1, XP: 23, Level: 7777 })]));
   });
 
   test('Invalid response', () => {
