@@ -1,10 +1,11 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler';
 import { createSettings } from '@src/settings';
+import { Request, Response } from 'express';
 
 const router = express.Router();
 
-router.post('/:guild_id', asyncHandler(async (req, res) => {
+router.post('/:guild_id', asyncHandler(async (req: Request, res: Response) => {
   res.json(await createSettings(BigInt(req.params.guild_id), req.body));
 }));
 
