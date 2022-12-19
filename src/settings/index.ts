@@ -26,3 +26,11 @@ export async function createSettings(guildID: bigint | number, settings: object)
   }
   return {};
 }
+
+export async function getSettings(guildID: bigint | number): Promise<any> {
+  const result = await DB.field('SELECT SettingsData FROM GuildSettings WHERE GuildID = ?', [guildID]);
+  if (result === null) {
+    throw createErrors(404, 'This guild does not exist.');
+  }
+  return result;
+}
