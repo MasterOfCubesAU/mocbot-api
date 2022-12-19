@@ -40,3 +40,17 @@ export async function getSettings(guildID: bigint | number): Promise<any> {
   }
   return result;
 }
+
+/**
+ *
+ * @param {bigint | number} guildID The guild ID to update
+ * @param {object} settings The new settings to override
+ * @returns
+ */
+export async function setSettings(guildID: bigint | number, settings: object): Promise<any> {
+  if (Object.keys(await DB.record('SELECT * FROM GuildSettings WHERE GuildID = ?', [guildID])).length === 0) {
+    throw createErrors(404, 'This guild does not exist.');
+  }
+  await DB.execute('UPDATE GuildSettings SET SettingsData = ? WHERE GuildID = ?', [settings, guildID]);
+  return {};
+}
