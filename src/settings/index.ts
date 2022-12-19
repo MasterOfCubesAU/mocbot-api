@@ -5,8 +5,8 @@ import createErrors from 'http-errors';
 /**
  * Stores settings for a given guild ID into the database
  *
- * @param guildID The guild ID to create settings for
- * @param settings an object with key:value pairs of settings for this guild
+ * @param {bigint | number} guildID The guild ID to create settings for
+ * @param {object} settings an object with key:value pairs of settings for this guild
  * @throws {createErrors<400>} if settings not provided
  * @throws {createErrors<409>} if settings already exist
  * @returns {object} Empty object
