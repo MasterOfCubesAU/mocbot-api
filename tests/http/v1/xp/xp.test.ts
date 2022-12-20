@@ -5,7 +5,7 @@ const ROUTE = '/v1/xp';
 
 // Ensure DB is in a predictable state by clearing it initially, then again after every test
 // We then close the DB at the end to remove any open handles
-beforeAll(async () => {
+beforeEach(async () => {
   await DB.execute('DELETE FROM UserInGuilds');
   await DB.execute('INSERT INTO UserInGuilds values (1, 123, 789)');
   await DB.execute('INSERT INTO UserInGuilds values (2, 124, 789)');
@@ -21,13 +21,25 @@ afterAll(async () => {
 });
 
 describe('Guild XP Data', () => {
-  test('Valid response', async () => {
+  test('Valid response', () => {
     const request = http('GET', `${ROUTE}/789`, undefined);
     expect(request.statusCode).toStrictEqual(200);
   });
 
-  test('Invalid response', () => {
+  test('Invalid response (invalid guildId)', () => {
     const request = http('GET', `${ROUTE}/120`, undefined);
+    expect(request.statusCode).toStrictEqual(404);
+  });
+});
+
+describe('Delete XP Data', () => {
+  test('Valid response', () => {
+    const request = http('DELETE', `${ROUTE}/789`, undefined);
+    expect(request.statusCode).toStrictEqual(200);
+  });
+
+  test('Invalid response (invalid guildId)', () => {
+    const request = http('DELETE', `${ROUTE}/120`, undefined);
     expect(request.statusCode).toStrictEqual(404);
   });
 });

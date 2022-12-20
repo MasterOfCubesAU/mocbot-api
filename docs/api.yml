@@ -231,7 +231,40 @@ paths:
           description: The Guild ID you would like to update settings for
       responses:
         "200":
-          description: OK
+          description: OK. Returns the new complete configuration object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Settings"
+        "400":
+          description: New settings was not provided
+        "404":
+          description: Guild ID not found
+    put:
+      tags:
+        - Settings
+      summary: Replaces an existing configuration with a new configuration
+      parameters:
+        - name: guild_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The Guild ID you would like to replace settings for
+      requestBody:
+        description: The settings to add for this guild
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Settings"
+      responses:
+        "200":
+          description: OK. Returns the new settings
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Settings"
         "404":
           description: Guild ID not found
     delete:
@@ -298,6 +331,13 @@ paths:
       summary: Creates a warning object
       description: |-
         This route creates a new warning for a user in a given guild
+      requestBody:
+        description: The request body for a warning
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserWarningsRequest"
       parameters:
         - name: guild_id
           in: path
@@ -314,6 +354,12 @@ paths:
       responses:
         "200":
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserWarnings"
+        "400":
+          description: Reason or AdminID is missing
         "404":
           description: Guild/User ID not found
     get:
@@ -441,9 +487,8 @@ components:
           type: string
           description: The reason behind the warning
         Time:
-          type: string
-          format: date-time
-          description: The time the user was warned
+          type: integer
+          description: The time (epoch) in milliseconds at which the user was warned
         AdminID:
           type: integer
           description: The ID of the administrator who distributed the warning
@@ -455,3 +500,12 @@ components:
         setting_3: {}
     EmptyObject:
       type: object
+    UserWarningsRequest:
+      type: object
+      properties:
+        reason:
+          type: string
+          description: The reason behind the warning
+        adminID:
+          type: integer
+          description: The ID of the administrator who distributed the warning
