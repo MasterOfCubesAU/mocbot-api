@@ -256,6 +256,33 @@ paths:
           description: New settings was not provided
         "404":
           description: Guild ID not found
+    put:
+      tags:
+        - Settings
+      summary: Replaces an existing configuration with a new configuration
+      parameters:
+        - name: guild_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The Guild ID you would like to replace settings for
+      requestBody:
+        description: The settings to add for this guild
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Settings"
+      responses:
+        "200":
+          description: OK. Returns the new settings
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Settings"
+        "404":
+          description: Guild ID not found
     delete:
       tags:
         - Settings
