@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
  * @param {bigint | number} userID The user ID to create a warning for
  * @param {bigint | number} guildID The guild ID the user belongs to
  * @param {string} reason The reason for the warning
- * @param {bigint | number} adminID Thee adminID who distributed the warning
+ * @param {bigint | number} adminID The adminID who distributed the warning
  * @throws {createErrors<400>} Reason/AdminID is left empty
  * @throws {createErrors<404>} User/Guild ID does not exist
  * @returns {object} the warning created
