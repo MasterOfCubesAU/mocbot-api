@@ -54,10 +54,10 @@ describe('PATCH', () => {
     expect(http('PATCH', `${ROUTE}/1`, undefined, { setting1: false }).statusCode).toStrictEqual(200);
   });
   test('Invalid (Guild does not exist)', () => {
-    expect(http('GET', `${ROUTE}/1`).statusCode).toStrictEqual(404);
+    expect(http('PATCH', `${ROUTE}/1`, undefined, { setting1: true }).statusCode).toStrictEqual(404);
   });
   test('Invalid (No settings provided)', () => {
-    expect(http('GET', `${ROUTE}/1`).statusCode).toStrictEqual(404);
+    expect(http('PATCH', `${ROUTE}/1`, undefined, {}).statusCode).toStrictEqual(400);
   });
 });
 
