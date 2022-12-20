@@ -1,5 +1,5 @@
 import DB from '@utils/DBHandler';
-import { createSettings, getSettings, updateSettings } from '@src/settings';
+import { createSettings, getSettings, updateSettings, deleteSettings } from '@src/settings';
 
 // Ensure DB is in a predictable state by clearing it initially, then again after every test
 // We then close the DB at the end to remove any open handles
@@ -50,5 +50,15 @@ describe('Update settings', () => {
   test('Settings is empty', async () => {
     await expect(createSettings(1, { setting1: true, setting2: { a: true, b: false } })).resolves.not.toThrow();
     await expect(updateSettings(1, {})).rejects.toThrow();
+  });
+});
+describe('Delete settings', () => {
+  test('Valid', async () => {
+    await expect(createSettings(1, { setting1: true })).resolves.not.toThrow();
+    await expect(deleteSettings(1)).resolves.not.toThrow();
+    await expect(getSettings(1)).rejects.toThrow();
+  });
+  test('Guild ID does not exist', async () => {
+    await expect(deleteSettings(1)).rejects.toThrow();
   });
 });

@@ -60,3 +60,16 @@ describe('PATCH', () => {
     expect(http('GET', `${ROUTE}/1`).statusCode).toStrictEqual(404);
   });
 });
+
+describe('DELETE', () => {
+  test('Valid', () => {
+    // Create an entry
+    expect(http('POST', `${ROUTE}/1`, undefined, { setting1: true }).statusCode).toStrictEqual(200);
+    // We expect to fetch it with no issues
+    const request = http('DELETE', `${ROUTE}/1`);
+    expect(request.statusCode).toStrictEqual(200);
+  });
+  test('Invalid (Guild does not exist)', () => {
+    expect(http('DELETE', `${ROUTE}/1`).statusCode).toStrictEqual(404);
+  });
+});
