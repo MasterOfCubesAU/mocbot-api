@@ -4,7 +4,7 @@ import createErrors from 'http-errors';
 /**
  * Fetches all the XP data for the given guildId
  *
- * @param {bigint} guildID - the guild id to fetch xp for
+ * @param {bigint | number} guildID - the guild id to fetch xp for
  * @throws {createErrors<404>} - when guildId is not found in database
  * @returns {object}
  */
@@ -17,7 +17,7 @@ export async function fetchGuildXP(guildID: bigint | number): Promise<any> {
 /**
  * Deletes the XP data for a given guildId
  *
- * @param {bigint} guildID - the guild id to delete xp data for
+ * @param {bigint | number} guildID - the guild id to delete xp data for
  * @throws {createErrors<404>} - when guildId is not found in database
  * @returns {} - on success
  */
