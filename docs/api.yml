@@ -254,7 +254,11 @@ paths:
               $ref: "#/components/schemas/Settings"
       responses:
         "200":
-          description: OK
+          description: OK. Returns the new settings
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Settings"
         "404":
           description: Guild ID not found
     delete:

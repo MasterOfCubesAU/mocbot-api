@@ -49,10 +49,11 @@ describe('GET', () => {
 describe('PUT', () => {
   test('Valid', () => {
     // Create an entry
-    expect(http('POST', `${ROUTE}/1`, undefined, { setting1: true, setting2: false, setting3: {} }).statusCode).toStrictEqual(200);
-    // We expect to set a new value with no issues
-    const request = http('PUT', `${ROUTE}/1`, undefined, { setting1: false });
-    expect(request.statusCode).toStrictEqual(200);
+    expect(http('POST', `${ROUTE}/1`, undefined, { setting1: true }).statusCode).toStrictEqual(200);
+    // We expect to be able to update it with no issues
+    const REQ = http('PUT', `${ROUTE}/1`, undefined, { setting1: false });
+    expect(REQ.statusCode).toStrictEqual(200);
+    expect(JSON.parse(REQ.getBody() as string)).toStrictEqual({ setting1: false });
   });
   test('Invalid (Guild does not exist)', () => {
     expect(http('PUT', `${ROUTE}/1`, undefined, {}).statusCode).toStrictEqual(404);

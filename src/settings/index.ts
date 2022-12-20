@@ -52,6 +52,7 @@ export async function setSettings(guildID: bigint | number, settings: object): P
     throw createErrors(404, 'This guild does not exist.');
   }
   await DB.execute('UPDATE GuildSettings SET SettingsData = ? WHERE GuildID = ?', [settings, guildID]);
+  return settings;
 }
 /**
  * Removes settings for a given guild

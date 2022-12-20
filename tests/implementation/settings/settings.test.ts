@@ -36,9 +36,11 @@ describe('Get settings', () => {
 describe('Set settings', () => {
   test('Valid', async () => {
     await expect(createSettings(1, { setting1: true, setting2: false, setting3: {} })).resolves.not.toThrow();
-    await expect(setSettings(1, { setting1: false })).resolves.not.toThrow();
-    await expect(getSettings(1)).resolves.not.toThrow();
-    expect(await getSettings(1)).toStrictEqual({ setting1: false });
+    const EXPECTED = { setting1: false };
+    const FUNC_CALL = await expect(setSettings(1, EXPECTED));
+
+    FUNC_CALL.resolves.not.toThrow();
+    FUNC_CALL.resolves.toStrictEqual(EXPECTED);
   });
   test('Guild ID does not exist', async () => {
     await expect(getSettings(1)).rejects.toThrow();
