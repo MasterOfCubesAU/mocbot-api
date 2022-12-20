@@ -8,14 +8,14 @@ const router = express.Router();
 router.get(
   '/:guild_id',
   asyncHandler(async (req: Request, res: Response) => {
-    res.json(await fetchGuildXP(req.params.guild_id));
+    res.json(await fetchGuildXP(BigInt(req.params.guild_id)));
   })
 );
 
 router.delete(
   '/:guild_id',
   asyncHandler(async (req: Request, res: Response) => {
-    res.json(await deleteGuildXP(req.params.guild_id));
+    res.json(await deleteGuildXP(BigInt(req.params.guild_id)));
   })
 );
 

@@ -20,20 +20,20 @@ afterAll(async () => {
 
 describe('Fetching Guild XP data', () => {
   test('Invalid Guild ID', async () => {
-    await expect(fetchGuildXP('1')).rejects.toThrow();
+    await expect(fetchGuildXP(1)).rejects.toThrow();
   });
   test('Valid Guild ID', async () => {
-    await expect(fetchGuildXP('789')).resolves.not.toThrow();
-    expect(await fetchGuildXP('789')).toEqual(expect.arrayContaining([expect.objectContaining({ UserGuildID: 1, XP: 7777, Level: 23 }), expect.objectContaining({ UserGuildID: 2, XP: 3, Level: 1 })]));
+    await expect(fetchGuildXP(789)).resolves.not.toThrow();
+    expect(await fetchGuildXP(789)).toEqual(expect.arrayContaining([expect.objectContaining({ UserGuildID: 1, XP: 7777, Level: 23 }), expect.objectContaining({ UserGuildID: 2, XP: 3, Level: 1 })]));
   });
 });
 
 describe('Fetching Guild XP data', () => {
   test('Invalid Guild ID', async () => {
-    await expect(deleteGuildXP('1')).rejects.toThrow();
+    await expect(deleteGuildXP(1)).rejects.toThrow();
   });
   test('Valid Guild ID', async () => {
-    await expect(deleteGuildXP('789')).resolves.not.toThrow();
-    await expect(fetchGuildXP('789')).rejects.toThrow();
+    await expect(deleteGuildXP(789)).resolves.not.toThrow();
+    await expect(fetchGuildXP(789)).rejects.toThrow();
   });
 });
