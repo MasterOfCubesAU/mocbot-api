@@ -36,13 +36,20 @@ describe('Get settings', () => {
 describe('Update settings', () => {
   test('Valid (single value)', async () => {
     await expect(createSettings(1, { setting1: true, setting2: { a: true, b: false } })).resolves.not.toThrow();
-    await expect(updateSettings(1, { setting2: { a: false } })).resolves.not.toThrow();
-    expect(await getSettings(1)).toStrictEqual({ setting1: true, setting2: { a: false, b: false } });
+    const FUNC_CALL = await expect(updateSettings(1, { setting2: { a: false } }));
+
+    const EXPECTED = { setting1: true, setting2: { a: false, b: false } };
+    FUNC_CALL.resolves.not.toThrow();
+    FUNC_CALL.resolves.toStrictEqual(EXPECTED);
   });
   test('Valid (all values)', async () => {
+    const EXPECTED = { setting1: false, setting2: { a: false, b: true } };
+
     await expect(createSettings(1, { setting1: true, setting2: { a: true, b: false } })).resolves.not.toThrow();
-    await expect(updateSettings(1, { setting1: false, setting2: { a: false, b: true } })).resolves.not.toThrow();
-    expect(await getSettings(1)).toStrictEqual({ setting1: false, setting2: { a: false, b: true } });
+    const FUNC_CALL = await expect(updateSettings(1, EXPECTED));
+
+    FUNC_CALL.resolves.not.toThrow();
+    FUNC_CALL.resolves.toStrictEqual(EXPECTED);
   });
   test('Guild does not exist', async () => {
     await expect(updateSettings(1, { setting1: true })).rejects.toThrow();

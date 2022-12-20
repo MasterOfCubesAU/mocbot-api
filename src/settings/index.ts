@@ -58,7 +58,9 @@ export async function updateSettings(guildID: bigint | number, newSettings: obje
   if (oldSettings === null) {
     throw createErrors(404, 'Settings for this guild does not exist.');
   }
-  await DB.execute('UPDATE GuildSettings SET SettingsData = ? WHERE GuildID = ?', [lodash.merge(oldSettings, newSettings), guildID]);
+  const ALL_SETTINGS = lodash.merge(oldSettings, newSettings);
+  await DB.execute('UPDATE GuildSettings SET SettingsData = ? WHERE GuildID = ?', [ALL_SETTINGS, guildID]);
+  return ALL_SETTINGS;
 }
 
 /**

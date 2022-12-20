@@ -51,7 +51,9 @@ describe('PATCH', () => {
     // Create an entry
     expect(http('POST', `${ROUTE}/1`, undefined, { setting1: true }).statusCode).toStrictEqual(200);
     // We expect to be able to update it with no issues
-    expect(http('PATCH', `${ROUTE}/1`, undefined, { setting1: false }).statusCode).toStrictEqual(200);
+    const REQ = http('PATCH', `${ROUTE}/1`, undefined, { setting1: false });
+    expect(REQ.statusCode).toStrictEqual(200);
+    expect(JSON.parse(REQ.getBody() as string)).toStrictEqual({ setting1: false });
   });
   test('Invalid (Guild does not exist)', () => {
     expect(http('PATCH', `${ROUTE}/1`, undefined, { setting1: true }).statusCode).toStrictEqual(404);
