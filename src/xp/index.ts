@@ -24,6 +24,8 @@ export async function fetchGuildXP(guildID: string): Promise<any> {
  */
 export async function fetchUserXP(guildID: bigint | number, userID: bigint | number): Promise<any> {
   const result = await DB.record('SELECT x.* FROM XP AS x INNER JOIN UserInGuilds u ON u.UserGuildID = x.UserGuildID WHERE u.GuildID = ? AND u.userID = ?', [guildID, userID]);
-  if (result.length === 0) throw createErrors(404, 'Guild/User ID not found in database');
+  if (Object.keys(result).length === 0) {
+    throw createErrors(404, 'This guild does not exist.');
+  }
   return result;
 }
