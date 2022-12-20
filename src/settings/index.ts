@@ -40,3 +40,17 @@ export async function getSettings(guildID: bigint | number): Promise<any> {
   }
   return result;
 }
+
+/**
+ * Removes settings for a given guild
+ * @param {bigint | number} guildID The guild ID to delete
+ * @throws {createErrors<404>} if guild ID not found
+ * @returns {}
+ */
+export async function deleteSettings(guildID: bigint | number): Promise<any> {
+  if (Object.keys(await DB.record('SELECT * FROM GuildSettings WHERE GuildID = ?', [guildID])).length === 0) {
+    throw createErrors(404, 'This guild does not exist.');
+  }
+  await DB.execute('DELETE FROM GuildSettings WHERE GuildID = ?', [guildID]);
+  return {};
+}
