@@ -31,3 +31,25 @@ describe('Guild XP Data', () => {
     expect(request.statusCode).toStrictEqual(404);
   });
 });
+
+describe('User XP Data', () => {
+  test('Valid response', async () => {
+    const request = http('GET', `${ROUTE}/789/123`, undefined);
+    expect(request.statusCode).toStrictEqual(200);
+  });
+
+  test('Invalid response (invalid guildId)', () => {
+    const request = http('GET', `${ROUTE}/120/123`, undefined);
+    expect(request.statusCode).toStrictEqual(404);
+  });
+
+  test('Invalid response (invalid userId)', () => {
+    const request = http('GET', `${ROUTE}/789/125`, undefined);
+    expect(request.statusCode).toStrictEqual(404);
+  });
+
+  test('Invalid response (invalid userId/buildId combo)', () => {
+    const request = http('GET', `${ROUTE}/790/124`, undefined);
+    expect(request.statusCode).toStrictEqual(404);
+  });
+});

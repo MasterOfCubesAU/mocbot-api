@@ -1,5 +1,5 @@
 import DB from '@utils/DBHandler';
-import { fetchGuildXP } from '@src/xp';
+import { fetchGuildXP, fetchUserXP } from '@src/xp';
 
 // Ensure DB is in a predictable state by clearing it initially, then again after every test
 // We then close the DB at the end to remove any open handles
@@ -25,5 +25,20 @@ describe('Fetching Guild XP data', () => {
   test('Valid Guild ID', async () => {
     await expect(fetchGuildXP('789')).resolves.not.toThrow();
     expect(await fetchGuildXP('789')).toEqual(expect.arrayContaining([expect.objectContaining({ UserGuildID: 1, XP: 7777, Level: 23 }), expect.objectContaining({ UserGuildID: 2, XP: 3, Level: 1 })]));
+  });
+});
+
+describe('Fetching User XP data', () => {
+  test('Invalid Guild ID', async () => {
+    await expect(fetchUserXP(1, 123)).rejects.toThrow();
+  });
+  test('Invalid User ID', async () => {
+    await expect(fetchUserXP(789, 125)).rejects.toThrow();
+  });
+  test('Invalid Guild ID/User ID combo', async () => {
+    await expect(fetchUserXP(790, 124)).rejects.toThrow();
+  });
+  test('Correct response', async () => {
+    expect(await fetchUserXP(789, 123)).toEqual(expect.arrayContaining([expect.objectContaining({ UserGuildID: 1, XP: 7777, Level: 23 })]));
   });
 });
