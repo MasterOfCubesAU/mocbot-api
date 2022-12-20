@@ -1,5 +1,5 @@
 import DB from '@utils/DBHandler';
-import { createSettings, getSettings, updateSettings, deleteSettings } from '@src/settings';
+import { createSettings, getSettings, setSettings, deleteSettings, updateSettings } from '@src/settings';
 
 // Ensure DB is in a predictable state by clearing it initially, then again after every test
 // We then close the DB at the end to remove any open handles
@@ -23,6 +23,7 @@ describe('Create settings', () => {
     await expect(createSettings(1, {})).rejects.toThrow();
   });
 });
+
 describe('Get settings', () => {
   test('Valid', async () => {
     await expect(createSettings(1, { setting1: true })).resolves.not.toThrow();
@@ -33,6 +34,21 @@ describe('Get settings', () => {
     await expect(getSettings(1)).rejects.toThrow();
   });
 });
+
+describe('Set settings', () => {
+  test('Valid', async () => {
+    await expect(createSettings(1, { setting1: true, setting2: false, setting3: {} })).resolves.not.toThrow();
+    const EXPECTED = { setting1: false };
+    const FUNC_CALL = await expect(setSettings(1, EXPECTED));
+
+    FUNC_CALL.resolves.not.toThrow();
+    FUNC_CALL.resolves.toStrictEqual(EXPECTED);
+  });
+  test('Guild ID does not exist', async () => {
+    await expect(setSettings(1, { setting1: false })).rejects.toThrow();
+  });
+});
+
 describe('Update settings', () => {
   test('Valid (single value)', async () => {
     await expect(createSettings(1, { setting1: true, setting2: { a: true, b: false } })).resolves.not.toThrow();
@@ -59,6 +75,7 @@ describe('Update settings', () => {
     await expect(updateSettings(1, {})).rejects.toThrow();
   });
 });
+
 describe('Delete settings', () => {
   test('Valid', async () => {
     await expect(createSettings(1, { setting1: true })).resolves.not.toThrow();

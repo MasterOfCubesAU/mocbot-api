@@ -32,6 +32,7 @@ describe('POST', () => {
     expect(request.statusCode).toStrictEqual(409);
   });
 });
+
 describe('GET', () => {
   test('Valid', () => {
     // Create an entry
@@ -46,6 +47,21 @@ describe('GET', () => {
     expect(http('GET', `${ROUTE}/1`).statusCode).toStrictEqual(404);
   });
 });
+
+describe('PUT', () => {
+  test('Valid', () => {
+    // Create an entry
+    expect(http('POST', `${ROUTE}/1`, undefined, { setting1: true }).statusCode).toStrictEqual(200);
+    // We expect to be able to update it with no issues
+    const REQ = http('PUT', `${ROUTE}/1`, undefined, { setting1: false });
+    expect(REQ.statusCode).toStrictEqual(200);
+    expect(JSON.parse(REQ.getBody() as string)).toStrictEqual({ setting1: false });
+  });
+  test('Invalid (Guild does not exist)', () => {
+    expect(http('PUT', `${ROUTE}/1`, undefined, {}).statusCode).toStrictEqual(404);
+  });
+});
+
 describe('PATCH', () => {
   test('Valid', () => {
     // Create an entry
