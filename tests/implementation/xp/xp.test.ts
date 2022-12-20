@@ -28,7 +28,7 @@ describe('Fetching Guild XP data', () => {
   });
 });
 
-describe('Fetching Guild XP data', () => {
+describe('Deleting Guild XP data', () => {
   test('Invalid Guild ID', async () => {
     await expect(deleteGuildXP(1)).rejects.toThrow();
   });
