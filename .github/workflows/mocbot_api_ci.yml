@@ -47,6 +47,8 @@ jobs:
       - run: npm run tsc
   jest:
     name: Unit Testing
+    env:
+      API_KEY: ${{ secrets.API_KEY }}
     runs-on: ubuntu-latest
 
     strategy:
@@ -59,8 +61,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-        env:
-          API_KEY: ${{ secrets.API_KEY }}
       - run: npm ci
       - run: |
           SERVER_LOG=$(mktemp)
