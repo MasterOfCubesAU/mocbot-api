@@ -33,7 +33,7 @@ describe('Guild XP Data', () => {
 });
 
 describe('User XP Data', () => {
-  test('Valid response', async () => {
+  test('Valid response', () => {
     const request = http('GET', `${ROUTE}/789/123`, undefined);
     expect(request.statusCode).toStrictEqual(200);
   });
