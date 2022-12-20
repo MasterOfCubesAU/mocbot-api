@@ -85,6 +85,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm install --production
+      - run: npm ci --omit=dev
       - run: |
           npm run build

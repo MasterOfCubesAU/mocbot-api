@@ -31,5 +31,8 @@
         "require": [
             "tsconfig-paths/register"
         ]
-    }
+    },
+    "include": [
+        "./src/**/*.ts"
+    ]
 }
