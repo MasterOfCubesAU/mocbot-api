@@ -13,3 +13,19 @@ export async function fetchGuildXP(guildID: string): Promise<any> {
   if (result.length === 0) throw createErrors(404, 'Guild ID not found in database');
   return result;
 }
+
+/**
+ * Deletes the XP data for a given guildId
+ *
+ * @param {string} guildID - the guild id to delete xp data for
+ * @throws {createErrors<404>} - when guildId is not found in database
+ * @returns {} - on success
+ */
+export async function deleteGuildXP(guildID: string): Promise<any> {
+  if (Object.keys(await DB.record('SELECT * FROM UserInGuilds WHERE GuildID = ?', [guildID])).length === 0) {
+    throw createErrors(404, 'This guild does not exist.');
+  }
+
+  await DB.execute('DELETE x FROM XP x INNER JOIN UserInGuilds u ON u.UserGuildID = x.UserGuildID WHERE u.GuildID = ?', [guildID]);
+  return {};
+}
