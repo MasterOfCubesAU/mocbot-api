@@ -1,6 +1,6 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler';
-import { createSettings, getSettings, setSettings } from '@src/settings';
+import { createSettings, getSettings, setSettings, deleteSettings } from '@src/settings';
 import { Request, Response } from 'express';
 
 const router = express.Router();
@@ -16,6 +16,9 @@ router.patch('/:guild_id', (req, res) => {
 });
 router.put('/:guild_id', asyncHandler(async (req: Request, res: Response) => {
   res.json(await setSettings(BigInt(req.params.guild_id), req.body));
+}));
+router.delete('/:guild_id', asyncHandler(async (req: Request, res: Response) => {
+  res.json(await deleteSettings(BigInt(req.params.guild_id)));
 }));
 
 export default router;
