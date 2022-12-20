@@ -231,7 +231,13 @@ paths:
           description: The Guild ID you would like to update settings for
       responses:
         "200":
-          description: OK
+          description: OK. Returns the new complete configuration object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Settings"
+        "400":
+          description: New settings was not provided
         "404":
           description: Guild ID not found
     delete:
