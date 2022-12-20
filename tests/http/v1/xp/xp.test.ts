@@ -21,7 +21,7 @@ afterAll(async () => {
 });
 
 describe('Guild XP Data', () => {
-  test('Valid response', async () => {
+  test('Valid response', () => {
     const request = http('GET', `${ROUTE}/789`, undefined);
     expect(request.statusCode).toStrictEqual(200);
   });
@@ -33,7 +33,7 @@ describe('Guild XP Data', () => {
 });
 
 describe('Delete XP Data', () => {
-  test('Valid response', async () => {
+  test('Valid response', () => {
     const request = http('DELETE', `${ROUTE}/789`, undefined);
     expect(request.statusCode).toStrictEqual(200);
   });
