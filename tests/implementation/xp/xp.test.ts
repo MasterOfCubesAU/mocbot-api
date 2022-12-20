@@ -39,6 +39,6 @@ describe('Fetching User XP data', () => {
     await expect(fetchUserXP(790, 124)).rejects.toThrow();
   });
   test('Correct response', async () => {
-    expect(await fetchUserXP(789, 123)).toEqual(expect.arrayContaining([expect.objectContaining({ UserGuildID: 1, XP: 7777, Level: 23 })]));
+    expect(await fetchUserXP(789, 123)).toEqual(expect.toMatchObject({ UserGuildID: 1, XP: 7777, Level: 23 }));
   });
 });
