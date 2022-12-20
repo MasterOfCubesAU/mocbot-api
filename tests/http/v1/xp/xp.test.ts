@@ -22,24 +22,24 @@ afterAll(async () => {
 
 describe('Guild XP Data', () => {
   test('Valid response', () => {
-    const request = http('GET', `${ROUTE}/789`, undefined);
+    const request = http('GET', `${ROUTE}/789`);
     expect(request.statusCode).toStrictEqual(200);
   });
 
   test('Invalid response (invalid guildId)', () => {
-    const request = http('GET', `${ROUTE}/120`, undefined);
+    const request = http('GET', `${ROUTE}/120`);
     expect(request.statusCode).toStrictEqual(404);
   });
 });
 
 describe('Delete XP Data', () => {
   test('Valid response', () => {
-    const request = http('DELETE', `${ROUTE}/789`, undefined);
+    const request = http('DELETE', `${ROUTE}/789`);
     expect(request.statusCode).toStrictEqual(200);
   });
 
   test('Invalid response (invalid guildId)', () => {
-    const request = http('DELETE', `${ROUTE}/120`, undefined);
+    const request = http('DELETE', `${ROUTE}/120`);
     expect(request.statusCode).toStrictEqual(404);
   });
 });
