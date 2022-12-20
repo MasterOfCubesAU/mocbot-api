@@ -4,6 +4,8 @@ import cors from 'cors';
 import morgan from 'morgan';
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
+import asyncHandler from 'express-async-handler';
+import { validateSession } from '@src/auth';
 
 // Import API routes
 import v1Route from '@routes/v1';
@@ -15,12 +17,21 @@ app.use(cors());
 app.set('trust proxy', true);
 app.use(morgan(process.env.NODE_ENV !== 'production' ? 'dev' : 'common'));
 
-// Routes
+// Public Routes
 app.get('/', (req, res) => {
   res.redirect('/docs');
 });
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(YAML.load('docs/api.yml')));
+
+// All routes below this are authenticated
+app.use(asyncHandler(async (req, res, next) => {
+  await validateSession(req.headers['x-api-key'] as string);
+  next();
+}));
+
+// Protected Routes
+
 app.use('/v1', v1Route);
 
 // Listen
