@@ -22,46 +22,46 @@ afterAll(async () => {
 
 describe('Guild XP Data', () => {
   test('Valid response', () => {
-    const request = http('GET', `${ROUTE}/789`, undefined);
+    const request = http('GET', `${ROUTE}/789`);
     expect(request.statusCode).toStrictEqual(200);
   });
 
   test('Invalid response (invalid guildId)', () => {
-    const request = http('GET', `${ROUTE}/120`, undefined);
+    const request = http('GET', `${ROUTE}/120`);
     expect(request.statusCode).toStrictEqual(404);
   });
 });
 
 describe('Delete XP Data', () => {
   test('Valid response', () => {
-    const request = http('DELETE', `${ROUTE}/789`, undefined);
+    const request = http('DELETE', `${ROUTE}/789`);
     expect(request.statusCode).toStrictEqual(200);
   });
 
   test('Invalid response (invalid guildId)', () => {
-    const request = http('DELETE', `${ROUTE}/120`, undefined);
+    const request = http('DELETE', `${ROUTE}/120`);
     expect(request.statusCode).toStrictEqual(404);
   });
 });
 
 describe('User XP Data', () => {
   test('Valid response', () => {
-    const request = http('GET', `${ROUTE}/789/123`, undefined);
+    const request = http('GET', `${ROUTE}/789/123`);
     expect(request.statusCode).toStrictEqual(200);
   });
 
   test('Invalid response (invalid guildId)', () => {
-    const request = http('GET', `${ROUTE}/120/123`, undefined);
+    const request = http('GET', `${ROUTE}/120/123`);
     expect(request.statusCode).toStrictEqual(404);
   });
 
   test('Invalid response (invalid userId)', () => {
-    const request = http('GET', `${ROUTE}/789/125`, undefined);
+    const request = http('GET', `${ROUTE}/789/125`);
     expect(request.statusCode).toStrictEqual(404);
   });
 
   test('Invalid response (invalid userId/buildId combo)', () => {
-    const request = http('GET', `${ROUTE}/790/124`, undefined);
+    const request = http('GET', `${ROUTE}/790/124`);
     expect(request.statusCode).toStrictEqual(404);
   });
 });
