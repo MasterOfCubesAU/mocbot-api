@@ -43,7 +43,7 @@ describe('Set settings', () => {
     FUNC_CALL.resolves.toStrictEqual(EXPECTED);
   });
   test('Guild ID does not exist', async () => {
-    await expect(getSettings(1)).rejects.toThrow();
+    await expect(setSettings(1, { setting1: false })).rejects.toThrow();
   });
 });
 
