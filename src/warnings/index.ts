@@ -24,7 +24,7 @@ export async function createWarning(userID: bigint | number, guildID: bigint | n
   if (UserGuildID === null) {
     throw createErrors(404, 'User/Guild ID does not exist.');
   }
-  const TIME_NOW = new Date()
+  const TIME_NOW = new Date();
   const RESULT: WarningResult = {
     WarningID: uuidv4(),
     UserGuildID: UserGuildID,

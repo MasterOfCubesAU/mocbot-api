@@ -46,28 +46,27 @@ describe('Get Warnings (User)', () => {
     // Create a valid user
     await expect(DB.execute('INSERT INTO UserInGuilds (UserID, GuildID) VALUES (?, ?)', [1, 1])).resolves.not.toThrow();
     // Create a Warning
-    const createRequest = http('POST', `${ROUTE}/1/1`, { reason: "Test Reason (MOCBOT API)", adminID: 2 });
+    const createRequest = http('POST', `${ROUTE}/1/1`, { reason: 'Test Reason (MOCBOT API)', adminID: 2 });
     expect(createRequest.statusCode).toStrictEqual(200);
     const EXPECTED = JSON.parse(createRequest.getBody() as string);
     // Get Warning
     const request = http('GET', `${ROUTE}/1/1`);
     expect(request.statusCode).toStrictEqual(200);
     expect(JSON.parse(request.getBody() as string)).toStrictEqual([EXPECTED]);
-
   });
   test('Valid (multiple values)', async () => {
     // Create a valid user
     await expect(DB.execute('INSERT INTO UserInGuilds (UserID, GuildID) VALUES (?, ?)', [1, 1])).resolves.not.toThrow();
     // Create warning 1
-    const createRequest = http('POST', `${ROUTE}/1/1`, { reason: "Test Reason 1 (MOCBOT API)", adminID: 2 });
+    const createRequest = http('POST', `${ROUTE}/1/1`, { reason: 'Test Reason 1 (MOCBOT API)', adminID: 2 });
     expect(createRequest.statusCode).toStrictEqual(200);
     const EXPECTED = JSON.parse(createRequest.getBody() as string);
     // Create warning 2
-    const createRequest2 = http('POST', `${ROUTE}/1/1`, { reason: "Test Reason 2 (MOCBOT API)", adminID: 2 });
+    const createRequest2 = http('POST', `${ROUTE}/1/1`, { reason: 'Test Reason 2 (MOCBOT API)', adminID: 2 });
     expect(createRequest2.statusCode).toStrictEqual(200);
     const EXPECTED2 = JSON.parse(createRequest.getBody() as string);
     // Create warning 2
-    const createRequest3 = http('POST', `${ROUTE}/1/1`, { reason: "Test Reason 3 (MOCBOT API)", adminID: 2 });
+    const createRequest3 = http('POST', `${ROUTE}/1/1`, { reason: 'Test Reason 3 (MOCBOT API)', adminID: 2 });
     expect(createRequest3.statusCode).toStrictEqual(200);
     const EXPECTED3 = JSON.parse(createRequest.getBody() as string);
     // Get Warnings
@@ -81,7 +80,6 @@ describe('Get Warnings (User)', () => {
           EXPECTED3
         ]
       ));
-
   });
   test("Invalid (User ID doesn't exist)", async () => {
     await expect(DB.execute('INSERT INTO UserInGuilds (UserID, GuildID) VALUES (?, ?)', [1, 1])).resolves.not.toThrow();
