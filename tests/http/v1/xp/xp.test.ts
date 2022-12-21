@@ -7,12 +7,8 @@ const ROUTE = '/v1/xp';
 // We then close the DB at the end to remove any open handles
 beforeEach(async () => {
   await DB.execute('DELETE FROM UserInGuilds');
-  await DB.execute('INSERT INTO UserInGuilds values (1, 123, 789)');
-  await DB.execute('INSERT INTO UserInGuilds values (2, 124, 789)');
-  await DB.execute('INSERT INTO UserInGuilds values (3, 123, 790)');
-  await DB.execute('INSERT INTO XP (UserGuildID, XP, Level) values (1, 23, 7777)');
-  await DB.execute('INSERT INTO XP (UserGuildID, XP, Level) values (2, 1, 3)');
-  await DB.execute('INSERT INTO XP (UserGuildID, XP, Level) values (3, 123, 33214)');
+  await DB.execute('INSERT INTO UserInGuilds values (1, 123, 789), (2, 124, 789), (3, 123, 790)');
+  await DB.execute('INSERT INTO XP (UserGuildID, XP, Level) values (1, 7777, 23), (2, 3, 1), (3, 33214, 123)');
 });
 
 afterAll(async () => {
