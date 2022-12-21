@@ -31,6 +31,32 @@ export async function fetchUserXP(guildID: bigint | number, userID: bigint | num
 }
 
 /**
+ * Creates a new XP object for a user
+ *
+ * @param {bigint | number} guildID - the guild id to create xp object for
+ * @param {bigint | number} userID - the user id to create xp object for
+ * @throws {createErrors<404>} - when the combination of the userID and guildID is not found
+ * @throws {createErrors<409>} - when an entry for that user in that guild already exists
+ * @returns {object}
+ */
+export async function postUserXP(guildID: bigint | number, userID: bigint | number): Promise<any> {
+  const userGuildID: number = await DB.field('SELECT UserGuildID FROM UserInGuilds WHERE guildID = ? AND userID = ?', [guildID, userID]);
+  if (userGuildID === undefined) {
+    throw createErrors(404, 'This Guild/User ID does not exist.');
+  }
+
+  try {
+    await DB.execute('INSERT INTO XP (UserGuildID, XP, Level) VALUES (?, ?, ?)', [userGuildID, 0, 0]);
+  } catch (error) {
+    if (error.code === 'ER_DUP_ENTRY') {
+      throw createErrors(409, 'XP data for this user in this guild already exists.');
+    } else {
+      throw error;
+    }
+  }
+}
+
+/**
  * Deletes the XP data for a given guildId
  *
  * @param {bigint | number} guildID - the guild id to delete xp data for

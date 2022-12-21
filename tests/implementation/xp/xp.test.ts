@@ -1,5 +1,5 @@
 import DB from '@utils/DBHandler';
-import { fetchGuildXP, fetchUserXP, deleteGuildXP } from '@src/xp';
+import { fetchGuildXP, fetchUserXP, deleteGuildXP, postUserXP } from '@src/xp';
 
 // Ensure DB is in a predictable state by clearing it initially, then again after every test
 // We then close the DB at the end to remove any open handles
@@ -46,5 +46,18 @@ describe('Fetching User XP data', () => {
   });
   test('Correct response', async () => {
     expect(await fetchUserXP(789, 123)).toMatchObject({ UserGuildID: 1, XP: 7777, Level: 23 });
+  });
+});
+
+describe('Posting User XP data', () => {
+  test('Invalid Guild ID/User ID combo', async () => {
+    await expect(fetchUserXP(1, 1)).rejects.toThrow();
+  });
+  test('Correct response', async () => {
+    await DB.execute('INSERT INTO UserInGuilds values (4, 1, 1)');
+    await expect(postUserXP(1, 1)).resolves.not.toThrow();
+    expect(await fetchUserXP(1, 1)).toMatchObject({ UserGuildID: 4, XP: 0, Level: 0 });
+    // should fail when trying to add same user in same guild again
+    await expect(postUserXP(1, 1)).rejects.toThrow();
   });
 });
