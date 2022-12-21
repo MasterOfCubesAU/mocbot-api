@@ -43,8 +43,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm ci --production
-      - run: npm run tsc
+      - run: npm ci --omit=dev
+      - run: npm run tsc -p tsconfig.prod.json
   jest:
     name: Unit Testing
     env:
@@ -87,6 +87,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm ci --production
+      - run: npm ci --omit=dev
       - run: |
           npm run build

@@ -11,7 +11,7 @@
     "lint-fix": "eslint --fix src tests",
     "start": "node dist/server.js",
     "start:dev": "nodemon src/server.ts",
-    "build": "rimraf dist && tsc --build && tsc-alias",
+    "build": "rimraf dist && tsc --build tsconfig.prod.json && tsc-alias",
     "jest": "jest"
   },
   "repository": {
