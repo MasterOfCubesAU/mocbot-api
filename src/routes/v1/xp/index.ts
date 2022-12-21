@@ -1,6 +1,6 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler';
-import { fetchGuildXP, fetchUserXP, deleteGuildXP } from '@src/xp';
+import { fetchGuildXP, fetchUserXP, deleteGuildXP, postUserXP } from '@src/xp';
 import { Request, Response } from 'express';
 
 const router = express.Router();
@@ -23,6 +23,13 @@ router.get(
   '/:guild_id/:user_id',
   asyncHandler(async (req: Request, res: Response) => {
     res.json(await fetchUserXP(BigInt(req.params.guild_id), BigInt(req.params.user_id)));
+  })
+);
+
+router.post(
+  '/:guild_id/:user_id',
+  asyncHandler(async (req: Request, res: Response) => {
+    res.json(await postUserXP(BigInt(req.params.guild_id), BigInt(req.params.user_id)));
   })
 );
 
