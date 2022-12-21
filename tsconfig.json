@@ -1,7 +1,6 @@
 {
     "compilerOptions": {
         "esModuleInterop": true,
-        "noImplicitAny": false,
         "resolveJsonModule": true,
         "allowJs": true,
         "suppressImplicitAnyIndexErrors": true,
@@ -31,8 +30,5 @@
         "require": [
             "tsconfig-paths/register"
         ]
-    },
-    "include": [
-        "./src/**/*.ts"
-    ]
+    }
 }

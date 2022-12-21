@@ -27,7 +27,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm ci
+      - run: npm ci --include=dev
       - run: npm run lint
   typecheck:
     name: Type Check
@@ -43,7 +43,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm ci
+      - run: npm ci --include=dev
       - run: npm run tsc
   jest:
     name: Unit Testing
@@ -61,11 +61,11 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm ci
+      - run: npm ci --include=dev
       - run: |
           SERVER_LOG=$(mktemp)
           # Start server in background and capture output in temp file
-          npm run start:dev &> $SERVER_LOG & pid=$!
+          npm run ts-node -- src/server.ts &> $SERVER_LOG & pid=$!
           sleep 2
           ps -o pid | egrep -q "^\s*${pid}$" || (cat $SERVER_LOG && exit 1)
           # Run test then kill server
@@ -87,6 +87,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm install --production
+      - run: npm ci --omit=dev
       - run: |
           npm run build
