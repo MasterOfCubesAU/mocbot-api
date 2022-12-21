@@ -8,7 +8,7 @@ import { createHash } from 'crypto';
  * @throws {createErrors<401>} if the API key is invalid
  */
 export async function validateSession(apiKey: string) {
-  if (apiKey === undefined || await DB.field('SELECT Token FROM APIKeys WHERE Token = ?', [createHash('sha256').update(apiKey).digest('hex')]) === null) {
+  if (apiKey === undefined || (await DB.field('SELECT Token FROM APIKeys WHERE Token = ?', [createHash('sha256').update(apiKey).digest('hex')])) === null) {
     throw createErrors(401, 'Unauthorized');
   }
 }

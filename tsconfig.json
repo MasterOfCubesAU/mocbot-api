@@ -1,7 +1,6 @@
 {
     "compilerOptions": {
         "esModuleInterop": true,
-        "noImplicitAny": false,
         "resolveJsonModule": true,
         "allowJs": true,
         "suppressImplicitAnyIndexErrors": true,
