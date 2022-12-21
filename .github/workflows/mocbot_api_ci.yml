@@ -47,6 +47,8 @@ jobs:
       - run: npm run tsc
   jest:
     name: Unit Testing
+    env:
+      API_KEY: ${{ secrets.API_KEY }}
     runs-on: ubuntu-latest
 
     strategy:

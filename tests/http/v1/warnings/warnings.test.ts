@@ -17,7 +17,7 @@ describe('Create Warning (User)', () => {
     const timeNow = Date.now();
     // Create a valid user
     await expect(DB.execute('INSERT INTO UserInGuilds (UserID, GuildID) VALUES (?, ?)', [1, 1])).resolves.not.toThrow();
-    const request = http('POST', `${ROUTE}/1/1`, undefined, { reason: 'Test Reason', adminID: 2 });
+    const request = http('POST', `${ROUTE}/1/1`, { reason: 'Test Reason', adminID: 2 });
     expect(request.statusCode).toStrictEqual(200);
     const response = JSON.parse(String(request.getBody() as string));
     expect(response).toStrictEqual({
@@ -32,10 +32,10 @@ describe('Create Warning (User)', () => {
   });
   test('Invalid (Reason missing)', async () => {
     await expect(DB.execute('INSERT INTO UserInGuilds (UserID, GuildID) VALUES (?, ?)', [1, 1])).resolves.not.toThrow();
-    expect(http('POST', `${ROUTE}/1/1`, undefined, { adminID: 2 }).statusCode).toStrictEqual(400);
+    expect(http('POST', `${ROUTE}/1/1`, { adminID: 2 }).statusCode).toStrictEqual(400);
   });
   test('Invalid (Admin ID missing)', async () => {
     await expect(DB.execute('INSERT INTO UserInGuilds (UserID, GuildID) VALUES (?, ?)', [1, 1])).resolves.not.toThrow();
-    expect(http('POST', `${ROUTE}/1/1`, undefined, { reason: 'Test Reason' }).statusCode).toStrictEqual(400);
+    expect(http('POST', `${ROUTE}/1/1`, { reason: 'Test Reason' }).statusCode).toStrictEqual(400);
   });
 });

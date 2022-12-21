@@ -8,8 +8,8 @@ import request, { HttpVerb } from 'sync-request';
  * @param payload The body/query strings depending on the method
  * @returns {Response}
  */
-export function http(method: HttpVerb, route: string, token?: string, payload?: object) {
+export function http(method: HttpVerb, route: string, payload?: object) {
   let qs; let json = {};
   if (payload) ['GET', 'DELETE'].includes(method.toUpperCase()) ? qs = payload : json = payload;
-  return request(method, `http://${process.env.HOST}:${process.env.PORT}` + route, { qs, json, headers: { token: token } });
+  return request(method, `http://${process.env.HOST}:${process.env.PORT}` + route, { qs, json, headers: { 'x-api-key': process.env.API_KEY } });
 }
