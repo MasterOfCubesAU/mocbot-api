@@ -76,3 +76,15 @@ describe('Post User XP Data', () => {
     expect(http('POST', `${ROUTE}/1/1`).statusCode).toStrictEqual(409);
   });
 });
+
+describe('Delete user XP Data', () => {
+  test('Valid response', () => {
+    const request = http('DELETE', `${ROUTE}/789/123`);
+    expect(request.statusCode).toStrictEqual(200);
+  });
+
+  test('Invalid response (invalid guildId/userId)', () => {
+    const request = http('DELETE', `${ROUTE}/790/124`);
+    expect(request.statusCode).toStrictEqual(404);
+  });
+});

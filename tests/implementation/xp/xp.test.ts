@@ -1,5 +1,5 @@
 import DB from '@utils/DBHandler';
-import { fetchGuildXP, fetchUserXP, deleteGuildXP, postUserXP } from '@src/xp';
+import { fetchGuildXP, fetchUserXP, deleteGuildXP, postUserXP, deleteUserXP } from '@src/xp';
 
 // Ensure DB is in a predictable state by clearing it initially, then again after every test
 // We then close the DB at the end to remove any open handles
@@ -61,3 +61,12 @@ describe('Posting User XP data', () => {
     await expect(postUserXP(1, 1)).rejects.toThrow();
   });
 });
+
+describe('Deleting user XP data', () => {
+  test('Invalid Guild ID', async () => {
+    await expect(deleteUserXP(790, 124)).rejects.toThrow();
+  });
+  test('Valid Guild ID', async () => {
+    await expect(deleteUserXP(789, 123)).resolves.not.toThrow();
+    await expect(fetchUserXP(789, 123)).rejects.toThrow();
+  });

@@ -41,6 +41,7 @@ export async function fetchUserXP(guildID: bigint | number, userID: bigint | num
  */
 export async function postUserXP(guildID: bigint | number, userID: bigint | number): Promise<any> {
   const userGuildID: number = await DB.field('SELECT UserGuildID FROM UserInGuilds WHERE guildID = ? AND UserID = ?', [guildID, userID]);
+  console.log(userGuildID);
   if (userGuildID === undefined) {
     throw createErrors(404, 'This Guild/User ID does not exist.');
   }
@@ -69,5 +70,23 @@ export async function deleteGuildXP(guildID: bigint | number): Promise<any> {
   }
 
   await DB.execute('DELETE x FROM XP x INNER JOIN UserInGuilds u ON u.UserGuildID = x.UserGuildID WHERE u.GuildID = ?', [guildID]);
+  return {};
+}
+
+/**
+ * Deletes the XP data for a given guildId and userId
+ *
+ * @param {bigint | number} guildID - the guild id to delete xp data for
+ * @param {bigint | number} userID - the user id to delete xp data for
+ * @throws {createErrors<404>} - when guildId/userId is not found in database
+ * @returns {} - on success
+ */
+export async function deleteUserXP(guildID: bigint | number, userID: bigint | number): Promise<any> {
+  const userGuildID: number = await DB.field('SELECT * FROM UserInGuilds WHERE GuildID = ? AND UserID = ?', [guildID, userID]);
+  if (userGuildID === undefined) {
+    throw createErrors(404, 'This guild does not exist.');
+  }
+
+  await DB.execute('DELETE FROM XP WHERE UserGuildID = ?', [userGuildID]);
   return {};
 }
