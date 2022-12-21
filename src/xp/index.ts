@@ -15,6 +15,22 @@ export async function fetchGuildXP(guildID: bigint | number): Promise<any> {
 }
 
 /**
+ * Fetches all the XP data for the given userId
+ *
+ * @param {bigint | number} guildID - the guild id to fetch xp for
+ * @param {bigint | number} userID - the user id to fetch xp for
+ * @throws {createErrors<404>} - when the combination of the userID and guildID is not found
+ * @returns {object}
+ */
+export async function fetchUserXP(guildID: bigint | number, userID: bigint | number): Promise<any> {
+  const result = await DB.record('SELECT x.* FROM XP AS x INNER JOIN UserInGuilds u ON u.UserGuildID = x.UserGuildID WHERE u.GuildID = ? AND u.userID = ?', [guildID, userID]);
+  if (Object.keys(result).length === 0) {
+    throw createErrors(404, 'This Guild/User ID does not exist.');
+  }
+  return result;
+}
+
+/**
  * Deletes the XP data for a given guildId
  *
  * @param {bigint | number} guildID - the guild id to delete xp data for
