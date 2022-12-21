@@ -23,7 +23,7 @@ export async function fetchGuildXP(guildID: bigint | number): Promise<any> {
  * @returns {object}
  */
 export async function fetchUserXP(guildID: bigint | number, userID: bigint | number): Promise<any> {
-  const result = await DB.record('SELECT x.* FROM XP AS x INNER JOIN UserInGuilds u ON u.UserGuildID = x.UserGuildID WHERE u.GuildID = ? AND u.userID = ?', [guildID, userID]);
+  const result = await DB.record('SELECT x.* FROM XP AS x INNER JOIN UserInGuilds u ON u.UserGuildID = x.UserGuildID WHERE u.GuildID = ? AND u.UserID = ?', [guildID, userID]);
   if (Object.keys(result).length === 0) {
     throw createErrors(404, 'This Guild/User ID does not exist.');
   }
@@ -40,7 +40,7 @@ export async function fetchUserXP(guildID: bigint | number, userID: bigint | num
  * @returns {object}
  */
 export async function postUserXP(guildID: bigint | number, userID: bigint | number): Promise<any> {
-  const userGuildID: number = await DB.field('SELECT UserGuildID FROM UserInGuilds WHERE guildID = ? AND userID = ?', [guildID, userID]);
+  const userGuildID: number = await DB.field('SELECT UserGuildID FROM UserInGuilds WHERE guildID = ? AND UserID = ?', [guildID, userID]);
   if (userGuildID === undefined) {
     throw createErrors(404, 'This Guild/User ID does not exist.');
   }
