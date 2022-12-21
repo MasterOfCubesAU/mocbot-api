@@ -51,7 +51,7 @@ describe('Fetching User XP data', () => {
 
 describe('Posting User XP data', () => {
   test('Invalid Guild ID/User ID combo', async () => {
-    await expect(fetchUserXP(1, 1)).rejects.toThrow();
+    await expect(postUserXP(1, 1)).rejects.toThrow();
   });
   test('Correct response', async () => {
     await DB.execute('INSERT INTO UserInGuilds values (4, 1, 1)');
@@ -70,3 +70,4 @@ describe('Deleting user XP data', () => {
     await expect(deleteUserXP(789, 123)).resolves.not.toThrow();
     await expect(fetchUserXP(789, 123)).rejects.toThrow();
   });
+});

@@ -34,7 +34,7 @@ router.post(
 );
 
 router.delete(
-  '/:guild_id/Luser_id',
+  '/:guild_id/:user_id',
   asyncHandler(async (req: Request, res: Response) => {
     res.json(await deleteUserXP(BigInt(req.params.guild_id), BigInt(req.params.user_id)));
   })
