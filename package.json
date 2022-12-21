@@ -10,8 +10,8 @@
     "lint": "eslint src tests",
     "lint-fix": "eslint --fix src tests",
     "start:dev": "nodemon src/server.ts",
-    "start:prod": "ts-node src/server.ts",
-    "build": "tsc --build && tsc-alias",
+    "start:prod": "ts-node src/server.ts -p tsconfig.prod.json",
+    "build": "tsc --build && tsc-alias -p tsconfig.prod.json",
     "jest": "jest"
   },
   "repository": {
