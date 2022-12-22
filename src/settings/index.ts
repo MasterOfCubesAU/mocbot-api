@@ -49,6 +49,9 @@ export async function getSettings(guildID: bigint | number): Promise<any> {
  * @returns
 */
 export async function setSettings(guildID: bigint | number, settings: object): Promise<any> {
+  if (Object.keys(settings).length === 0) {
+    throw createErrors(400, 'Settings can not be empty');
+  }
   if (Object.keys(await DB.record('SELECT * FROM GuildSettings WHERE GuildID = ?', [guildID])).length === 0) {
     throw createErrors(404, 'This guild does not exist.');
   }
