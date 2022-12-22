@@ -76,3 +76,19 @@ describe('Post User XP Data', () => {
     expect(http('POST', `${ROUTE}/1/1`).statusCode).toStrictEqual(409);
   });
 });
+
+describe('Update User XP Data', () => {
+  test('Invalid UserGuildID provided', () => {
+    const request = http('PATCH', `${ROUTE}/1/1`, { XP: 333, Level: 11 });
+    expect(request.statusCode).toStrictEqual(404);
+  });
+
+  test('No settings provided', () => {
+    const request = http('PATCH', `${ROUTE}/789/124`, {});
+    expect(request.statusCode).toStrictEqual(400);
+  });
+
+  test('Successfully updated user XP data', async () => {
+    expect(http('PATCH', `${ROUTE}/789/124`, { XP: 333, Level: 11 }).statusCode).toStrictEqual(200);
+  });
+});
