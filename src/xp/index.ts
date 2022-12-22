@@ -23,7 +23,7 @@ export async function fetchGuildXP(guildID: bigint | number): Promise<any> {
  * @returns {} - on success
  */
 export async function deleteGuildXP(guildID: bigint | number): Promise<any> {
-  if (Object.keys(await DB.record('SELECT * FROM UserInGuilds WHERE GuildID = ?', [guildID])).length === 0) {
+  if (await DB.records('SELECT x.* FROM XP as x INNER JOIN UserInGuilds u ON u.UserGuildID = x.UserGuildID WHERE GuildID = ?', [guildID]).length === 0) {
     throw createErrors(404, 'This guild does not exist.');
   }
 
