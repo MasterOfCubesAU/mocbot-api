@@ -47,6 +47,10 @@ describe('Set settings', () => {
   test('Guild ID does not exist', async () => {
     await expect(setSettings(1, { setting1: false })).rejects.toThrow();
   });
+  test('Empty settings', async () => {
+    await expect(createSettings(1, { setting1: true, setting2: false, setting3: {} })).resolves.not.toThrow();
+    await expect(setSettings(1, {})).rejects.toThrow();
+  });
 });
 
 describe('Update settings', () => {

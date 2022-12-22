@@ -57,8 +57,13 @@ describe('PUT', () => {
     expect(REQ.statusCode).toStrictEqual(200);
     expect(JSON.parse(REQ.getBody() as string)).toStrictEqual({ setting1: false });
   });
+  test('Invalid (Settings empty)', () => {
+    // Create an entry
+    expect(http('POST', `${ROUTE}/1`, { setting1: true }).statusCode).toStrictEqual(200);
+    expect(http('PUT', `${ROUTE}/1`, {}).statusCode).toStrictEqual(400);
+  });
   test('Invalid (Guild does not exist)', () => {
-    expect(http('PUT', `${ROUTE}/1`, {}).statusCode).toStrictEqual(404);
+    expect(http('PUT', `${ROUTE}/1`, { setting1: true }).statusCode).toStrictEqual(404);
   });
 });
 
