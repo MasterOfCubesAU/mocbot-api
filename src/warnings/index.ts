@@ -9,7 +9,6 @@ import { v4 as uuidv4 } from 'uuid';
  * @param {string} reason The reason for the warning
  * @param {bigint | number} adminID The adminID who distributed the warning
  * @throws {createErrors<400>} Reason/AdminID is left empty
- * @throws {createErrors<404>} User/Guild ID does not exist
  * @returns {object} the warning created
  */
 export async function createWarning(userID: bigint | number, guildID: bigint | number, reason: string, adminID: bigint | number) {
@@ -19,9 +18,10 @@ export async function createWarning(userID: bigint | number, guildID: bigint | n
   if (adminID === undefined) {
     throw createErrors(400, 'AdminID cannot be empty.');
   }
-  const UserGuildID = await DB.field('SELECT UserGuildID FROM UserInGuilds WHERE GuildID = ? AND UserID = ?', [guildID, userID]);
+  let UserGuildID = await DB.field('SELECT UserGuildID FROM UserInGuilds WHERE GuildID = ? AND UserID = ?', [guildID, userID]);
   if (UserGuildID === null) {
-    throw createErrors(404, 'User/Guild ID does not exist.');
+    await DB.execute('INSERT INTO UserInGuilds (UserID, GuildID) values (?, ?)', [userID, guildID]);
+    UserGuildID = await DB.field('SELECT UserGuildID FROM UserInGuilds WHERE GuildID = ? AND UserID = ?', [guildID, userID]);
   }
   const RESULT = {
     WarningID: uuidv4(),
