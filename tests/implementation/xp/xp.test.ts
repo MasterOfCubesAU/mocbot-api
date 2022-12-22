@@ -50,13 +50,10 @@ describe('Fetching User XP data', () => {
 });
 
 describe('Posting User XP data', () => {
-  test('Invalid Guild ID/User ID combo', async () => {
-    await expect(postUserXP(1, 1)).rejects.toThrow();
-  });
   test('Correct response', async () => {
-    await DB.execute('INSERT INTO UserInGuilds values (4, 1, 1)');
     await expect(postUserXP(1, 1)).resolves.not.toThrow();
-    expect(await fetchUserXP(1, 1)).toMatchObject({ UserGuildID: 4, XP: 0, Level: 0 });
+    // expect any number for userGuildID due to auto-increment
+    expect(await fetchUserXP(1, 1)).toMatchObject({ UserGuildID: expect.any(Number), XP: 0, Level: 0 });
     // should fail when trying to add same user in same guild again
     await expect(postUserXP(1, 1)).rejects.toThrow();
   });

@@ -23,7 +23,7 @@ export async function fetchGuildXP(guildID: bigint | number): Promise<any> {
  * @returns {} - on success
  */
 export async function deleteGuildXP(guildID: bigint | number): Promise<any> {
-  if (await DB.records('SELECT x.* FROM XP as x INNER JOIN UserInGuilds u ON u.UserGuildID = x.UserGuildID WHERE GuildID = ?', [guildID]).length === 0) {
+  if ((await DB.records('SELECT x.* FROM XP as x INNER JOIN UserInGuilds u ON u.UserGuildID = x.UserGuildID WHERE GuildID = ?', [guildID])).length === 0) {
     throw createErrors(404, 'This guild does not exist.');
   }
 
@@ -48,16 +48,20 @@ export async function fetchUserXP(guildID: bigint | number, userID: bigint | num
 }
 
 /**
- * Creates a new XP object for a user
+ * Creates a new XP object for a user, if the user/guild combination does not exist, it will create
+ * a new entry in the UserInGuilds table
  *
  * @param {bigint | number} guildID - the guild id to create xp object for
  * @param {bigint | number} userID - the user id to create xp object for
- * @throws {createErrors<404>} - when the combination of the userID and guildID is not found
  * @throws {createErrors<409>} - when an entry for that user in that guild already exists
  * @returns {object}
  */
 export async function postUserXP(guildID: bigint | number, userID: bigint | number): Promise<any> {
-  const userGuildID = await getUserGuildID(guildID, userID);
+  let userGuildID: number = await DB.field('SELECT UserGuildID FROM UserInGuilds WHERE GuildID = ? AND UserID = ?', [guildID, userID]);
+  if (userGuildID === null) {
+    await DB.execute('INSERT INTO UserInGuilds (UserID, GuildID) values (?, ?)', [userID, guildID]);
+    userGuildID = await DB.field('SELECT UserGuildID FROM UserInGuilds WHERE GuildID = ? AND UserID = ?', [guildID, userID]);
+  }
 
   try {
     await DB.execute('INSERT INTO XP (UserGuildID, XP, Level) VALUES (?, ?, ?)', [userGuildID, 0, 0]);

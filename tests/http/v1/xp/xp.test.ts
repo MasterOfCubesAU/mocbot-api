@@ -63,13 +63,7 @@ describe('Get User XP Data', () => {
 });
 
 describe('Post User XP Data', () => {
-  test('Invalid userId/guildId combo', () => {
-    const request = http('GET', `${ROUTE}/1/1`);
-    expect(request.statusCode).toStrictEqual(404);
-  });
-
   test('Successfully created new user XP data', async () => {
-    await DB.execute('INSERT INTO UserInGuilds values (4, 1, 1)');
     expect(http('POST', `${ROUTE}/1/1`).statusCode).toStrictEqual(200);
     expect(http('GET', `${ROUTE}/1/1`).statusCode).toStrictEqual(200);
     // should fail when called again on same user in same guild
