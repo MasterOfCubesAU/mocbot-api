@@ -178,6 +178,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/UserXP"
+        "400":
+          description: New data not provided
         "401":
           $ref: "#/components/responses/NotAuthorized"
         "404":
@@ -213,6 +215,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/UserXP"
+        "400":
+          description: New data not provided
         "401":
           $ref: "#/components/responses/NotAuthorized"
         "404":
@@ -355,6 +359,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Settings"
+        "400":
+          description: New settings were not provided
         "404":
           description: Guild ID not found
     delete:
@@ -547,20 +553,25 @@ components:
         UserGuildID:
           type: integer
           description: The UserGuildID
+          example: 1
         XP:
           type: integer
           description: The current XP value
+          example: 100
         Level:
           type: integer
           description: The current level
+          example: 1
         XPLock:
-          type: string
-          format: date-time
-          description: The time until this user can gain XP from messages
+          type: integer
+          format: int64
+          description: The epoch time until this user can gain XP from messages
+          example: 1671727778
         VoiceChannelXPLock:
-          type: string
-          format: date-time
-          description: The time until this user can gain XP from voice activity
+          type: integer
+          format: int64
+          description: The epoch time in milliseconds until this user can gain XP from voice activity
+          example: 1671727784
     GuildWarnings:
       type: array
       items:
@@ -575,15 +586,20 @@ components:
         UserGuildID:
           type: integer
           description: The UserGuildID
+          example: 231
         Reason:
           type: string
           description: The reason behind the warning
+          example: "Chat Spam"
         Time:
           type: integer
-          description: The time (epoch) in milliseconds at which the user was warned
+          format: int64
+          description: The epoch time epoch in milliseconds at which the user was warned
+          example: 1671727778
         AdminID:
           type: integer
           description: The ID of the administrator who distributed the warning
+          example: 381
     UserWarnings:
       type: array
       items:
@@ -594,9 +610,11 @@ components:
         reason:
           type: string
           description: The reason behind the warning
+          example: "Chat Spamming"
         adminID:
           type: integer
           description: The ID of the administrator who distributed the warning
+          example: 124
     Settings:
       type: object
       example:
@@ -607,6 +625,6 @@ components:
       type: object
       example:
         XP: 100
-        VC_XPLock: "2022-12-21 15:52:53"
+        VC_XPLock: 16717274013
 security:
   - APIKey: []
