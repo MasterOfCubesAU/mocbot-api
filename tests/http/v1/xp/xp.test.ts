@@ -63,13 +63,7 @@ describe('Get User XP Data', () => {
 });
 
 describe('Post User XP Data', () => {
-  test('Invalid userId/guildId combo', () => {
-    const request = http('GET', `${ROUTE}/1/1`);
-    expect(request.statusCode).toStrictEqual(404);
-  });
-
   test('Successfully created new user XP data', async () => {
-    await DB.execute('INSERT INTO UserInGuilds values (4, 1, 1)');
     expect(http('POST', `${ROUTE}/1/1`).statusCode).toStrictEqual(200);
     expect(http('GET', `${ROUTE}/1/1`).statusCode).toStrictEqual(200);
     // should fail when called again on same user in same guild
@@ -90,5 +84,17 @@ describe('Update User XP Data', () => {
 
   test('Successfully updated user XP data', async () => {
     expect(http('PATCH', `${ROUTE}/789/124`, { XP: 333, Level: 11 }).statusCode).toStrictEqual(200);
+  });
+});
+
+describe('Delete user XP Data', () => {
+  test('Valid response', () => {
+    const request = http('DELETE', `${ROUTE}/789/123`);
+    expect(request.statusCode).toStrictEqual(200);
+  });
+
+  test('Invalid response (invalid guildId/userId)', () => {
+    const request = http('DELETE', `${ROUTE}/790/124`);
+    expect(request.statusCode).toStrictEqual(404);
   });
 });

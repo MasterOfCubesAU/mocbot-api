@@ -23,6 +23,9 @@
             ],
             "@src/*": [
                 "./src/*"
+            ],
+            "@interfaces/*": [
+                "./src/interfaces/*"
             ]
         },
     },
