@@ -99,6 +99,6 @@ describe('Delete warning', () => {
     expect(http('DELETE', `${ROUTE}/${warningID}`).statusCode).toStrictEqual(200);
   });
   test('Invalid (Warning ID does not exist)', async () => {
-    expect(http('POST', `${ROUTE}/abcde`).statusCode).toStrictEqual(404);
+    expect(http('DELETE', `${ROUTE}/abcde`).statusCode).toStrictEqual(404);
   });
 });
