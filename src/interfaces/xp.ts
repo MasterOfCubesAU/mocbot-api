@@ -6,7 +6,7 @@ export interface UserXP {
   VoiceChannelXPLock: number;
 }
 
-export interface UserXPInput {
+export interface CreateUserXPInput {
   UserGuildID?: number;
   XP?: number;
   Level?: number;
@@ -14,7 +14,7 @@ export interface UserXPInput {
   VoiceChannelXPLock?: number;
 }
 
-export interface PutUserXPInput {
+export interface ReplaceUserXPInput {
   XP: number;
   Level: number;
   XPLock: number;
