@@ -623,6 +623,6 @@ components:
       type: object
       example:
         XP: 100
-        VC_XPLock: 16717274013
+        VoiceChannelXPLock: 16717274013
 security:
   - APIKey: []

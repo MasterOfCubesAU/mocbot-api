@@ -69,6 +69,11 @@ describe('Post User XP Data', () => {
     // should fail when called again on same user in same guild
     expect(http('POST', `${ROUTE}/1/1`).statusCode).toStrictEqual(409);
   });
+
+  test('Testing optional parameters passed in', async () => {
+    expect(http('POST', `${ROUTE}/1/1`, { XP: 333, Level: 11 }).statusCode).toStrictEqual(200);
+    expect(http('GET', `${ROUTE}/1/1`).statusCode).toStrictEqual(200);
+  });
 });
 
 describe('Update User XP Data', () => {
