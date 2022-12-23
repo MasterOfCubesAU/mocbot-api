@@ -89,7 +89,7 @@ export async function updateSettings(guildID: bigint | number, newSettings: Sett
  * @throws {createErrors<404>} if guild ID not found
  * @returns {}
  */
-export async function deleteSettings(guildID: bigint | number): Promise<object> {
+export async function deleteSettings(guildID: bigint | number): Promise<Record<string, never>> {
   if (Object.keys(await DB.record('SELECT * FROM GuildSettings WHERE GuildID = ?', [guildID])).length === 0) {
     throw createErrors(404, 'This guild does not exist.');
   }
