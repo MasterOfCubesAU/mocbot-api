@@ -47,3 +47,17 @@ export async function getUserWarnings(userID: bigint | number, guildID: bigint |
   if (result.length === 0) throw createErrors(404, 'User/Guild ID not found in database');
   return result;
 }
+
+/**
+ * Deletes a given warning ID.
+ * @param warningID the warningID to delete
+ * @throws {createErrors<404>} Warning ID not found.
+ * @returns {}
+ */
+export async function deleteWarning(warningID: string): Promise<Record<string, never>> {
+  if (await DB.field('SELECT WarningID FROM Warnings WHERE WarningID = ?', [warningID]) === null) {
+    throw createErrors(404, 'Warning ID not found');
+  }
+  await DB.execute('DELETE FROM Warnings WHERE WarningID = ?', [warningID]);
+  return {};
+}
