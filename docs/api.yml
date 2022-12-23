@@ -577,24 +577,20 @@ components:
           type: integer
           description: The new XP value
           example: 100
-          required: true
         Level:
           type: integer
           description: The new level
           example: 1
-          required: true
         XPLock:
           type: integer
           format: int64
           description: The Unix timestamp at which this user can start gaining XP from messages, in whole number of seconds
           example: 1671727778
-          required: true
         VoiceChannelXPLock:
           type: integer
           format: int64
           description: The Unix timestamp at which this user can start gaining XP from voice activity, in whole number of seconds
           example: 1671727784
-          required: true
     GuildWarnings:
       type: array
       items:
