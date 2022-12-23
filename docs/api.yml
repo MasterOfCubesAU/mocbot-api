@@ -207,7 +207,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UserXP"
+              $ref: "#/components/schemas/ReplaceUserXPInput"
       responses:
         "200":
           description: OK. Returns the users XP object
@@ -216,7 +216,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/UserXP"
         "400":
-          description: New data not provided
+          description: New data not provided/some fields are missing
         "401":
           $ref: "#/components/responses/NotAuthorized"
         "404":
@@ -552,6 +552,27 @@ components:
           type: integer
           description: The UserGuildID
           example: 1
+        XP:
+          type: integer
+          description: The current XP value
+          example: 100
+        Level:
+          type: integer
+          description: The current level
+          example: 1
+        XPLock:
+          type: integer
+          format: int64
+          description: The Unix timestamp at which this user can start gaining XP from messages, in whole number of seconds
+          example: 1671727778
+        VoiceChannelXPLock:
+          type: integer
+          format: int64
+          description: The Unix timestamp at which this user can start gaining XP from voice activity, in whole number of seconds
+          example: 1671727784
+    ReplaceUserXPInput:
+      type: object
+      properties:
         XP:
           type: integer
           description: The current XP value

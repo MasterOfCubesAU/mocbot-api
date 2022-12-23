@@ -103,3 +103,20 @@ describe('Delete user XP Data', () => {
     expect(request.statusCode).toStrictEqual(404);
   });
 });
+
+describe('Replacing user XP Data', () => {
+  const newTime = Math.floor(Date.now() / 1000);
+  test('Invalid UserGuildID provided', () => {
+    const request = http('PUT', `${ROUTE}/1/1`, { XP: 333, Level: 11, XPLock: newTime, VoiceChannelXPLock: newTime });
+    expect(request.statusCode).toStrictEqual(404);
+  });
+
+  test('No XP data provided/missing data', () => {
+    const request = http('PUT', `${ROUTE}/789/124`, { XP: 333, Level: 11, XPLock: newTime });
+    expect(request.statusCode).toStrictEqual(400);
+  });
+
+  test('Successfully replaced user XP data', async () => {
+    expect(http('PUT', `${ROUTE}/789/124`, { XP: 333, Level: 11, XPLock: newTime, VoiceChannelXPLock: newTime }).statusCode).toStrictEqual(200);
+  });
+});

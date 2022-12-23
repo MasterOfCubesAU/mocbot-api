@@ -1,4 +1,4 @@
-import { UserXPInput, UserXP } from '@src/interfaces/xp';
+import { UserXPInput, UserXP, PutUserXPInput } from '@src/interfaces/xp';
 import DB from '@utils/DBHandler';
 import getUserGuildID from '@utils/GetUserGuildID';
 import createErrors from 'http-errors';
@@ -127,4 +127,28 @@ export async function updateUserXP(guildID: bigint | number, userID: bigint | nu
 
   await DB.execute('UPDATE XP SET XP = ?, Level = ?, XPLock = FROM_UNIXTIME(?), VoiceChannelXPLock = FROM_UNIXTIME(?) WHERE UserGuildID = ?', [newData.XP, newData.Level, newData.XPLock, newData.VoiceChannelXPLock, userGuildID]);
   return newData;
+}
+
+/**
+ * Replaces an existing XP object for a user
+ *
+ * @param {bigint | number} guildID - the guild id to replace the xp object for
+ * @param {bigint | number} userID - the user id to replace the xp object for
+ * @param {PutUserXPInput} newXP - the new data to update, time should be in epoch seconds
+ * @throws {createErrors<400>} - when no new XP data is provided, or some settings are missing from newXP
+ * @throws {createErrors<404>} - when the combination of the userID and guildID is not found, or the user has no XP data in that guild
+ * @returns {UserXPResult}
+ */
+export async function replaceUserXP(guildID: bigint | number, userID: bigint | number, newXP: PutUserXPInput): Promise<UserXP> {
+  if (!('XP' in newXP && 'Level' in newXP && 'XPLock' in newXP && 'VoiceChannelXPLock' in newXP)) {
+    throw createErrors(400, 'New XP object must contain XP, Level, XPLock, and VoiceChannelXPLock');
+  }
+  const oldXP: UserXP = await DB.record(`SELECT ${selectQuery} FROM XP x INNER JOIN UserInGuilds u ON x.UserGuildID = u.UserGuildID WHERE u.UserID = ? AND u.GuildID = ?`, [userID, guildID]);
+  if (Object.keys(oldXP).length === 0) {
+    throw createErrors(404, 'XP data for this user in this guild does not exist.');
+  }
+
+  const userGuildID = oldXP.UserGuildID;
+  await DB.execute('UPDATE XP SET XP = ?, Level = ?, XPLock = FROM_UNIXTIME(?), VoiceChannelXPLock = FROM_UNIXTIME(?) WHERE UserGuildID = ?', [newXP.XP, newXP.Level, newXP.XPLock, newXP.VoiceChannelXPLock, userGuildID]);
+  return { UserGuildID: userGuildID, ...newXP };
 }

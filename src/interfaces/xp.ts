@@ -13,3 +13,10 @@ export interface UserXPInput {
   XPLock?: number;
   VoiceChannelXPLock?: number;
 }
+
+export interface PutUserXPInput {
+  XP: number;
+  Level: number;
+  XPLock: number;
+  VoiceChannelXPLock: number;
+}
