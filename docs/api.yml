@@ -563,12 +563,12 @@ components:
         XPLock:
           type: integer
           format: int64
-          description: The epoch time until this user can gain XP from messages
+          description: The Unix timestamp at which this user can start gaining XP from messages
           example: 1671727778
         VoiceChannelXPLock:
           type: integer
           format: int64
-          description: The epoch time in milliseconds until this user can gain XP from voice activity
+          description: The Unix timestamp at which this user can start gaining XP from voice activity
           example: 1671727784
     GuildWarnings:
       type: array
@@ -592,7 +592,7 @@ components:
         Time:
           type: integer
           format: int64
-          description: The epoch time epoch in milliseconds at which the user was warned
+          description: The Unix timestamp at which the user was warned
           example: 1671727778
         AdminID:
           type: integer
