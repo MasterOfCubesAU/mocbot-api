@@ -1,6 +1,7 @@
 import DB from '@utils/DBHandler';
 import createErrors from 'http-errors';
 import { v4 as uuidv4 } from 'uuid';
+import { Warning, WarningResult } from '@interfaces/warnings';
 
 /**
  * Creates a warning for a given user within a particular guild
@@ -23,13 +24,27 @@ export async function createWarning(userID: bigint | number, guildID: bigint | n
   if (UserGuildID === null) {
     throw createErrors(404, 'User/Guild ID does not exist.');
   }
-  const RESULT = {
+  const TIME_NOW = new Date();
+  const RESULT: WarningResult = {
     WarningID: uuidv4(),
     UserGuildID: UserGuildID,
     Reason: reason,
-    Time: Date.now(),
+    Time: Math.floor(TIME_NOW.valueOf() / 1000) * 1000,
     AdminID: adminID,
   };
-  await DB.execute('INSERT INTO Warnings (WarningID, UserGuildID, Reason, Time, AdminID) VALUES (?, ?, ?, ?, ?)', Object.values({ ...RESULT, Time: (new Date(RESULT.Time)).toISOString().slice(0, 19).replace('T', ' ') }));
+  await DB.execute('INSERT INTO Warnings (WarningID, UserGuildID, Reason, Time, AdminID) VALUES (?, ?, ?, ?, ?)', Object.values({ ...RESULT, Time: TIME_NOW.toISOString().slice(0, 19).replace('T', ' ') }));
   return RESULT;
+}
+
+/**
+ * Fetches all user warnings from a given guild
+ * @param userID the user ID to fetch warnings for
+ * @param guildID the guild ID the user belongs to
+ * @throws {createErrors<404>} if User/Guild ID not found
+ * @returns {Array} of warnings belonging to that user
+ */
+export async function getUserWarnings(userID: bigint | number, guildID: bigint | number) {
+  const result: Warning[] = await DB.records('SELECT w.* FROM Warnings AS w INNER JOIN UserInGuilds u ON w.UserGuildID = u.UserGuildID WHERE u.GuildID = ? AND u.UserID = ?', [guildID, userID]);
+  if (result.length === 0) throw createErrors(404, 'User/Guild ID not found in database');
+  return result.map((warning: Warning) => { return { ...warning, Time: Date.parse(`${warning.Time} UTC`) }; });
 }
