@@ -1,5 +1,5 @@
 import DB from '@utils/DBHandler';
-import { createWarning, deleteWarning, getUserWarnings } from '@src/warnings';
+import { createWarning, deleteGuildWarnings, deleteWarning, getUserWarnings } from '@src/warnings';
 
 // Ensure DB is in a predictable state by clearing it initially, then again after every test
 // We then close the DB at the end to remove any open handles
@@ -69,5 +69,15 @@ describe('Delete Warnings', () => {
   });
   test('Invalid (Warning ID does not exist)', async () => {
     await expect(deleteWarning('abcde')).rejects.toThrow();
+  });
+});
+describe('Delete Guild Warnings', () => {
+  test('Valid', async () => {
+    await createWarning(1, 2, 'boring reason', 1);
+    await createWarning(1, 2, 'another boring reason', 1);
+    await expect(deleteGuildWarnings(2)).resolves.not.toThrow();
+  });
+  test('Invalid (Guild ID does not exist)', async () => {
+    await expect(deleteGuildWarnings(2)).rejects.toThrow();
   });
 });
