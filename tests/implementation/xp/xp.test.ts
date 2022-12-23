@@ -60,8 +60,7 @@ describe('Posting User XP data', () => {
 });
 
 describe('Updating User XP data', () => {
-  const expectedNewTime = new Date(Date.now());
-  const newTime = expectedNewTime.toISOString().slice(0, 19).replace('T', ' ');
+  const newTime = Math.floor(Date.now() / 1000);
   test('Invalid guildID/userID provided', async () => {
     await expect(updateUserXP(790, 124, { XP: 333, Level: 11, XPLock: newTime })).rejects.toThrow();
   });
@@ -69,11 +68,10 @@ describe('Updating User XP data', () => {
     await expect(updateUserXP(789, 123, {})).rejects.toThrow();
   });
   test('Correct response', async () => {
-    const expected = { UserGuildID: 2, XP: 333, Level: 11 };
+    const expected = { UserGuildID: 2, XP: 333, Level: 11, XPLock: newTime };
     await expect(updateUserXP(789, 124, { XP: 333, Level: 11, XPLock: newTime })).resolves.not.toThrow();
     const result = await fetchUserXP(789, 124);
     expect(result).toEqual(expect.objectContaining(expected));
-    expect(result.XPLock.getTime()).toBeLessThan(expectedNewTime.getTime() + 1000);
   });
 });
 
