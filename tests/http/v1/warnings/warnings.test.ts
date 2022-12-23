@@ -90,3 +90,15 @@ describe('Get Warnings (User)', () => {
     expect(http('GET', `${ROUTE}/2/1`).statusCode).toStrictEqual(404);
   });
 });
+
+describe('Delete warning', () => {
+  test('Valid', async () => {
+    const request = http('POST', `${ROUTE}/1/1`, { reason: 'Test Reason', adminID: 2 });
+    expect(request.statusCode).toStrictEqual(200);
+    const warningID = JSON.parse(request.getBody() as string).WarningID;
+    expect(http('DELETE', `${ROUTE}/${warningID}`).statusCode).toStrictEqual(200);
+  });
+  test('Invalid (Warning ID does not exist)', async () => {
+    expect(http('POST', `${ROUTE}/abcde`).statusCode).toStrictEqual(404);
+  });
+});
