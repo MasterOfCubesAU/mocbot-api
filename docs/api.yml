@@ -575,11 +575,11 @@ components:
       properties:
         XP:
           type: integer
-          description: The current XP value
+          description: The new XP value
           example: 100
         Level:
           type: integer
-          description: The current level
+          description: The new level
           example: 1
         XPLock:
           type: integer
