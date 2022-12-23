@@ -57,6 +57,12 @@ describe('Posting User XP data', () => {
     // should fail when trying to add same user in same guild again
     await expect(postUserXP(1, 1)).rejects.toThrow();
   });
+  test('Testing optional parameters past in', async () => {
+    const time = Math.floor(Date.now() / 1000);
+    await expect(postUserXP(1, 1, { XP: 1, Level: 1, XPLock: time, VoiceChannelXPLock: time })).resolves.not.toThrow();
+    // expect any number for userGuildID due to auto-increment
+    expect(await fetchUserXP(1, 1)).toMatchObject({ UserGuildID: expect.any(Number), XP: 1, Level: 1, XPLock: time, VoiceChannelXPLock: time });
+  });
 });
 
 describe('Updating User XP data', () => {

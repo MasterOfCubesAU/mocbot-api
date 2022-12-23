@@ -29,7 +29,7 @@ router.get(
 router.post(
   '/:guild_id/:user_id',
   asyncHandler(async (req: Request, res: Response) => {
-    res.json(await postUserXP(BigInt(req.params.guild_id), BigInt(req.params.user_id)));
+    res.json(await postUserXP(BigInt(req.params.guild_id), BigInt(req.params.user_id), req.body));
   })
 );
 
