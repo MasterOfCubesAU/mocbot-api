@@ -1,7 +1,7 @@
 import DB from '@utils/DBHandler';
 import createErrors from 'http-errors';
 import { v4 as uuidv4 } from 'uuid';
-import { Warning, WarningResult } from '@interfaces/warnings';
+import { Warning } from '@interfaces/warnings';
 
 /**
  * Creates a warning for a given user within a particular guild
@@ -12,27 +12,26 @@ import { Warning, WarningResult } from '@interfaces/warnings';
  * @throws {createErrors<400>} Reason/AdminID is left empty
  * @returns {object} the warning created
  */
-export async function createWarning(userID: bigint | number, guildID: bigint | number, reason: string, adminID: bigint | number) {
+export async function createWarning(userID: bigint | number, guildID: bigint | number, reason: string, adminID: bigint | number): Promise<Warning> {
   if (reason === undefined || reason === '') {
     throw createErrors(400, 'Reason cannot be empty.');
   }
   if (adminID === undefined) {
     throw createErrors(400, 'AdminID cannot be empty.');
   }
-  let UserGuildID = await DB.field('SELECT UserGuildID FROM UserInGuilds WHERE GuildID = ? AND UserID = ?', [guildID, userID]);
-  if (UserGuildID === null) {
+  let userGuildID: number = await DB.field('SELECT UserGuildID FROM UserInGuilds WHERE GuildID = ? AND UserID = ?', [guildID, userID]);
+  if (userGuildID === null) {
     await DB.execute('INSERT INTO UserInGuilds (UserID, GuildID) values (?, ?)', [userID, guildID]);
-    UserGuildID = await DB.field('SELECT UserGuildID FROM UserInGuilds WHERE GuildID = ? AND UserID = ?', [guildID, userID]);
+    userGuildID = await DB.field('SELECT UserGuildID FROM UserInGuilds WHERE GuildID = ? AND UserID = ?', [guildID, userID]);
   }
-  const TIME_NOW = new Date();
-  const RESULT: WarningResult = {
+  const RESULT: Warning = {
     WarningID: uuidv4(),
-    UserGuildID: UserGuildID,
+    UserGuildID: userGuildID,
     Reason: reason,
-    Time: Math.floor(TIME_NOW.valueOf() / 1000) * 1000,
+    Time: Math.floor(Date.now() / 1000),
     AdminID: adminID,
   };
-  await DB.execute('INSERT INTO Warnings (WarningID, UserGuildID, Reason, Time, AdminID) VALUES (?, ?, ?, ?, ?)', Object.values({ ...RESULT, Time: TIME_NOW.toISOString().slice(0, 19).replace('T', ' ') }));
+  await DB.execute('INSERT INTO Warnings (WarningID, UserGuildID, Reason, Time, AdminID) VALUES (?, ?, ?, FROM_UNIXTIME(?), ?)', Object.values(RESULT));
   return RESULT;
 }
 
@@ -43,8 +42,8 @@ export async function createWarning(userID: bigint | number, guildID: bigint | n
  * @throws {createErrors<404>} if User/Guild ID not found
  * @returns {Array} of warnings belonging to that user
  */
-export async function getUserWarnings(userID: bigint | number, guildID: bigint | number) {
-  const result: Warning[] = await DB.records('SELECT w.* FROM Warnings AS w INNER JOIN UserInGuilds u ON w.UserGuildID = u.UserGuildID WHERE u.GuildID = ? AND u.UserID = ?', [guildID, userID]);
+export async function getUserWarnings(userID: bigint | number, guildID: bigint | number): Promise<Warning[]> {
+  const result: Warning[] = await DB.records('SELECT w.WarningID, w.UserGuildID, w.Reason, UNIX_TIMESTAMP(w.Time) AS Time, w.AdminID FROM Warnings AS w INNER JOIN UserInGuilds u ON w.UserGuildID = u.UserGuildID WHERE u.GuildID = ? AND u.UserID = ?', [guildID, userID]);
   if (result.length === 0) throw createErrors(404, 'User/Guild ID not found in database');
-  return result.map((warning: Warning) => { return { ...warning, Time: Date.parse(`${warning.Time} UTC`) }; });
+  return result;
 }

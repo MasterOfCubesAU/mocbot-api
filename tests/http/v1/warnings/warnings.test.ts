@@ -17,7 +17,7 @@ describe('Create Warning (User)', () => {
     await expect(DB.execute('INSERT INTO UserInGuilds (UserID, GuildID) VALUES (?, ?)', [1, 1])).resolves.not.toThrow();
 
     // Get request time now to compare later
-    const timeNow = Date.now();
+    const timeNow = Math.floor(Date.now() / 1000);
     const request = http('POST', `${ROUTE}/1/1`, { reason: 'Test Reason', adminID: 2 });
     expect(request.statusCode).toStrictEqual(200);
     const response = JSON.parse(String(request.getBody() as string));
