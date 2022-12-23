@@ -143,7 +143,7 @@ export async function replaceUserXP(guildID: bigint | number, userID: bigint | n
   if (!('XP' in newXP && 'Level' in newXP && 'XPLock' in newXP && 'VoiceChannelXPLock' in newXP)) {
     throw createErrors(400, 'New XP object must contain XP, Level, XPLock, and VoiceChannelXPLock');
   }
-  const userGuildID: number = await DB.field(`SELECT x.UserGuildID FROM XP x INNER JOIN UserInGuilds u ON x.UserGuildID = u.UserGuildID WHERE u.UserID = ? AND u.GuildID = ?`, [userID, guildID]);
+  const userGuildID: number = await DB.field('SELECT x.UserGuildID FROM XP x INNER JOIN UserInGuilds u ON x.UserGuildID = u.UserGuildID WHERE u.UserID = ? AND u.GuildID = ?', [userID, guildID]);
   if (userGuildID === null) {
     throw createErrors(404, 'XP data for this user in this guild does not exist.');
   }
