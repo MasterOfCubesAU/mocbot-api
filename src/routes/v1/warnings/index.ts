@@ -1,6 +1,6 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler';
-import { createWarning, deleteWarning, getUserWarnings } from '@src/warnings';
+import { createWarning, deleteGuildWarnings, deleteWarning, getUserWarnings } from '@src/warnings';
 import { Request, Response } from 'express';
 
 const router = express.Router();
@@ -13,6 +13,9 @@ router.post('/:guild_id/:user_id', asyncHandler(async (req: Request, res: Respon
 }));
 router.get('/:guild_id/:user_id', asyncHandler(async (req: Request, res: Response) => {
   res.json(await getUserWarnings(BigInt(req.params.user_id), BigInt(req.params.guild_id)));
+}));
+router.delete('/:guild_id(\\d+)', asyncHandler(async (req: Request, res: Response) => {
+  res.json(await deleteGuildWarnings(BigInt(req.params.guild_id)));
 }));
 router.delete('/:warning_id', asyncHandler(async (req: Request, res: Response) => {
   res.json(await deleteWarning(req.params.warning_id));

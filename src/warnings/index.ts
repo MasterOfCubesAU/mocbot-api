@@ -61,3 +61,16 @@ export async function deleteWarning(warningID: string): Promise<Record<string, n
   await DB.execute('DELETE FROM Warnings WHERE WarningID = ?', [warningID]);
   return {};
 }
+
+/**
+ * Removes all warnings for a given guild
+ * @param {bigint | number} guildID The guild ID to delete warnings from
+ * @throws {createErrors<404>} Guild ID not found
+ * @returns {}
+ */
+export async function deleteGuildWarnings(guildID: bigint | number): Promise<Record<string, never>> {
+  const result: Warning[] = await DB.records('SELECT w.WarningID, w.UserGuildID, w.Reason, UNIX_TIMESTAMP(w.Time) AS Time, w.AdminID FROM Warnings AS w INNER JOIN UserInGuilds u ON w.UserGuildID = u.UserGuildID WHERE u.GuildID = ?', [guildID]);
+  if (result.length === 0) throw createErrors(404, 'Guild ID not found in database');
+  await DB.execute("DELETE w FROM Warnings AS w INNER JOIN UserInGuilds u ON w.UserGuildID = u.UserGuildID WHERE u.GuildID = ?', [guildID]");
+  return {};
+}
