@@ -18,7 +18,7 @@ describe('POST', () => {
     const request = http('POST', `${ROUTE}/1`, { setting1: true });
     expect(request.statusCode).toStrictEqual(200);
     const response = JSON.parse(String(request.getBody() as string));
-    expect(response).toStrictEqual({});
+    expect(response).toStrictEqual({ setting1: true });
   });
   test('Invalid (No Settings)', () => {
     const request = http('POST', `${ROUTE}/1`, {});
