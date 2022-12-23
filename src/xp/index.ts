@@ -84,7 +84,6 @@ export async function postUserXP(guildID: bigint | number, userID: bigint | numb
  * @returns {object}
  */
 export async function updateUserXP(guildID: bigint | number, userID: bigint | number, newXP: object): Promise<any> {
-  console.log(newXP);
   if (Object.keys(newXP).length === 0) {
     throw createErrors(400, 'No new data was provided');
   }
