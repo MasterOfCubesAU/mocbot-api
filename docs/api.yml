@@ -476,8 +476,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/UserWarning"
-        "404":
-          description: Guild/User ID not found
     get:
       tags:
         - User Warnings
