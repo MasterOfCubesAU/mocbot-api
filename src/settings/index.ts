@@ -1,6 +1,7 @@
 
 import DB from '@utils/DBHandler';
 import createErrors from 'http-errors';
+import { Settings } from '@src/interfaces/settings';
 import lodash from 'lodash';
 
 /**
@@ -12,7 +13,7 @@ import lodash from 'lodash';
  * @throws {createErrors<409>} if settings already exist
  * @returns {object} Empty object
  */
-export async function createSettings(guildID: bigint | number, settings: object): Promise<any> {
+export async function createSettings(guildID: bigint | number, settings: Settings): Promise<Settings> {
   if (Object.keys(settings).length === 0) {
     throw createErrors(400, 'Settings for this guild must be provided.');
   }
@@ -25,7 +26,7 @@ export async function createSettings(guildID: bigint | number, settings: object)
       throw error;
     }
   }
-  return {};
+  return settings;
 }
 
 /**
@@ -34,7 +35,7 @@ export async function createSettings(guildID: bigint | number, settings: object)
  * @throws {createErrors<404>} if not found
  * @returns {object}
  */
-export async function getSettings(guildID: bigint | number): Promise<any> {
+export async function getSettings(guildID: bigint | number): Promise<Settings> {
   const result = await DB.field('SELECT SettingsData FROM GuildSettings WHERE GuildID = ?', [guildID]);
   if (result === null) {
     throw createErrors(404, 'This guild does not exist.');
@@ -50,7 +51,7 @@ export async function getSettings(guildID: bigint | number): Promise<any> {
  * @throws {createErrors<404>} when guild does not exist
  * @returns {object} the new settings
 */
-export async function setSettings(guildID: bigint | number, settings: object): Promise<any> {
+export async function setSettings(guildID: bigint | number, settings: Settings): Promise<Settings> {
   if (Object.keys(settings).length === 0) {
     throw createErrors(400, 'Settings can not be empty');
   }
@@ -69,15 +70,15 @@ export async function setSettings(guildID: bigint | number, settings: object): P
  * @throws {createErrors<404>} if the guild ID does not exist
  * @returns {object} empty object on success
  */
-export async function updateSettings(guildID: bigint | number, newSettings: object): Promise<any> {
+export async function updateSettings(guildID: bigint | number, newSettings: Settings): Promise<Settings> {
   if (Object.keys(newSettings).length === 0) {
     throw createErrors(400, 'New settings for this guild must be provided.');
   }
-  const oldSettings = await DB.field('SELECT SettingsData FROM GuildSettings WHERE GuildID = ?', [guildID]);
+  const oldSettings: Settings = await DB.field('SELECT SettingsData FROM GuildSettings WHERE GuildID = ?', [guildID]);
   if (oldSettings === null) {
     throw createErrors(404, 'Settings for this guild does not exist.');
   }
-  const ALL_SETTINGS = lodash.merge(oldSettings, newSettings);
+  const ALL_SETTINGS: Settings = lodash.merge(oldSettings, newSettings);
   await DB.execute('UPDATE GuildSettings SET SettingsData = ? WHERE GuildID = ?', [ALL_SETTINGS, guildID]);
   return ALL_SETTINGS;
 }
@@ -88,7 +89,7 @@ export async function updateSettings(guildID: bigint | number, newSettings: obje
  * @throws {createErrors<404>} if guild ID not found
  * @returns {}
  */
-export async function deleteSettings(guildID: bigint | number): Promise<any> {
+export async function deleteSettings(guildID: bigint | number): Promise<object> {
   if (Object.keys(await DB.record('SELECT * FROM GuildSettings WHERE GuildID = ?', [guildID])).length === 0) {
     throw createErrors(404, 'This guild does not exist.');
   }
