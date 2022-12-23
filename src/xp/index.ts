@@ -1,4 +1,4 @@
-import { CreateUserXPInput, UserXP, ReplaceCreateUserXPInput } from '@src/interfaces/xp';
+import { CreateUserXPInput, UserXP, ReplaceUserXPInput } from '@src/interfaces/xp';
 import DB from '@utils/DBHandler';
 import getUserGuildID from '@utils/GetUserGuildID';
 import createErrors from 'http-errors';
@@ -134,12 +134,12 @@ export async function updateUserXP(guildID: bigint | number, userID: bigint | nu
  *
  * @param {bigint | number} guildID - the guild id to replace the xp object for
  * @param {bigint | number} userID - the user id to replace the xp object for
- * @param {ReplaceCreateUserXPInput} newXP - the new data to update, time should be in epoch seconds
+ * @param {ReplaceUserXPInput} newXP - the new data to update, time should be in epoch seconds
  * @throws {createErrors<400>} - when no new XP data is provided, or some settings are missing from newXP
  * @throws {createErrors<404>} - when the combination of the userID and guildID is not found, or the user has no XP data in that guild
  * @returns {UserXPResult}
  */
-export async function replaceUserXP(guildID: bigint | number, userID: bigint | number, newXP: ReplaceCreateUserXPInput): Promise<UserXP> {
+export async function replaceUserXP(guildID: bigint | number, userID: bigint | number, newXP: ReplaceUserXPInput): Promise<UserXP> {
   if (!('XP' in newXP && 'Level' in newXP && 'XPLock' in newXP && 'VoiceChannelXPLock' in newXP)) {
     throw createErrors(400, 'New XP object must contain XP, Level, XPLock, and VoiceChannelXPLock');
   }
