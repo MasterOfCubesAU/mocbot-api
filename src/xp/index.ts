@@ -1,6 +1,6 @@
 import { CreateUserXPInput, UserXP, ReplaceUserXPInput } from '@src/interfaces/xp';
 import DB from '@utils/DBHandler';
-import getUserGuildID from '@utils/GetUserGuildID';
+import { getUserGuildID } from '@utils/Misc';
 import createErrors from 'http-errors';
 import lodash from 'lodash';
 
