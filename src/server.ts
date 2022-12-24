@@ -16,6 +16,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 app.set('trust proxy', true);
+app.set('json replacer', (_: any, value: any) => (typeof value === 'bigint' ? value.toString() + 'n' : value));
 app.use(morgan(process.env.NODE_ENV !== 'production' ? 'dev' : 'common'));
 
 // Public Routes
