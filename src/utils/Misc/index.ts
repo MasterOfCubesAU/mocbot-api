@@ -1,6 +1,7 @@
 import DB from '@utils/DBHandler';
 import createErrors from 'http-errors';
 import { SettingsReturn } from '@src/interfaces/settings';
+import { UserXP } from '@src/interfaces/xp';
 
 /**
  * Given a guildID and userID, return its corresponding userGuildID, otherwise throw a 404
@@ -32,6 +33,33 @@ export async function getSettingsData(guildID: number | bigint): Promise<Setting
     throw createErrors(404, 'Settings for this guild do not exist.');
   }
   return res;
+}
+
+/**
+ * Returns guild XP data for a given guildID, throws an error if no data is found
+ *
+ * @param {number | bigint} guildID - the guildID to search XP data for
+ * @throws {createErrors<404>} - if no XP data for this guild is found
+ * @returns {Promise<UserXP[]>}
+ */
+export async function getGuildXPData(guildID: number | bigint): Promise<UserXP[]> {
+  const result: UserXP[] = await DB.records('SELECT UserGuildID, XP, Level, XPLock, VoiceChannelXPLock FROM UserGuildXP WHERE GuildID = ?', [guildID]);
+  if (result.length === 0) throw createErrors(404, 'No XP data for that guild was found in database');
+  return result;
+}
+
+/**
+ * Returns XP data for a given guildID and userID, throws an error if no data is found
+ *
+ * @param {number | bigint} guildID - the guildID to search XP data for
+ * @param {number | bigint} userID - the userID to search XP data for
+ * @throws {createErrors<404>} - if no XP data for this guild is found
+ * @returns {Promise<UserXP>}
+ */
+export async function getUserXPData(guildID: number | bigint, userID: number | bigint): Promise<UserXP> {
+  const result: UserXP = await DB.record('SELECT UserGuildID, XP, Level, XPLock, VoiceChannelXPLock FROM UserGuildXP WHERE GuildID = ? AND UserID = ?', [guildID, userID]);
+  if (Object.keys(result).length === 0) throw createErrors(404, 'No XP data for that user was found in database');
+  return result;
 }
 
 /**
