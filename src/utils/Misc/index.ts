@@ -1,7 +1,5 @@
 import DB from '@utils/DBHandler';
 import createErrors from 'http-errors';
-import { SettingsReturn } from '@src/interfaces/settings';
-import { UserXP } from '@src/interfaces/xp';
 
 /**
  * Given a guildID and userID, return its corresponding userGuildID, otherwise throw a 404
