@@ -1,5 +1,5 @@
 import DB from '@utils/DBHandler';
-import { fetchGuildXP, fetchUserXP, deleteGuildXP, postUserXP, updateUserXP, deleteUserXP } from '@src/xp';
+import { fetchGuildXP, fetchUserXP, deleteGuildXP, postUserXP, updateUserXP, deleteUserXP, replaceUserXP } from '@src/xp';
 
 // Ensure DB is in a predictable state by clearing it initially, then again after every test
 // We then close the DB at the end to remove any open handles
@@ -88,5 +88,18 @@ describe('Deleting user XP data', () => {
   test('Valid Guild ID', async () => {
     await expect(deleteUserXP(789, 123)).resolves.not.toThrow();
     await expect(fetchUserXP(789, 123)).rejects.toThrow();
+  });
+});
+
+describe('Replacing User XP data', () => {
+  const newTime = Math.floor(Date.now() / 1000);
+  test('Invalid guildID/userID provided', async () => {
+    await expect(replaceUserXP(790, 124, { XP: 333, Level: 11, XPLock: newTime, VoiceChannelXPLock: newTime })).rejects.toThrow();
+  });
+  test('Correct response', async () => {
+    const expected = { UserGuildID: 2, XP: 333, Level: 11, XPLock: newTime, VoiceChannelXPLock: newTime };
+    await expect(replaceUserXP(789, 124, { XP: 333, Level: 11, XPLock: newTime, VoiceChannelXPLock: newTime })).resolves.not.toThrow();
+    const result = await fetchUserXP(789, 124);
+    expect(result).toEqual(expect.objectContaining(expected));
   });
 });
