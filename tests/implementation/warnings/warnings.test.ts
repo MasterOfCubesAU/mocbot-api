@@ -87,7 +87,7 @@ describe('Get Guild Warnings', () => {
       ]
     ));
   });
-  test('Invalid (Warning ID does not exist)', async () => {
+  test('Invalid (Guild ID does not exist)', async () => {
     await expect(getGuildWarnings(1)).rejects.toThrow();
   });
 });
