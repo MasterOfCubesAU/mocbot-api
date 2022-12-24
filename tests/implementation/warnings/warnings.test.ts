@@ -76,6 +76,7 @@ describe('Delete Guild Warnings', () => {
     await createWarning(1, 2, 'boring reason', 1);
     await createWarning(1, 2, 'another boring reason', 1);
     await expect(deleteGuildWarnings(2)).resolves.not.toThrow();
+    await expect(getGuildWarnings(2)).rejects.toThrow();
   });
   test('Invalid (Guild ID does not exist)', async () => {
     await expect(deleteGuildWarnings(2)).rejects.toThrow();
