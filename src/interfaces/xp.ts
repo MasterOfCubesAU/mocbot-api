@@ -1,22 +1,4 @@
 export interface UserXP {
-  UserID: number;
-  GuildID: number;
-  XP: number;
-  Level: number;
-  XPLock: number;
-  VoiceChannelXPLock: number;
-}
-
-export interface UserXPReturn {
-  UserID: string;
-  GuildID: string;
-  XP: number;
-  Level: number;
-  XPLock: number;
-  VoiceChannelXPLock: number;
-}
-
-export interface UserXPInternal {
   UserGuildID: number;
   XP: number;
   Level: number;
@@ -25,6 +7,7 @@ export interface UserXPInternal {
 }
 
 export interface CreateUserXPInput {
+  UserGuildID?: number;
   XP?: number;
   Level?: number;
   XPLock?: number;

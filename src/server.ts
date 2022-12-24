@@ -16,6 +16,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 app.set('trust proxy', true);
+app.set('json replacer', (_: any, value: any) => (typeof value === 'bigint' ? value.toString() + 'n' : value));
 app.use(morgan(process.env.NODE_ENV !== 'production' ? 'dev' : 'common'));
 
 // Public Routes
@@ -26,10 +27,12 @@ app.get('/', (req: Request, res: Response) => {
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(YAML.load('docs/api.yml')));
 
 // All routes below this are authenticated
-app.use(asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-  await validateSession(req.headers['x-api-key'] as string);
-  next();
-}));
+app.use(
+  asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    await validateSession(req.headers['x-api-key'] as string);
+    next();
+  })
+);
 
 // Protected Routes
 
