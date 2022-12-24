@@ -99,7 +99,19 @@ describe('Delete warning', () => {
     expect(http('DELETE', `${ROUTE}/${warningID}`).statusCode).toStrictEqual(200);
   });
   test('Invalid (Warning ID does not exist)', async () => {
-    expect(http('POST', `${ROUTE}/abcde`).statusCode).toStrictEqual(404);
+    expect(http('DELETE', `${ROUTE}/abcde`).statusCode).toStrictEqual(404);
+  });
+});
+
+describe('Delete guild warnings', () => {
+  test('Valid', async () => {
+    expect(http('POST', `${ROUTE}/2/1`, { reason: 'Test Reason', adminID: 2 }).statusCode).toStrictEqual(200);
+    const req = http('DELETE', `${ROUTE}/2`);
+    expect(req.statusCode).toStrictEqual(200);
+    expect(JSON.parse(req.getBody() as string)).toStrictEqual({});
+  });
+  test('Invalid (Warning ID does not exist)', async () => {
+    expect(http('DELETE', `${ROUTE}/2`).statusCode).toStrictEqual(404);
   });
 });
 
