@@ -37,8 +37,8 @@ export async function createWarning(userID: bigint | number, guildID: bigint | n
 
 /**
  * Fetches all user warnings from a given guild
- * @param userID the user ID to fetch warnings for
- * @param guildID the guild ID the user belongs to
+ * @param {bigint | number} userID the user ID to fetch warnings for
+ * @param {bigint |number} guildID the guild ID the user belongs to
  * @throws {createErrors<404>} if User/Guild ID not found
  * @returns {Array} of warnings belonging to that user
  */
@@ -50,7 +50,7 @@ export async function getUserWarnings(userID: bigint | number, guildID: bigint |
 
 /**
  * Deletes a given warning ID.
- * @param warningID the warningID to delete
+ * @param {string} warningID the warningID to delete
  * @throws {createErrors<404>} Warning ID not found.
  * @returns {}
  */
@@ -67,10 +67,22 @@ export async function deleteWarning(warningID: string): Promise<Record<string, n
  * @param {bigint | number} guildID The guild ID to delete warnings from
  * @throws {createErrors<404>} Guild ID not found
  * @returns {}
- */
+*/
 export async function deleteGuildWarnings(guildID: bigint | number): Promise<Record<string, never>> {
   const result: string[] = await DB.column('SELECT w.WarningID FROM Warnings AS w INNER JOIN UserInGuilds u ON w.UserGuildID = u.UserGuildID WHERE u.GuildID = ?', [guildID]);
   if (result.length === 0) throw createErrors(404, 'Guild ID not found in database');
   await DB.execute('DELETE w FROM Warnings AS w INNER JOIN UserInGuilds u ON w.UserGuildID = u.UserGuildID WHERE u.GuildID = ?', [guildID]);
   return {};
+}
+
+/**
+ * Fetch all warnings from a given guild
+ * @param {bigint | number} guildID The guild ID you'd like to fetch warnings for
+ * @throws {createErrors<404>} Guild ID not found
+ * @returns {Warning[]} The list of warnings
+ */
+export async function getGuildWarnings(guildID: bigint | number): Promise<Warning[]> {
+  const result: Warning[] = await DB.records('SELECT w.WarningID, w.UserGuildID, w.Reason, UNIX_TIMESTAMP(w.Time) AS Time, w.AdminID FROM Warnings AS w INNER JOIN UserInGuilds u ON w.UserGuildID = u.UserGuildID WHERE u.GuildID = ?', [guildID]);
+  if (result.length === 0) throw createErrors(404, 'Guild ID not found in database');
+  return result;
 }

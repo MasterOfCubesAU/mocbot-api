@@ -1,4 +1,4 @@
-import { UserXPInput, UserXP } from '@src/interfaces/xp';
+import { CreateUserXPInput, UserXP, ReplaceUserXPInput } from '@src/interfaces/xp';
 import DB from '@utils/DBHandler';
 import getUserGuildID from '@utils/GetUserGuildID';
 import createErrors from 'http-errors';
@@ -57,11 +57,11 @@ export async function fetchUserXP(guildID: bigint | number, userID: bigint | num
  *
  * @param {bigint | number} guildID - the guild id to create xp object for
  * @param {bigint | number} userID - the user id to create xp object for
- * @param {UserXPInput} newXP - the new data to post, time should be in epoch seconds
+ * @param {CreateUserXPInput} newXP - the new data to post, time should be in epoch seconds
  * @throws {createErrors<409>} - when an entry for that user in that guild already exists
  * @returns {object}
  */
-export async function postUserXP(guildID: bigint | number, userID: bigint | number, newXP?: UserXPInput): Promise<UserXP> {
+export async function postUserXP(guildID: bigint | number, userID: bigint | number, newXP?: CreateUserXPInput): Promise<UserXP> {
   let userGuildID: number = await DB.field('SELECT UserGuildID FROM UserInGuilds WHERE GuildID = ? AND UserID = ?', [guildID, userID]);
   if (userGuildID === null) {
     await DB.execute('INSERT INTO UserInGuilds (UserID, GuildID) values (?, ?)', [userID, guildID]);
@@ -108,12 +108,12 @@ export async function deleteUserXP(guildID: bigint | number, userID: bigint | nu
  *
  * @param {bigint | number} guildID - the guild id to update the xp object for
  * @param {bigint | number} userID - the user id to update the xp object for
- * @param {UserXPInput} newXP - the new data to update, time should be in epoch seconds
+ * @param {CreateUserXPInput} newXP - the new data to update, time should be in epoch seconds
  * @throws {createErrors<400>} - when no new XP data is provided
  * @throws {createErrors<404>} - when the combination of the userID and guildID is not found, or the user has no XP data in that guild
  * @returns {UserXPResult}
  */
-export async function updateUserXP(guildID: bigint | number, userID: bigint | number, newXP: UserXPInput): Promise<UserXP> {
+export async function updateUserXP(guildID: bigint | number, userID: bigint | number, newXP: CreateUserXPInput): Promise<UserXP> {
   if (Object.keys(newXP).length === 0) {
     throw createErrors(400, 'No new data was provided');
   }
@@ -127,4 +127,27 @@ export async function updateUserXP(guildID: bigint | number, userID: bigint | nu
 
   await DB.execute('UPDATE XP SET XP = ?, Level = ?, XPLock = FROM_UNIXTIME(?), VoiceChannelXPLock = FROM_UNIXTIME(?) WHERE UserGuildID = ?', [newData.XP, newData.Level, newData.XPLock, newData.VoiceChannelXPLock, userGuildID]);
   return newData;
+}
+
+/**
+ * Replaces an existing XP object for a user
+ *
+ * @param {bigint | number} guildID - the guild id to replace the xp object for
+ * @param {bigint | number} userID - the user id to replace the xp object for
+ * @param {ReplaceUserXPInput} newXP - the new data to update, time should be in epoch seconds
+ * @throws {createErrors<400>} - when no new XP data is provided, or some settings are missing from newXP
+ * @throws {createErrors<404>} - when the combination of the userID and guildID is not found, or the user has no XP data in that guild
+ * @returns {UserXPResult}
+ */
+export async function replaceUserXP(guildID: bigint | number, userID: bigint | number, newXP: ReplaceUserXPInput): Promise<UserXP> {
+  if (!('XP' in newXP && 'Level' in newXP && 'XPLock' in newXP && 'VoiceChannelXPLock' in newXP)) {
+    throw createErrors(400, 'New XP object must contain XP, Level, XPLock, and VoiceChannelXPLock');
+  }
+  const userGuildID: number = await DB.field('SELECT x.UserGuildID FROM XP x INNER JOIN UserInGuilds u ON x.UserGuildID = u.UserGuildID WHERE u.UserID = ? AND u.GuildID = ?', [userID, guildID]);
+  if (userGuildID === null) {
+    throw createErrors(404, 'XP data for this user in this guild does not exist.');
+  }
+
+  await DB.execute('UPDATE XP SET XP = ?, Level = ?, XPLock = FROM_UNIXTIME(?), VoiceChannelXPLock = FROM_UNIXTIME(?) WHERE UserGuildID = ?', [newXP.XP, newXP.Level, newXP.XPLock, newXP.VoiceChannelXPLock, userGuildID]);
+  return { UserGuildID: userGuildID, ...newXP };
 }
