@@ -2,7 +2,6 @@ import DB from '@utils/DBHandler';
 import createErrors from 'http-errors';
 import { Settings } from '@src/interfaces/settings';
 import lodash from 'lodash';
-import { getSettingsData } from '@utils/Misc';
 
 /**
  * Stores settings for a given guild ID into the database
@@ -36,7 +35,11 @@ export async function createSettings(guildID: bigint | number, settings: Setting
  * @returns {object}
  */
 export async function getSettings(guildID: bigint | number): Promise<Settings> {
-  return (await getSettingsData(guildID)).SettingsData;
+  const res: Settings = await DB.field('SELECT SettingsData FROM GuildSettings WHERE GuildID = ?', [guildID]);
+  if (res === null) {
+    throw createErrors(404, 'Settings for this guild do not exist.');
+  }
+  return res;
 }
 
 /**
@@ -51,7 +54,7 @@ export async function setSettings(guildID: bigint | number, settings: Settings):
   if (Object.keys(settings).length === 0) {
     throw createErrors(400, 'Settings can not be empty');
   }
-  await getSettingsData(guildID);
+  await getSettings(guildID);
   await DB.execute('UPDATE GuildSettings SET SettingsData = ? WHERE GuildID = ?', [settings, guildID]);
   return settings;
 }
@@ -68,7 +71,7 @@ export async function updateSettings(guildID: bigint | number, newSettings: Sett
   if (Object.keys(newSettings).length === 0) {
     throw createErrors(400, 'New settings for this guild must be provided.');
   }
-  const oldSettings: Settings = (await getSettingsData(guildID)).SettingsData;
+  const oldSettings: Settings = await getSettings(guildID);
   const ALL_SETTINGS: Settings = lodash.merge(oldSettings, newSettings);
   await DB.execute('UPDATE GuildSettings SET SettingsData = ? WHERE GuildID = ?', [ALL_SETTINGS, guildID]);
   return ALL_SETTINGS;
@@ -81,7 +84,7 @@ export async function updateSettings(guildID: bigint | number, newSettings: Sett
  * @returns {}
  */
 export async function deleteSettings(guildID: bigint | number): Promise<Record<string, never>> {
-  await getSettingsData(guildID);
+  await getSettings(guildID);
   await DB.execute('DELETE FROM GuildSettings WHERE GuildID = ?', [guildID]);
   return {};
 }
