@@ -102,3 +102,22 @@ describe('Delete warning', () => {
     expect(http('POST', `${ROUTE}/abcde`).statusCode).toStrictEqual(404);
   });
 });
+
+describe('Get guild warnings', () => {
+  test('Valid', async () => {
+    const warning1 = JSON.parse(http('POST', `${ROUTE}/1/1`, { reason: 'a test reason', adminID: 2 }).getBody() as string);
+    const warning2 = JSON.parse(http('POST', `${ROUTE}/1/1`, { reason: 'another test reason', adminID: 2 }).getBody() as string);
+    const warning3 = JSON.parse(http('POST', `${ROUTE}/1/1`, { reason: 'the last test reason 3', adminID: 2 }).getBody() as string);
+    const request = http('GET', `${ROUTE}/1`);
+    expect(request.statusCode).toStrictEqual(200);
+    const result = JSON.parse(request.getBody() as string);
+    expect(result).toEqual(expect.arrayContaining([
+      warning1,
+      warning2,
+      warning3
+    ]));
+  });
+  test('Invalid (Guild ID does not exist)', async () => {
+    expect(http('GET', `${ROUTE}/1`).statusCode).toStrictEqual(404);
+  });
+});
