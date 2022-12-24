@@ -1,22 +1,24 @@
-import { CreateUserXPInput, UserXP, ReplaceUserXPInput } from '@src/interfaces/xp';
+import { CreateUserXPInput, UserXP, ReplaceUserXPInput, UserXPInternal, UserXPReturn } from '@src/interfaces/xp';
 import DB from '@utils/DBHandler';
 import { createUserGuildID, getUserGuildID } from '@utils/Misc';
 import createErrors from 'http-errors';
 import lodash from 'lodash';
 
-const selectQuery = 'UserGuildID, XP, Level, XPLock, VoiceChannelXPLock';
+const selectQuery = 'UserID, GuildID, XP, Level, XPLock, VoiceChannelXPLock';
 
 /**
  * Fetches all the XP data for the given guildId
  *
  * @param {bigint | number} guildID - the guild id to fetch xp for
  * @throws {createErrors<404>} - when guildId is not found in database
- * @returns {object}
+ * @returns {UserXPReturn[]}
  */
-export async function fetchGuildXP(guildID: bigint | number): Promise<UserXP[]> {
+export async function fetchGuildXP(guildID: bigint | number): Promise<UserXPReturn[]> {
   const result: UserXP[] = await DB.records(`SELECT ${selectQuery} FROM UserGuildXP WHERE GuildID = ?`, [guildID]);
   if (result.length === 0) throw createErrors(404, 'No XP data for that guild was found in database');
-  return result;
+  return result.map((xp) => {
+    return { ...xp, UserID: xp.UserID.toString(), GuildID: xp.GuildID.toString() };
+  });
 }
 
 /**
@@ -38,12 +40,12 @@ export async function deleteGuildXP(guildID: bigint | number): Promise<Record<st
  * @param {bigint | number} guildID - the guild id to fetch xp for
  * @param {bigint | number} userID - the user id to fetch xp for
  * @throws {createErrors<404>} - when the combination of the userID and guildID is not found
- * @returns {object}
+ * @returns {UserXPReturn}
  */
-export async function fetchUserXP(guildID: bigint | number, userID: bigint | number): Promise<UserXP> {
+export async function fetchUserXP(guildID: bigint | number, userID: bigint | number): Promise<UserXPReturn> {
   const result: UserXP = await DB.record(`SELECT ${selectQuery} FROM UserGuildXP WHERE GuildID = ? AND UserID = ?`, [guildID, userID]);
   if (Object.keys(result).length === 0) throw createErrors(404, 'No XP data for that user was found in database');
-  return result;
+  return { ...result, UserID: result.UserID.toString(), GuildID: result.GuildID.toString() };
 }
 
 /**
@@ -54,11 +56,11 @@ export async function fetchUserXP(guildID: bigint | number, userID: bigint | num
  * @param {bigint | number} userID - the user id to create xp object for
  * @param {CreateUserXPInput} newXP - the new data to post, time should be in epoch seconds
  * @throws {createErrors<409>} - when an entry for that user in that guild already exists
- * @returns {object}
+ * @returns {UserXPReturn}
  */
-export async function postUserXP(guildID: bigint | number, userID: bigint | number, newXP?: CreateUserXPInput): Promise<UserXP> {
+export async function postUserXP(guildID: bigint | number, userID: bigint | number, newXP?: CreateUserXPInput): Promise<UserXPReturn> {
   const userGuildID = await createUserGuildID(guildID, userID);
-  const result: UserXP = {
+  const result: UserXPInternal = {
     UserGuildID: userGuildID,
     XP: newXP?.XP || 0,
     Level: newXP?.Level || 0,
@@ -75,7 +77,15 @@ export async function postUserXP(guildID: bigint | number, userID: bigint | numb
       throw error;
     }
   }
-  return result;
+
+  return {
+    UserID: userID.toString(),
+    GuildID: guildID.toString(),
+    XP: result.XP,
+    Level: result.Level,
+    XPLock: result.XPLock,
+    VoiceChannelXPLock: result.VoiceChannelXPLock,
+  };
 }
 
 /**
@@ -100,18 +110,29 @@ export async function deleteUserXP(guildID: bigint | number, userID: bigint | nu
  * @param {CreateUserXPInput} newXP - the new data to update, time should be in epoch seconds
  * @throws {createErrors<400>} - when no new XP data is provided
  * @throws {createErrors<404>} - when the combination of the userID and guildID is not found, or the user has no XP data in that guild
- * @returns {UserXPResult}
+ * @returns {UserXPReturn}
  */
-export async function updateUserXP(guildID: bigint | number, userID: bigint | number, newXP: CreateUserXPInput): Promise<UserXP> {
+export async function updateUserXP(guildID: bigint | number, userID: bigint | number, newXP: CreateUserXPInput): Promise<UserXPReturn> {
   if (Object.keys(newXP).length === 0) {
     throw createErrors(400, 'No new data was provided');
   }
 
-  const oldXP: UserXP = await fetchUserXP(guildID, userID);
+  const oldXP: UserXPInternal = await DB.record('SELECT UserGuildID, XP, Level, XPLock, VoiceChannelXPLock FROM UserGuildXP WHERE UserID = ? AND GuildID = ?', [userID, guildID]);
+  if (Object.keys(oldXP).length === 0) {
+    throw createErrors(404, 'No user XP data was found in the database');
+  }
   const userGuildID = oldXP.UserGuildID;
-  const newData: UserXP = lodash.merge(oldXP, newXP);
+  const newData: UserXPInternal = lodash.merge(oldXP, newXP);
   await DB.execute('UPDATE XP SET XP = ?, Level = ?, XPLock = FROM_UNIXTIME(?), VoiceChannelXPLock = FROM_UNIXTIME(?) WHERE UserGuildID = ?', [newData.XP, newData.Level, newData.XPLock, newData.VoiceChannelXPLock, userGuildID]);
-  return newData;
+
+  return {
+    UserID: userID.toString(),
+    GuildID: guildID.toString(),
+    XP: newData.XP,
+    Level: newData.Level,
+    XPLock: newData.XPLock,
+    VoiceChannelXPLock: newData.VoiceChannelXPLock,
+  };
 }
 
 /**
@@ -122,13 +143,14 @@ export async function updateUserXP(guildID: bigint | number, userID: bigint | nu
  * @param {ReplaceUserXPInput} newXP - the new data to update, time should be in epoch seconds
  * @throws {createErrors<400>} - when no new XP data is provided, or some settings are missing from newXP
  * @throws {createErrors<404>} - when the combination of the userID and guildID is not found, or the user has no XP data in that guild
- * @returns {UserXPResult}
+ * @returns {UserXPReturn}
  */
-export async function replaceUserXP(guildID: bigint | number, userID: bigint | number, newXP: ReplaceUserXPInput): Promise<UserXP> {
+export async function replaceUserXP(guildID: bigint | number, userID: bigint | number, newXP: ReplaceUserXPInput): Promise<UserXPReturn> {
   if (!('XP' in newXP && 'Level' in newXP && 'XPLock' in newXP && 'VoiceChannelXPLock' in newXP)) {
     throw createErrors(400, 'New XP object must contain XP, Level, XPLock, and VoiceChannelXPLock');
   }
-  const userGuildID: number = (await fetchUserXP(guildID, userID)).UserGuildID;
+  const userGuildID: number = await getUserGuildID(guildID, userID);
+
   await DB.execute('UPDATE XP SET XP = ?, Level = ?, XPLock = FROM_UNIXTIME(?), VoiceChannelXPLock = FROM_UNIXTIME(?) WHERE UserGuildID = ?', [newXP.XP, newXP.Level, newXP.XPLock, newXP.VoiceChannelXPLock, userGuildID]);
-  return { UserGuildID: userGuildID, ...newXP };
+  return { UserID: userID.toString(), GuildID: guildID.toString(), ...newXP };
 }
