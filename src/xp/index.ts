@@ -1,6 +1,6 @@
 import { CreateUserXPInput, UserXP, ReplaceUserXPInput } from '@src/interfaces/xp';
 import DB from '@utils/DBHandler';
-import getUserGuildID from '@utils/GetUserGuildID';
+import { createUserGuildID, getUserGuildID } from '@utils/Misc';
 import createErrors from 'http-errors';
 import lodash from 'lodash';
 
@@ -15,7 +15,7 @@ const selectQuery = 'UserGuildID, XP, Level, XPLock, VoiceChannelXPLock';
  */
 export async function fetchGuildXP(guildID: bigint | number): Promise<UserXP[]> {
   const result: UserXP[] = await DB.records(`SELECT ${selectQuery} FROM UserGuildXP WHERE GuildID = ?`, [guildID]);
-  if (result.length === 0) throw createErrors(404, 'Guild ID not found in database');
+  if (result.length === 0) throw createErrors(404, 'No XP data for that guild was found in database');
   return result;
 }
 
@@ -27,10 +27,7 @@ export async function fetchGuildXP(guildID: bigint | number): Promise<UserXP[]> 
  * @returns {} - on success
  */
 export async function deleteGuildXP(guildID: bigint | number): Promise<Record<string, never>> {
-  if ((await DB.records(`SELECT ${selectQuery} FROM UserGuildXP WHERE GuildID = ?`, [guildID])).length === 0) {
-    throw createErrors(404, 'This guild does not exist.');
-  }
-
+  await fetchGuildXP(guildID);
   await DB.execute('DELETE x FROM XP x INNER JOIN UserGuildXP u ON x.UserGuildID = u.UserGuildID WHERE u.GuildID = ?', [guildID]);
   return {};
 }
@@ -45,9 +42,7 @@ export async function deleteGuildXP(guildID: bigint | number): Promise<Record<st
  */
 export async function fetchUserXP(guildID: bigint | number, userID: bigint | number): Promise<UserXP> {
   const result: UserXP = await DB.record(`SELECT ${selectQuery} FROM UserGuildXP WHERE GuildID = ? AND UserID = ?`, [guildID, userID]);
-  if (Object.keys(result).length === 0) {
-    throw createErrors(404, 'This Guild/User ID does not exist.');
-  }
+  if (Object.keys(result).length === 0) throw createErrors(404, 'No XP data for that user was found in database');
   return result;
 }
 
@@ -62,12 +57,7 @@ export async function fetchUserXP(guildID: bigint | number, userID: bigint | num
  * @returns {object}
  */
 export async function postUserXP(guildID: bigint | number, userID: bigint | number, newXP?: CreateUserXPInput): Promise<UserXP> {
-  let userGuildID: number = await DB.field('SELECT UserGuildID FROM UserInGuilds WHERE GuildID = ? AND UserID = ?', [guildID, userID]);
-  if (userGuildID === null) {
-    await DB.execute('INSERT INTO UserInGuilds (UserID, GuildID) values (?, ?)', [userID, guildID]);
-    userGuildID = await DB.field('SELECT UserGuildID FROM UserInGuilds WHERE GuildID = ? AND UserID = ?', [guildID, userID]);
-  }
-
+  const userGuildID = await createUserGuildID(guildID, userID);
   const result: UserXP = {
     UserGuildID: userGuildID,
     XP: newXP?.XP || 0,
@@ -85,7 +75,6 @@ export async function postUserXP(guildID: bigint | number, userID: bigint | numb
       throw error;
     }
   }
-
   return result;
 }
 
@@ -117,14 +106,10 @@ export async function updateUserXP(guildID: bigint | number, userID: bigint | nu
   if (Object.keys(newXP).length === 0) {
     throw createErrors(400, 'No new data was provided');
   }
-  const oldXP: UserXP = await DB.record(`SELECT ${selectQuery} FROM UserGuildXP WHERE UserID = ? AND GuildID = ?`, [userID, guildID]);
-  if (Object.keys(oldXP).length === 0) {
-    throw createErrors(404, 'XP data for this user in this guild does not exist.');
-  }
 
+  const oldXP: UserXP = await fetchUserXP(guildID, userID);
   const userGuildID = oldXP.UserGuildID;
   const newData: UserXP = lodash.merge(oldXP, newXP);
-
   await DB.execute('UPDATE XP SET XP = ?, Level = ?, XPLock = FROM_UNIXTIME(?), VoiceChannelXPLock = FROM_UNIXTIME(?) WHERE UserGuildID = ?', [newData.XP, newData.Level, newData.XPLock, newData.VoiceChannelXPLock, userGuildID]);
   return newData;
 }
@@ -143,11 +128,7 @@ export async function replaceUserXP(guildID: bigint | number, userID: bigint | n
   if (!('XP' in newXP && 'Level' in newXP && 'XPLock' in newXP && 'VoiceChannelXPLock' in newXP)) {
     throw createErrors(400, 'New XP object must contain XP, Level, XPLock, and VoiceChannelXPLock');
   }
-  const userGuildID: number = await DB.field('SELECT UserGuildID FROM UserGuildXP WHERE UserID = ? AND GuildID = ?', [userID, guildID]);
-  if (userGuildID === null) {
-    throw createErrors(404, 'XP data for this user in this guild does not exist.');
-  }
-
+  const userGuildID: number = (await fetchUserXP(guildID, userID)).UserGuildID;
   await DB.execute('UPDATE XP SET XP = ?, Level = ?, XPLock = FROM_UNIXTIME(?), VoiceChannelXPLock = FROM_UNIXTIME(?) WHERE UserGuildID = ?', [newXP.XP, newXP.Level, newXP.XPLock, newXP.VoiceChannelXPLock, userGuildID]);
   return { UserGuildID: userGuildID, ...newXP };
 }

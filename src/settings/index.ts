@@ -1,4 +1,3 @@
-
 import DB from '@utils/DBHandler';
 import createErrors from 'http-errors';
 import { Settings } from '@src/interfaces/settings';
@@ -36,11 +35,11 @@ export async function createSettings(guildID: bigint | number, settings: Setting
  * @returns {object}
  */
 export async function getSettings(guildID: bigint | number): Promise<Settings> {
-  const result = await DB.field('SELECT SettingsData FROM GuildSettings WHERE GuildID = ?', [guildID]);
-  if (result === null) {
-    throw createErrors(404, 'This guild does not exist.');
+  const res: Settings = await DB.field('SELECT SettingsData FROM GuildSettings WHERE GuildID = ?', [guildID]);
+  if (res === null) {
+    throw createErrors(404, 'Settings for this guild do not exist.');
   }
-  return result;
+  return res;
 }
 
 /**
@@ -50,14 +49,12 @@ export async function getSettings(guildID: bigint | number): Promise<Settings> {
  * @throws {createErrors<400>} when settings are empty
  * @throws {createErrors<404>} when guild does not exist
  * @returns {object} the new settings
-*/
+ */
 export async function setSettings(guildID: bigint | number, settings: Settings): Promise<Settings> {
   if (Object.keys(settings).length === 0) {
     throw createErrors(400, 'Settings can not be empty');
   }
-  if (Object.keys(await DB.record('SELECT * FROM GuildSettings WHERE GuildID = ?', [guildID])).length === 0) {
-    throw createErrors(404, 'This guild does not exist.');
-  }
+  await getSettings(guildID);
   await DB.execute('UPDATE GuildSettings SET SettingsData = ? WHERE GuildID = ?', [settings, guildID]);
   return settings;
 }
@@ -74,10 +71,7 @@ export async function updateSettings(guildID: bigint | number, newSettings: Sett
   if (Object.keys(newSettings).length === 0) {
     throw createErrors(400, 'New settings for this guild must be provided.');
   }
-  const oldSettings: Settings = await DB.field('SELECT SettingsData FROM GuildSettings WHERE GuildID = ?', [guildID]);
-  if (oldSettings === null) {
-    throw createErrors(404, 'Settings for this guild does not exist.');
-  }
+  const oldSettings: Settings = await getSettings(guildID);
   const ALL_SETTINGS: Settings = lodash.merge(oldSettings, newSettings);
   await DB.execute('UPDATE GuildSettings SET SettingsData = ? WHERE GuildID = ?', [ALL_SETTINGS, guildID]);
   return ALL_SETTINGS;
@@ -90,9 +84,7 @@ export async function updateSettings(guildID: bigint | number, newSettings: Sett
  * @returns {}
  */
 export async function deleteSettings(guildID: bigint | number): Promise<Record<string, never>> {
-  if (Object.keys(await DB.record('SELECT * FROM GuildSettings WHERE GuildID = ?', [guildID])).length === 0) {
-    throw createErrors(404, 'This guild does not exist.');
-  }
+  await getSettings(guildID);
   await DB.execute('DELETE FROM GuildSettings WHERE GuildID = ?', [guildID]);
   return {};
 }

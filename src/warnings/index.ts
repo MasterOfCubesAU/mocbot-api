@@ -2,6 +2,7 @@ import DB from '@utils/DBHandler';
 import createErrors from 'http-errors';
 import { v4 as uuidv4 } from 'uuid';
 import { Warning } from '@interfaces/warnings';
+import { createUserGuildID } from '@utils/Misc';
 
 const queryValues = 'WarningID, UserGuildID, Reason, Time, AdminID';
 
@@ -21,11 +22,7 @@ export async function createWarning(userID: bigint | number, guildID: bigint | n
   if (adminID === undefined) {
     throw createErrors(400, 'AdminID cannot be empty.');
   }
-  let userGuildID: number = await DB.field('SELECT UserGuildID FROM UserInGuilds WHERE GuildID = ? AND UserID = ?', [guildID, userID]);
-  if (userGuildID === null) {
-    await DB.execute('INSERT INTO UserInGuilds (UserID, GuildID) values (?, ?)', [userID, guildID]);
-    userGuildID = await DB.field('SELECT UserGuildID FROM UserInGuilds WHERE GuildID = ? AND UserID = ?', [guildID, userID]);
-  }
+  const userGuildID: number = await createUserGuildID(guildID, userID);
   const RESULT: Warning = {
     WarningID: uuidv4(),
     UserGuildID: userGuildID,
