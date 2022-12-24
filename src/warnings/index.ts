@@ -3,6 +3,8 @@ import createErrors from 'http-errors';
 import { v4 as uuidv4 } from 'uuid';
 import { Warning } from '@interfaces/warnings';
 
+const queryValues = 'WarningID, UserGuildID, Reason, Time, AdminID';
+
 /**
  * Creates a warning for a given user within a particular guild
  * @param {bigint | number} userID The user ID to create a warning for
@@ -31,7 +33,7 @@ export async function createWarning(userID: bigint | number, guildID: bigint | n
     Time: Math.floor(Date.now() / 1000),
     AdminID: adminID,
   };
-  await DB.execute('INSERT INTO Warnings (WarningID, UserGuildID, Reason, Time, AdminID) VALUES (?, ?, ?, FROM_UNIXTIME(?), ?)', Object.values(RESULT));
+  await DB.execute(`INSERT INTO Warnings (${queryValues}) VALUES (?, ?, ?, FROM_UNIXTIME(?), ?)`, Object.values(RESULT));
   return RESULT;
 }
 
@@ -43,7 +45,7 @@ export async function createWarning(userID: bigint | number, guildID: bigint | n
  * @returns {Array} of warnings belonging to that user
  */
 export async function getUserWarnings(userID: bigint | number, guildID: bigint | number): Promise<Warning[]> {
-  const result: Warning[] = await DB.records('SELECT w.WarningID, w.UserGuildID, w.Reason, UNIX_TIMESTAMP(w.Time) AS Time, w.AdminID FROM Warnings AS w INNER JOIN UserInGuilds u ON w.UserGuildID = u.UserGuildID WHERE u.GuildID = ? AND u.UserID = ?', [guildID, userID]);
+  const result: Warning[] = await DB.records(`SELECT ${queryValues} FROM UserGuildWarnings WHERE GuildID = ? AND UserID = ?`, [guildID, userID]);
   if (result.length === 0) throw createErrors(404, 'User/Guild ID not found in database');
   return result;
 }
@@ -55,7 +57,7 @@ export async function getUserWarnings(userID: bigint | number, guildID: bigint |
  * @returns {}
  */
 export async function deleteWarning(warningID: string): Promise<Record<string, never>> {
-  if (await DB.field('SELECT WarningID FROM Warnings WHERE WarningID = ?', [warningID]) === null) {
+  if ((await DB.field('SELECT WarningID FROM Warnings WHERE WarningID = ?', [warningID])) === null) {
     throw createErrors(404, 'Warning ID not found');
   }
   await DB.execute('DELETE FROM Warnings WHERE WarningID = ?', [warningID]);
@@ -67,9 +69,9 @@ export async function deleteWarning(warningID: string): Promise<Record<string, n
  * @param {bigint | number} guildID The guild ID to delete warnings from
  * @throws {createErrors<404>} Guild ID not found
  * @returns {}
-*/
+ */
 export async function deleteGuildWarnings(guildID: bigint | number): Promise<Record<string, never>> {
-  const result: string[] = await DB.column('SELECT w.WarningID FROM Warnings AS w INNER JOIN UserInGuilds u ON w.UserGuildID = u.UserGuildID WHERE u.GuildID = ?', [guildID]);
+  const result: string[] = await DB.column('SELECT WarningID FROM UserGuildWarnings WHERE GuildID = ?', [guildID]);
   if (result.length === 0) throw createErrors(404, 'Guild ID not found in database');
   await DB.execute('DELETE w FROM Warnings AS w INNER JOIN UserInGuilds u ON w.UserGuildID = u.UserGuildID WHERE u.GuildID = ?', [guildID]);
   return {};
@@ -82,7 +84,7 @@ export async function deleteGuildWarnings(guildID: bigint | number): Promise<Rec
  * @returns {Warning[]} The list of warnings
  */
 export async function getGuildWarnings(guildID: bigint | number): Promise<Warning[]> {
-  const result: Warning[] = await DB.records('SELECT w.WarningID, w.UserGuildID, w.Reason, UNIX_TIMESTAMP(w.Time) AS Time, w.AdminID FROM Warnings AS w INNER JOIN UserInGuilds u ON w.UserGuildID = u.UserGuildID WHERE u.GuildID = ?', [guildID]);
+  const result: Warning[] = await DB.records(`SELECT ${queryValues} FROM UserGuildWarnings WHERE GuildID = ?`, [guildID]);
   if (result.length === 0) throw createErrors(404, 'Guild ID not found in database');
   return result;
 }
