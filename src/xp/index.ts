@@ -12,8 +12,7 @@ import lodash from 'lodash';
  * @returns {object}
  */
 export async function fetchGuildXP(guildID: bigint | number): Promise<UserXP[]> {
-  const result = await getGuildXPData(guildID);
-  return result;
+  return await getGuildXPData(guildID);
 }
 
 /**
@@ -38,8 +37,7 @@ export async function deleteGuildXP(guildID: bigint | number): Promise<Record<st
  * @returns {object}
  */
 export async function fetchUserXP(guildID: bigint | number, userID: bigint | number): Promise<UserXP> {
-  const result = await getUserXPData(guildID, userID);
-  return result;
+  return await getUserXPData(guildID, userID);
 }
 
 /**

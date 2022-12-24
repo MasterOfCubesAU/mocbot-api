@@ -36,8 +36,7 @@ export async function createSettings(guildID: bigint | number, settings: Setting
  * @returns {object}
  */
 export async function getSettings(guildID: bigint | number): Promise<Settings> {
-  const result = (await getSettingsData(guildID)).SettingsData;
-  return result;
+  return (await getSettingsData(guildID)).SettingsData;
 }
 
 /**
