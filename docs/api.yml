@@ -538,6 +538,13 @@ paths:
       summary: Puts the user in Verification
       description: |-
         This route puts the specified user into verification
+      requestBody:
+        description: The lock down data
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VerificationUpdate"
       parameters:
         - name: guild_id
           in: path
