@@ -27,10 +27,12 @@ app.get('/', (req: Request, res: Response) => {
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(YAML.load('docs/api.yml')));
 
 // All routes below this are authenticated
-app.use(asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-  await validateSession(req.headers['x-api-key'] as string);
-  next();
-}));
+app.use(
+  asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    await validateSession(req.headers['x-api-key'] as string);
+    next();
+  })
+);
 
 // Protected Routes
 

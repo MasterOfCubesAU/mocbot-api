@@ -6,11 +6,12 @@ import lodash from 'lodash';
 
 /**
  * Adds a user from a given guild into verification. Putting this user into lock down immediately is possible
- * @param {bigint | number} userID - The User ID to add to verification
- * @param {bigint | number} guildID - The guild ID the user belongs to
- * @param {bigint | number | undefined} messageID - Optional ID of the lock down approval message
- * @param {bigint | number | undefined} channelID - Optional ID of the lock down approval channel
- * @throws {createErrors<409>} - User already in verification
+ *
+ * @param {bigint | number} userID - the userID to add to verification
+ * @param {bigint | number} guildID - the guildID the user belongs to
+ * @param {bigint | number | undefined} messageID - optional ID of the lock down approval message
+ * @param {bigint | number | undefined} channelID - optional ID of the lock down approval channel
+ * @throws {createErrors<409>} - user already in verification
  * @returns {Promise<Verification>}
  */
 export async function addVerification(userID: bigint | number, guildID: bigint | number, messageID?: bigint | number, channelID?: bigint | number): Promise<Verification> {
@@ -28,15 +29,16 @@ export async function addVerification(userID: bigint | number, guildID: bigint |
   return {
     UserID: userID,
     GuildID: guildID,
-    JoinTime: TIME
+    JoinTime: TIME,
   };
 }
 
 /**
  * Remove a user from verification
- * @param {bigint | number} userID - The User ID to add to verification
- * @param {bigint | number} guildID - The guild ID the user belongs to
- * @throws {createErrors<404>} - Guild/User ID not found
+ *
+ * @param {bigint | number} userID - the userID to add to verification
+ * @param {bigint | number} guildID - the guildID the user belongs to
+ * @throws {createErrors<404>} - guildID/userID not found in the database
  * @returns {}
  */
 export async function removeVerification(userID: bigint | number, guildID: bigint | number): Promise<Record<string, never>> {
@@ -47,11 +49,12 @@ export async function removeVerification(userID: bigint | number, guildID: bigin
 
 /**
  * Adds a user from a given guild into verification. Putting this user into lock down immediately is possible
- * @param {bigint | number} userID - The User ID to add to verification
- * @param {bigint | number} guildID - The guild ID the user belongs to
+ *
+ * @param {bigint | number} userID - the UserID to add to verification
+ * @param {bigint | number} guildID - the guildID the user belongs to
  * @param {LockdownInput} data - the new lock down data to add to the user
  * @throws {createErrors<400>} - if provided lock down data is not complete or data is empty
- * @throws {createErrors<404>} - User/Guild ID not found
+ * @throws {createErrors<404>} - userID/guildID not found in the database
  * @returns {Promise<Verification>}
  */
 export async function updateVerification(userID: bigint | number, guildID: bigint | number, data: LockdownInput): Promise<Verification> {

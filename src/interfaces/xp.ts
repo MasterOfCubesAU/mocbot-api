@@ -1,5 +1,6 @@
 export interface UserXP {
-  UserGuildID: number;
+  UserID: bigint | number;
+  GuildID: bigint | number;
   XP: number;
   Level: number;
   XPLock: number;
@@ -7,7 +8,6 @@ export interface UserXP {
 }
 
 export interface CreateUserXPInput {
-  UserGuildID?: number;
   XP?: number;
   Level?: number;
   XPLock?: number;

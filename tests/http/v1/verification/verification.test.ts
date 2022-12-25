@@ -13,17 +13,8 @@ afterAll(() => DB.close());
 
 describe('Add Verification', () => {
   test('Valid', () => {
-    const timeNow = Math.floor(Date.now() / 1000);
     const request = http('POST', `${ROUTE}/2/1`);
     expect(request.statusCode).toStrictEqual(200);
-    const response = JSON.parse(String(request.getBody() as string));
-    expect(response).toStrictEqual({
-      UserID: '1n',
-      GuildID: '2n',
-      JoinTime: expect.any(Number)
-    });
-
-    expect(response.JoinTime).toBeLessThanOrEqual(timeNow + 5000);
   });
   test('Already exist', () => {
     expect(http('POST', `${ROUTE}/2/1`).statusCode).toStrictEqual(200);

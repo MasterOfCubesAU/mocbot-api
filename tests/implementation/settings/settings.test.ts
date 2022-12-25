@@ -39,7 +39,7 @@ describe('Set settings', () => {
   test('Valid', async () => {
     await expect(createSettings(1, { setting1: true, setting2: false, setting3: {} })).resolves.not.toThrow();
     const EXPECTED = { setting1: false };
-    const FUNC_CALL = await expect(setSettings(1, EXPECTED));
+    const FUNC_CALL = expect(setSettings(1, EXPECTED));
 
     FUNC_CALL.resolves.not.toThrow();
     FUNC_CALL.resolves.toStrictEqual(EXPECTED);
@@ -56,7 +56,7 @@ describe('Set settings', () => {
 describe('Update settings', () => {
   test('Valid (single value)', async () => {
     await expect(createSettings(1, { setting1: true, setting2: { a: true, b: false } })).resolves.not.toThrow();
-    const FUNC_CALL = await expect(updateSettings(1, { setting2: { a: false } }));
+    const FUNC_CALL = expect(updateSettings(1, { setting2: { a: false } }));
 
     const EXPECTED = { setting1: true, setting2: { a: false, b: false } };
     FUNC_CALL.resolves.not.toThrow();
@@ -66,7 +66,7 @@ describe('Update settings', () => {
     const EXPECTED = { setting1: false, setting2: { a: false, b: true } };
 
     await expect(createSettings(1, { setting1: true, setting2: { a: true, b: false } })).resolves.not.toThrow();
-    const FUNC_CALL = await expect(updateSettings(1, EXPECTED));
+    const FUNC_CALL = expect(updateSettings(1, EXPECTED));
 
     FUNC_CALL.resolves.not.toThrow();
     FUNC_CALL.resolves.toStrictEqual(EXPECTED);
