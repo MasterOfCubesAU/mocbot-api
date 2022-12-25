@@ -29,7 +29,7 @@ tags:
     description: General Warning operations
   - name: Verification
     description: User Verification operations
-  - name: AFK 
+  - name: AFK
     description: User AFK operations
 paths:
   /xp/{guild_id}:
@@ -676,7 +676,7 @@ paths:
       description: |-
         This route sets relevant data for a user who is AFK in a Guild
       requestBody:
-        description: The AFK data for a user 
+        description: The AFK data for a user
         required: true
         content:
           application/json:
@@ -703,7 +703,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/AFK"
         "400":
-          description: If settings not provided/some settings missing
+          description: If AFKData not provided/some AFKData missing
         "401":
           $ref: "#/components/responses/NotAuthorized"
         "409":
@@ -763,7 +763,7 @@ components:
           example: "1n"
         GuildID:
           type: string
-          description: The guild ID of the user 
+          description: The guild ID of the user
           example: "1n"
         XP:
           type: integer
@@ -817,11 +817,11 @@ components:
           description: The Warning ID
         UserID:
           type: string
-          description: The User ID of the warning 
+          description: The User ID of the warning
           example: "1n"
         GuildID:
-          type: string 
-          description: The Guild ID where the warning was issued 
+          type: string
+          description: The Guild ID where the warning was issued
           example: "1n"
         Reason:
           type: string
@@ -901,12 +901,12 @@ components:
           description: The Channel ID of the AFK message sent by the bot
           example: 673449065593438238
         OldName:
-          type: string 
+          type: string
           description: The old name of the user
           example: "A"
         Reason:
           type: integer
-          description: The reason for the user being AFK 
+          description: The reason for the user being AFK
           example: "B"
     AFK:
       type: object
@@ -928,12 +928,12 @@ components:
           description: The Channel ID of the AFK message sent by the bot
           example: "673449065593438238n"
         OldName:
-          type: string 
+          type: string
           description: The old name of the user
           example: "A"
         Reason:
           type: integer
-          description: The reason for the user being AFK 
+          description: The reason for the user being AFK
           example: "B"
 security:
   - APIKey: []
