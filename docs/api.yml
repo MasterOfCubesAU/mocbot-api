@@ -29,6 +29,8 @@ tags:
     description: General Warning operations
   - name: Verification
     description: User Verification operations
+  - name: AFK 
+    description: User AFK operations
 paths:
   /xp/{guild_id}:
     get:
@@ -636,6 +638,106 @@ paths:
           $ref: "#/components/responses/NotAuthorized"
         "404":
           description: Guild/User ID not found
+  /afk/{guild_id}/{user_id}:
+    get:
+      tags:
+        - AFK
+      summary: Gets data for a user who is AFK in a Guild
+      description: |-
+        This route gets the relevant data for a user who is AFK in a Guild
+      parameters:
+        - name: guild_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The Guild ID the user is from
+        - name: user_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The User ID of the user
+      responses:
+        "200":
+          description: OK. Returns an AFK object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AFK"
+        "401":
+          $ref: "#/components/responses/NotAuthorized"
+        "404":
+          description: Guild/UserID is not found
+    post:
+      tags:
+        - AFK
+      summary: Sets data for a user who is AFK in a Guild
+      description: |-
+        This route sets relevant data for a user who is AFK in a Guild
+      requestBody:
+        description: The AFK data for a user 
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AFKRequest"
+      parameters:
+        - name: guild_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The Guild ID the user is from
+        - name: user_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The User ID of the user
+      responses:
+        "200":
+          description: OK. Returns an AFK object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AFK"
+        "400":
+          description: If settings not provided/some settings missing
+        "401":
+          $ref: "#/components/responses/NotAuthorized"
+        "409":
+          description: "User already has AFK data in the specified guild"
+    delete:
+      tags:
+        - AFK
+      summary: Remove AFK data associated with the user in the guild
+      description: |-
+        This route will remove the relevant data for a user who is AFK in a guild
+      parameters:
+        - name: guild_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The Guild ID the user is from
+        - name: user_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The User ID of the user
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmptyObject"
+        "401":
+          $ref: "#/components/responses/NotAuthorized"
+        "404":
+          description: Guild/User ID not found
 components:
   responses:
     NotAuthorized:
@@ -787,5 +889,51 @@ components:
           type: integer
           description: The ID of the lock down approvals channel
           example: 673449065593438238
+    AFKRequest:
+      type: object
+      properties:
+        MessageID:
+          type: integer
+          description: The Message ID of the AFK message sent by the bot
+          example: 1056206377569222656
+        ChannelID:
+          type: integer
+          description: The Channel ID of the AFK message sent by the bot
+          example: 673449065593438238
+        OldName:
+          type: string 
+          description: The old name of the user
+          example: "A"
+        Reason:
+          type: integer
+          description: The reason for the user being AFK 
+          example: "B"
+    AFK:
+      type: object
+      properties:
+        UserID:
+          type: string
+          description: The ID of the user
+          example: "231230403053092864n"
+        GuildID:
+          type: string
+          description: The ID of the guild the user is in
+          example: "169402073404669952n"
+        MessageID:
+          type: integer
+          description: The Message ID of the AFK message sent by the bot
+          example: "1056206377569222656n"
+        ChannelID:
+          type: integer
+          description: The Channel ID of the AFK message sent by the bot
+          example: "673449065593438238n"
+        OldName:
+          type: string 
+          description: The old name of the user
+          example: "A"
+        Reason:
+          type: integer
+          description: The reason for the user being AFK 
+          example: "B"
 security:
   - APIKey: []
