@@ -4,11 +4,13 @@ import express from 'express';
 import settingsRouter from './settings';
 import XPRouter from './xp';
 import warningsRouter from './warnings';
+import verificationRouter from './verification';
 
 const router = express.Router();
 
 router.use('/settings', settingsRouter);
 router.use('/xp', XPRouter);
 router.use('/warnings', warningsRouter);
+router.use('/verification', verificationRouter);
 
 export default router;

@@ -8,7 +8,7 @@ info:
     - The [MOCBOT API](https://github.com/MasterOfCubesAU/mocbot-api) repository
   contact:
     email: masterofcubesau@gmail.com
-  version: 1.0.0
+  version: 1.1.0
 externalDocs:
   description: Find out more about MOCBOT
   url: https://mocbot.masterofcubesau.com
@@ -27,6 +27,8 @@ tags:
     description: Guild Settings operations
   - name: Warnings
     description: General Warning operations
+  - name: Verification
+    description: User Verification operations
 paths:
   /xp/{guild_id}:
     get:
@@ -529,6 +531,111 @@ paths:
           $ref: "#/components/responses/NotAuthorized"
         "404":
           description: Warning ID not found
+  /verification/{guild_id}/{user_id}:
+    post:
+      tags:
+        - Verification
+      summary: Puts the user in Verification
+      description: |-
+        This route puts the specified user into verification
+      requestBody:
+        description: The lock down data
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VerificationUpdate"
+      parameters:
+        - name: guild_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The Guild ID the user is from
+        - name: user_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The User ID of the user
+      responses:
+        "200":
+          description: OK. Returns a Verification object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Verification"
+        "401":
+          $ref: "#/components/responses/NotAuthorized"
+        "409":
+          description: "User already in verification"
+    patch:
+      tags:
+        - Verification
+      summary: Places this user into lock down
+      description: |-
+        This route puts the specified user into lock down, requiring manual verification
+      requestBody:
+        description: The lock down data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VerificationUpdate"
+      parameters:
+        - name: guild_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The Guild ID the user is from
+        - name: user_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The User ID of the user
+      responses:
+        "200":
+          description: OK. Returns the Verification object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Verification"
+        "401":
+          $ref: "#/components/responses/NotAuthorized"
+        "404":
+          description: Guild/User ID not found
+    delete:
+      tags:
+        - Verification
+      summary: Remove a user from verification
+      description: |-
+        This route will remove a user from verification
+      parameters:
+        - name: guild_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The Guild ID the user is from
+        - name: user_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The User ID of the user
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmptyObject"
+        "401":
+          $ref: "#/components/responses/NotAuthorized"
+        "404":
+          description: Guild/User ID not found
 components:
   responses:
     NotAuthorized:
@@ -645,5 +752,32 @@ components:
       example:
         XP: 100
         VoiceChannelXPLock: 16717274013
+    Verification:
+      type: object
+      properties:
+        UserID:
+          type: string
+          description: The ID of the user
+          example: 231230403053092864n
+        GuildID:
+          type: string
+          description: The ID of the guild the user is in
+          example: 169402073404669952n
+        JoinTime:
+          type: integer
+          format: int64
+          description: The Unix timestamp at which the user was placed in Verification, in whole number of seconds
+          example: 1671727778
+    VerificationUpdate:
+      type: object
+      properties:
+        MessageID:
+          type: integer
+          description: The ID of the lock down approval message
+          example: 1056206377569222656
+        ChannelID:
+          type: integer
+          description: The ID of the lock down approvals channel
+          example: 673449065593438238
 security:
   - APIKey: []
