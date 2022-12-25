@@ -52,7 +52,6 @@ export async function removeVerification(userID: bigint | number, guildID: bigin
  * @param {LockdownInput} data - the new lock down data to add to the user
  * @throws {createErrors<400>} - if provided lock down data is not complete or data is empty
  * @throws {createErrors<404>} - User/Guild ID not found
- * @throws {createErrors<409>} - User already in verification
  * @returns {Promise<Verification>}
  */
 export async function updateVerification(userID: bigint | number, guildID: bigint | number, data: LockdownInput): Promise<Verification> {
