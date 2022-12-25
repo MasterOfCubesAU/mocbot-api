@@ -28,13 +28,16 @@ describe('Get Warnings', () => {
     await expect(DB.execute('INSERT INTO UserInGuilds (UserID, GuildID) VALUES (?, ?)', [1, 1])).resolves.not.toThrow();
     await expect(createWarning(1, 1, 'Test Reason', 2)).resolves.not.toThrow();
     await expect(getUserWarnings(1, 1)).resolves.not.toThrow();
-    expect(await getUserWarnings(1, 1)).toStrictEqual([{
-      WarningID: expect.any(String),
-      UserGuildID: expect.any(Number),
-      Reason: 'Test Reason',
-      Time: expect.any(Number),
-      AdminID: 2,
-    }]);
+    expect(await getUserWarnings(1, 1)).toStrictEqual([
+      {
+        WarningID: expect.any(String),
+        UserID: 1,
+        GuildID: 1,
+        Reason: 'Test Reason',
+        Time: expect.any(Number),
+        AdminID: 2,
+      },
+    ]);
   });
   test('Valid (multiple values)', async () => {
     await expect(DB.execute('INSERT INTO UserInGuilds (UserID, GuildID) VALUES (?, ?)', [1, 1])).resolves.not.toThrow();
@@ -43,14 +46,7 @@ describe('Get Warnings', () => {
     const warning3 = await createWarning(1, 1, 'Test Reason 3', 4);
 
     await expect(getUserWarnings(1, 1)).resolves.not.toThrow();
-    expect(await getUserWarnings(1, 1)).toEqual(
-      expect.arrayContaining(
-        [
-          warning1,
-          warning2,
-          warning3
-        ]
-      ));
+    expect(await getUserWarnings(1, 1)).toEqual(expect.arrayContaining([warning1, warning2, warning3]));
   });
   test('Invalid (UserID invalid)', async () => {
     await expect(DB.execute('INSERT INTO UserInGuilds (UserID, GuildID) VALUES (?, ?)', [1, 1])).resolves.not.toThrow();
@@ -88,15 +84,9 @@ describe('Get Guild Warnings', () => {
     const warning = await createWarning(1, 1, 'Test Reason', 2);
     const warning2 = await createWarning(1, 1, 'Test Reason 2', 2);
     const warning3 = await createWarning(1, 1, 'Test Reason 3', 2);
-    const result = await expect(getGuildWarnings(1));
+    const result = expect(getGuildWarnings(1));
     result.resolves.not.toThrow();
-    result.resolves.toEqual(expect.arrayContaining(
-      [
-        warning,
-        warning2,
-        warning3
-      ]
-    ));
+    result.resolves.toEqual(expect.arrayContaining([warning, warning2, warning3]));
   });
   test('Invalid (Guild ID does not exist)', async () => {
     await expect(getGuildWarnings(1)).rejects.toThrow();

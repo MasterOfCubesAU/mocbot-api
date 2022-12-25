@@ -17,8 +17,6 @@ describe('POST', () => {
   test('Valid', () => {
     const request = http('POST', `${ROUTE}/1`, { setting1: true });
     expect(request.statusCode).toStrictEqual(200);
-    const response = JSON.parse(String(request.getBody() as string));
-    expect(response).toStrictEqual({ setting1: true });
   });
   test('Invalid (No Settings)', () => {
     const request = http('POST', `${ROUTE}/1`, {});
@@ -40,8 +38,6 @@ describe('GET', () => {
     // We expect to fetch it with no issues
     const request = http('GET', `${ROUTE}/1`);
     expect(request.statusCode).toStrictEqual(200);
-    const response = JSON.parse(String(request.getBody() as string));
-    expect(response).toStrictEqual({ setting1: true });
   });
   test('Invalid (Guild does not exist)', () => {
     expect(http('GET', `${ROUTE}/1`).statusCode).toStrictEqual(404);
@@ -55,7 +51,6 @@ describe('PUT', () => {
     // We expect to be able to update it with no issues
     const REQ = http('PUT', `${ROUTE}/1`, { setting1: false });
     expect(REQ.statusCode).toStrictEqual(200);
-    expect(JSON.parse(REQ.getBody() as string)).toStrictEqual({ setting1: false });
   });
   test('Invalid (Settings empty)', () => {
     // Create an entry
@@ -74,7 +69,6 @@ describe('PATCH', () => {
     // We expect to be able to update it with no issues
     const REQ = http('PATCH', `${ROUTE}/1`, { setting1: false });
     expect(REQ.statusCode).toStrictEqual(200);
-    expect(JSON.parse(REQ.getBody() as string)).toStrictEqual({ setting1: false });
   });
   test('Invalid (Guild does not exist)', () => {
     expect(http('PATCH', `${ROUTE}/1`, { setting1: true }).statusCode).toStrictEqual(404);

@@ -63,14 +63,14 @@ describe('Get User XP Data', () => {
 });
 
 describe('Post User XP Data', () => {
-  test('Successfully created new user XP data', async () => {
+  test('Successfully created new user XP data', () => {
     expect(http('POST', `${ROUTE}/1/1`).statusCode).toStrictEqual(200);
     expect(http('GET', `${ROUTE}/1/1`).statusCode).toStrictEqual(200);
     // should fail when called again on same user in same guild
     expect(http('POST', `${ROUTE}/1/1`).statusCode).toStrictEqual(409);
   });
 
-  test('Testing optional parameters passed in', async () => {
+  test('Testing optional parameters passed in', () => {
     expect(http('POST', `${ROUTE}/1/1`, { XP: 333, Level: 11 }).statusCode).toStrictEqual(200);
     expect(http('GET', `${ROUTE}/1/1`).statusCode).toStrictEqual(200);
   });
@@ -87,7 +87,7 @@ describe('Update User XP Data', () => {
     expect(request.statusCode).toStrictEqual(400);
   });
 
-  test('Successfully updated user XP data', async () => {
+  test('Successfully updated user XP data', () => {
     expect(http('PATCH', `${ROUTE}/789/124`, { XP: 333, Level: 11 }).statusCode).toStrictEqual(200);
   });
 });
@@ -116,7 +116,7 @@ describe('Replacing user XP Data', () => {
     expect(request.statusCode).toStrictEqual(400);
   });
 
-  test('Successfully replaced user XP data', async () => {
+  test('Successfully replaced user XP data', () => {
     expect(http('PUT', `${ROUTE}/789/124`, { XP: 333, Level: 11, XPLock: newTime, VoiceChannelXPLock: newTime }).statusCode).toStrictEqual(200);
   });
 });

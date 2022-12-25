@@ -551,11 +551,11 @@ components:
         UserID:
           type: string
           description: The user ID
-          example: "1"
+          example: "1n"
         GuildID:
           type: string
           description: The guild ID of the user 
-          example: "1"
+          example: "1n"
         XP:
           type: integer
           description: The current XP value
@@ -606,10 +606,14 @@ components:
           type: string
           format: uuid
           description: The Warning ID
-        UserGuildID:
-          type: integer
-          description: The UserGuildID
-          example: 231
+        UserID:
+          type: string
+          description: The User ID of the warning 
+          example: "1n"
+        GuildID:
+          type: string 
+          description: The Guild ID where the warning was issued 
+          example: "1n"
         Reason:
           type: string
           description: The reason behind the warning
