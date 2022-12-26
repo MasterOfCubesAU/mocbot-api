@@ -1,12 +1,12 @@
 export interface Verification {
-    UserID: bigint | number,
-    GuildID: bigint | number,
-    MessageID?: bigint | number,
-    ChannelID?: bigint | number,
-    JoinTime: number
+  UserID: string;
+  GuildID: string;
+  MessageID?: string;
+  ChannelID?: string;
+  JoinTime: string;
 }
 
 export interface LockdownInput {
-    MessageID?: bigint | number,
-    ChannelID?: bigint | number
+  MessageID?: bigint | number;
+  ChannelID?: bigint | number;
 }

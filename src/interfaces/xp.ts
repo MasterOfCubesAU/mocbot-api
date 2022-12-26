@@ -1,10 +1,10 @@
 export interface UserXP {
-  UserID: bigint | number;
-  GuildID: bigint | number;
-  XP: number;
-  Level: number;
-  XPLock: number;
-  VoiceChannelXPLock: number;
+  UserID: string;
+  GuildID: string;
+  XP: string;
+  Level: string;
+  XPLock: string;
+  VoiceChannelXPLock: string;
 }
 
 export interface CreateUserXPInput {

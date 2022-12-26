@@ -59,12 +59,12 @@ export async function fetchUserXP(guildID: bigint | number, userID: bigint | num
 export async function postUserXP(guildID: bigint | number, userID: bigint | number, newXP?: CreateUserXPInput): Promise<UserXP> {
   const userGuildID = await createUserGuildID(guildID, userID);
   const result: UserXP = {
-    UserID: userID,
-    GuildID: guildID,
-    XP: newXP?.XP || 0,
-    Level: newXP?.Level || 0,
-    XPLock: newXP?.XPLock || Math.floor(Date.now() / 1000),
-    VoiceChannelXPLock: newXP?.VoiceChannelXPLock || Math.floor(Date.now() / 1000),
+    UserID: userID.toString(),
+    GuildID: guildID.toString(),
+    XP: (newXP?.XP || 0).toString(),
+    Level: (newXP?.Level || 0).toString(),
+    XPLock: (newXP?.XPLock || Math.floor(Date.now() / 1000)).toString(),
+    VoiceChannelXPLock: (newXP?.VoiceChannelXPLock || Math.floor(Date.now() / 1000)).toString(),
   };
 
   try {
@@ -131,5 +131,5 @@ export async function replaceUserXP(guildID: bigint | number, userID: bigint | n
   }
   const userGuildID: number = await getUserGuildID(guildID, userID, 'UserGuildXP');
   await DB.execute('UPDATE XP SET XP = ?, Level = ?, XPLock = FROM_UNIXTIME(?), VoiceChannelXPLock = FROM_UNIXTIME(?) WHERE UserGuildID = ?', [newXP.XP, newXP.Level, newXP.XPLock, newXP.VoiceChannelXPLock, userGuildID]);
-  return { UserID: userID, GuildID: guildID, ...newXP };
+  return { UserID: userID.toString(), GuildID: guildID.toString(), XP: newXP.XP.toString(), Level: newXP.Level.toString(), XPLock: newXP.XPLock.toString(), VoiceChannelXPLock: newXP.VoiceChannelXPLock.toString() };
 }

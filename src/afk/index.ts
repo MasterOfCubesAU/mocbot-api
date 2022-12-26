@@ -43,10 +43,10 @@ export async function insertAFK(userID: bigint | number, guildID: bigint | numbe
     }
   }
   return {
-    UserID: userID,
-    GuildID: guildID,
-    MessageID: data.MessageID,
-    ChannelID: data.ChannelID,
+    UserID: userID.toString(),
+    GuildID: guildID.toString(),
+    MessageID: data.MessageID.toString(),
+    ChannelID: data.ChannelID.toString(),
     OldName: data.OldName,
     Reason: data.Reason,
   };

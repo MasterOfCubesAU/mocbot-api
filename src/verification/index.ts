@@ -27,9 +27,9 @@ export async function addVerification(userID: bigint | number, guildID: bigint |
     }
   }
   return {
-    UserID: userID,
-    GuildID: guildID,
-    JoinTime: TIME,
+    UserID: userID.toString(),
+    GuildID: guildID.toString(),
+    JoinTime: TIME.toString(),
   };
 }
 
