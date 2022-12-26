@@ -1,4 +1,5 @@
 import { addVerification, removeVerification, updateVerification } from '@src/verification';
+import { createWarning } from '@src/warnings';
 import DB from '@utils/DBHandler';
 
 // Ensure DB is in a predictable state by clearing it initially, then again after every test
@@ -17,7 +18,7 @@ describe('addVerification()', () => {
     expect(result).toStrictEqual({
       UserID: 1,
       GuildID: 2,
-      JoinTime: expect.any(Number)
+      JoinTime: expect.any(Number),
     });
   });
   test('Already exist', async () => {
@@ -33,6 +34,11 @@ describe('removeVerification()', () => {
   test('User ID not found', async () => {
     await DB.execute('INSERT INTO UserInGuilds (UserID, GuildID) VALUES (?, ?)', [1, 2]);
     await expect(removeVerification(2, 2)).rejects.toThrow();
+  });
+  test('GuildID/userID exists in UserInGuilds, but not verification', async () => {
+    await createWarning(2, 2, 'Test Reason', 2);
+    await expect(removeVerification(2, 2)).rejects.toThrow();
+    await DB.execute('DELETE FROM Warnings');
   });
   test('Valid', async () => {
     await addVerification(1, 2);
