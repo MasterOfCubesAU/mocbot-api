@@ -6,11 +6,12 @@ import createErrors from 'http-errors';
  *
  * @param {bigint | number} guildID - the guildID in question
  * @param {bigint | number} userID - the userID in question
+ * @param {string} table - the table to search UserGuildID in, by default being 'UserInGuilds'
  * @throws {createErrors<404>} - when userGuildID is not found
  * @returns {Promise<number>} - the corresponding userGuildID
  */
-export async function getUserGuildID(guildID: bigint | number, userID: bigint | number): Promise<number> {
-  const userGuildID: number = await DB.field('SELECT UserGuildID FROM UserInGuilds WHERE GuildID = ? AND UserID = ?', [guildID, userID]);
+export async function getUserGuildID(guildID: bigint | number, userID: bigint | number, table = 'UserInGuilds'): Promise<number> {
+  const userGuildID: number = await DB.field(`SELECT UserGuildID FROM ${table} WHERE GuildID = ? AND UserID = ?`, [guildID, userID]);
   if (userGuildID === null) {
     throw createErrors(404, 'This Guild/User ID does not exist.');
   }

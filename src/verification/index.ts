@@ -42,7 +42,7 @@ export async function addVerification(userID: bigint | number, guildID: bigint |
  * @returns {}
  */
 export async function removeVerification(userID: bigint | number, guildID: bigint | number): Promise<Record<string, never>> {
-  const userGuildID = await getUserGuildID(guildID, userID);
+  const userGuildID = await getUserGuildID(guildID, userID, 'UserGuildVerification');
   await DB.execute('DELETE FROM Verification WHERE UserGuildID = ?', [userGuildID]);
   return {};
 }

@@ -61,7 +61,7 @@ export async function insertAFK(userID: bigint | number, guildID: bigint | numbe
  * @returns {}
  */
 export async function removeAFK(userID: bigint | number, guildID: bigint | number): Promise<Record<string, never>> {
-  const userGuildID = await getUserGuildID(guildID, userID);
+  const userGuildID = await getUserGuildID(guildID, userID, 'UserGuildAFK');
   await DB.execute('DELETE FROM AFK WHERE UserGuildID = ?', [userGuildID]);
   return {};
 }

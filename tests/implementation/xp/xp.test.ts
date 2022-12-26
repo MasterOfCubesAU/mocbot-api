@@ -1,5 +1,6 @@
 import DB from '@utils/DBHandler';
 import { fetchGuildXP, fetchUserXP, deleteGuildXP, postUserXP, updateUserXP, deleteUserXP, replaceUserXP } from '@src/xp';
+import { createWarning } from '@src/warnings';
 
 // Ensure DB is in a predictable state by clearing it initially, then again after every test
 // We then close the DB at the end to remove any open handles
@@ -73,6 +74,11 @@ describe('Updating User XP data', () => {
   test('No settings provided', async () => {
     await expect(updateUserXP(789, 123, {})).rejects.toThrow();
   });
+  test('Guild ID/User ID exists, but not in XP table', async () => {
+    await createWarning(790, 124, 'Test Reason', 2);
+    await expect(updateUserXP(790, 124, { XP: 333, Level: 11, XPLock: newTime })).rejects.toThrow();
+    await DB.execute('DELETE FROM Warnings');
+  });
   test('Correct response', async () => {
     const expected = { GuildID: 789, UserID: 124, XP: 333, Level: 11, XPLock: newTime };
     await expect(updateUserXP(789, 124, { XP: 333, Level: 11, XPLock: newTime })).resolves.not.toThrow();
@@ -85,6 +91,11 @@ describe('Deleting user XP data', () => {
   test('Invalid Guild ID', async () => {
     await expect(deleteUserXP(790, 124)).rejects.toThrow();
   });
+  test('Guild ID/User ID exists, but not in XP table', async () => {
+    await createWarning(790, 124, 'Test Reason', 2);
+    await expect(deleteUserXP(790, 124)).rejects.toThrow();
+    await DB.execute('DELETE FROM Warnings');
+  });
   test('Valid Guild ID', async () => {
     await expect(deleteUserXP(789, 123)).resolves.not.toThrow();
     await expect(fetchUserXP(789, 123)).rejects.toThrow();
@@ -95,6 +106,11 @@ describe('Replacing User XP data', () => {
   const newTime = Math.floor(Date.now() / 1000);
   test('Invalid guildID/userID provided', async () => {
     await expect(replaceUserXP(790, 124, { XP: 333, Level: 11, XPLock: newTime, VoiceChannelXPLock: newTime })).rejects.toThrow();
+  });
+  test('Guild ID/User ID exists, but not in XP table', async () => {
+    await createWarning(790, 124, 'Test Reason', 2);
+    await expect(replaceUserXP(790, 124, { XP: 333, Level: 11, XPLock: newTime, VoiceChannelXPLock: newTime })).rejects.toThrow();
+    await DB.execute('DELETE FROM Warnings');
   });
   test('Correct response', async () => {
     const expected = { GuildID: 789, UserID: 124, XP: 333, Level: 11, XPLock: newTime, VoiceChannelXPLock: newTime };

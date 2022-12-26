@@ -1,4 +1,5 @@
 import { getAFK, insertAFK, removeAFK } from '@src/afk';
+import { createWarning } from '@src/warnings';
 import DB from '@utils/DBHandler';
 
 // Ensure DB is in a predictable state by clearing it initially, then again after every test
@@ -71,5 +72,10 @@ describe('Remove AFKData', () => {
   });
   test('Guild/User ID not found', async () => {
     await expect(removeAFK(1, 2)).rejects.toThrow();
+  });
+  test('GuildID/userID exists in UserInGuilds, but not AFK', async () => {
+    await createWarning(2, 2, 'Test Reason', 2);
+    await expect(removeAFK(2, 2)).rejects.toThrow();
+    await DB.execute('DELETE FROM Warnings');
   });
 });

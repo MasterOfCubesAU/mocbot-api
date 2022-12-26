@@ -88,7 +88,7 @@ export async function postUserXP(guildID: bigint | number, userID: bigint | numb
  * @returns {} - on success
  */
 export async function deleteUserXP(guildID: bigint | number, userID: bigint | number): Promise<Record<string, never>> {
-  const userGuildID = await getUserGuildID(guildID, userID);
+  const userGuildID = await getUserGuildID(guildID, userID, 'UserGuildXP');
   await DB.execute('DELETE FROM XP WHERE UserGuildID = ?', [userGuildID]);
   return {};
 }
@@ -109,7 +109,7 @@ export async function updateUserXP(guildID: bigint | number, userID: bigint | nu
   }
 
   const oldXP: UserXP = await fetchUserXP(guildID, userID);
-  const userGuildID = await getUserGuildID(guildID, userID);
+  const userGuildID = await getUserGuildID(guildID, userID, 'UserGuildXP');
   const newData: UserXP = lodash.merge(oldXP, newXP);
   await DB.execute('UPDATE XP SET XP = ?, Level = ?, XPLock = FROM_UNIXTIME(?), VoiceChannelXPLock = FROM_UNIXTIME(?) WHERE UserGuildID = ?', [newData.XP, newData.Level, newData.XPLock, newData.VoiceChannelXPLock, userGuildID]);
   return newData;
@@ -129,7 +129,7 @@ export async function replaceUserXP(guildID: bigint | number, userID: bigint | n
   if (!('XP' in newXP && 'Level' in newXP && 'XPLock' in newXP && 'VoiceChannelXPLock' in newXP)) {
     throw createErrors(400, 'New XP object must contain XP, Level, XPLock, and VoiceChannelXPLock');
   }
-  const userGuildID: number = await getUserGuildID(guildID, userID);
+  const userGuildID: number = await getUserGuildID(guildID, userID, 'UserGuildXP');
   await DB.execute('UPDATE XP SET XP = ?, Level = ?, XPLock = FROM_UNIXTIME(?), VoiceChannelXPLock = FROM_UNIXTIME(?) WHERE UserGuildID = ?', [newXP.XP, newXP.Level, newXP.XPLock, newXP.VoiceChannelXPLock, userGuildID]);
   return { UserID: userID, GuildID: guildID, ...newXP };
 }
