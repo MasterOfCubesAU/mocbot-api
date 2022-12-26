@@ -760,50 +760,46 @@ components:
         UserID:
           type: string
           description: The user ID
-          example: "1n"
+          example: "1"
         GuildID:
           type: string
           description: The guild ID of the user
-          example: "1n"
+          example: "1"
         XP:
-          type: integer
+          type: string
           description: The current XP value
-          example: 100
+          example: "100"
         Level:
-          type: integer
+          type: string
           description: The current level
-          example: 1
+          example: "1"
         XPLock:
-          type: integer
-          format: int64
+          type: string
           description: The Unix timestamp at which this user can start gaining XP from messages, in whole number of seconds
-          example: 1671727778
+          example: "1671727778"
         VoiceChannelXPLock:
-          type: integer
-          format: int64
+          type: string
           description: The Unix timestamp at which this user can start gaining XP from voice activity, in whole number of seconds
-          example: 1671727784
+          example: "1671727784"
     ReplaceUserXPInput:
       type: object
       properties:
         XP:
-          type: integer
+          type: string
           description: The new XP value
-          example: 100
+          example: "100"
         Level:
-          type: integer
+          type: string
           description: The new level
-          example: 1
+          example: "1"
         XPLock:
-          type: integer
-          format: int64
+          type: string
           description: The Unix timestamp at which this user can start gaining XP from messages, in whole number of seconds
-          example: 1671727778
+          example: "1671727778"
         VoiceChannelXPLock:
-          type: integer
-          format: int64
+          type: string
           description: The Unix timestamp at which this user can start gaining XP from voice activity, in whole number of seconds
-          example: 1671727784
+          example: "1671727784"
     GuildWarnings:
       type: array
       items:
@@ -818,24 +814,23 @@ components:
         UserID:
           type: string
           description: The User ID of the warning
-          example: "1n"
+          example: "1"
         GuildID:
           type: string
           description: The Guild ID where the warning was issued
-          example: "1n"
+          example: "1"
         Reason:
           type: string
           description: The reason behind the warning
           example: "Chat Spam"
         Time:
-          type: integer
-          format: int64
+          type: string
           description: The Unix timestamp at which the user was warned, in whole number of seconds
-          example: 1671727778
+          example: "1671727778"
         AdminID:
-          type: integer
+          type: string
           description: The ID of the administrator who distributed the warning
-          example: 381
+          example: "381"
     UserWarnings:
       type: array
       items:
@@ -848,9 +843,9 @@ components:
           description: The reason behind the warning
           example: "Chat Spamming"
         adminID:
-          type: integer
+          type: string
           description: The ID of the administrator who distributed the warning
-          example: 124
+          example: "124"
     Settings:
       type: object
       example:
@@ -860,52 +855,51 @@ components:
     UserXPRequest:
       type: object
       example:
-        XP: 100
-        VoiceChannelXPLock: 16717274013
+        XP: "100"
+        VoiceChannelXPLock: "16717274013"
     Verification:
       type: object
       properties:
         UserID:
           type: string
           description: The ID of the user
-          example: 231230403053092864n
+          example: "231230403053092864"
         GuildID:
           type: string
           description: The ID of the guild the user is in
-          example: 169402073404669952n
+          example: "169402073404669952"
         JoinTime:
-          type: integer
-          format: int64
+          type: string
           description: The Unix timestamp at which the user was placed in Verification, in whole number of seconds
-          example: 1671727778
+          example: "1671727778"
     VerificationUpdate:
       type: object
       properties:
         MessageID:
-          type: integer
+          type: string
           description: The ID of the lock down approval message
-          example: 1056206377569222656
+          example: "1056206377569222656"
         ChannelID:
-          type: integer
+          type: string
           description: The ID of the lock down approvals channel
-          example: 673449065593438238
+          example: "673449065593438238"
     AFKRequest:
       type: object
       properties:
         MessageID:
-          type: integer
+          type: string
           description: The Message ID of the AFK message sent by the bot
-          example: 1056206377569222656
+          example: "1056206377569222656"
         ChannelID:
-          type: integer
+          type: string
           description: The Channel ID of the AFK message sent by the bot
-          example: 673449065593438238
+          example: "673449065593438238"
         OldName:
           type: string
           description: The old name of the user
           example: "A"
         Reason:
-          type: integer
+          type: string
           description: The reason for the user being AFK
           example: "B"
     AFK:
@@ -914,25 +908,25 @@ components:
         UserID:
           type: string
           description: The ID of the user
-          example: "231230403053092864n"
+          example: "231230403053092864"
         GuildID:
           type: string
           description: The ID of the guild the user is in
-          example: "169402073404669952n"
+          example: "169402073404669952"
         MessageID:
-          type: integer
+          type: string
           description: The Message ID of the AFK message sent by the bot
-          example: "1056206377569222656n"
+          example: "1056206377569222656"
         ChannelID:
-          type: integer
+          type: string
           description: The Channel ID of the AFK message sent by the bot
-          example: "673449065593438238n"
+          example: "673449065593438238"
         OldName:
           type: string
           description: The old name of the user
           example: "A"
         Reason:
-          type: integer
+          type: string
           description: The reason for the user being AFK
           example: "B"
 security:

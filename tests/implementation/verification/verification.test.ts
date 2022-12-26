@@ -16,9 +16,9 @@ describe('addVerification()', () => {
   test('Valid', async () => {
     const result = await addVerification(1, 2);
     expect(result).toStrictEqual({
-      UserID: 1,
-      GuildID: 2,
-      JoinTime: expect.any(Number),
+      UserID: '1',
+      GuildID: '2',
+      JoinTime: expect.any(String),
     });
   });
   test('Already exist', async () => {

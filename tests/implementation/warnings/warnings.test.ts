@@ -31,11 +31,11 @@ describe('Get Warnings', () => {
     expect(await getUserWarnings(1, 1)).toStrictEqual([
       {
         WarningID: expect.any(String),
-        UserID: 1,
-        GuildID: 1,
+        UserID: '1',
+        GuildID: '1',
         Reason: 'Test Reason',
-        Time: expect.any(Number),
-        AdminID: 2,
+        Time: expect.any(String),
+        AdminID: '2',
       },
     ]);
   });

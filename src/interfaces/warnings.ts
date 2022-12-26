@@ -1,8 +1,8 @@
 export interface Warning {
   WarningID: string;
-  UserID: bigint | number;
-  GuildID: bigint | number;
+  UserID: string;
+  GuildID: string;
   Reason: string;
-  Time: number;
-  AdminID: bigint | number;
+  Time: string;
+  AdminID: string;
 }

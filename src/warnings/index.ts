@@ -26,11 +26,11 @@ export async function createWarning(userID: bigint | number, guildID: bigint | n
   const userGuildID: number = await createUserGuildID(guildID, userID);
   const RESULT: Warning = {
     WarningID: uuidv4(),
-    UserID: userID,
-    GuildID: guildID,
+    UserID: userID.toString(),
+    GuildID: guildID.toString(),
     Reason: reason,
-    Time: Math.floor(Date.now() / 1000),
-    AdminID: adminID,
+    Time: Math.floor(Date.now() / 1000).toString(),
+    AdminID: adminID.toString(),
   };
   await DB.execute('INSERT INTO Warnings (WarningID, UserGuildID, Reason, Time, AdminID) VALUES (?, ?, ?, FROM_UNIXTIME(?), ?)', [RESULT.WarningID, userGuildID, RESULT.Reason, RESULT.Time, RESULT.AdminID]);
   return RESULT;

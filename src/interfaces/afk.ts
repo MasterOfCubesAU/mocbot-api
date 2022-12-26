@@ -1,8 +1,8 @@
 export interface AFK {
-  UserID: bigint | number;
-  GuildID: bigint | number;
-  MessageID: bigint | number;
-  ChannelID: bigint | number;
+  UserID: string;
+  GuildID: string;
+  MessageID: string;
+  ChannelID: string;
   OldName: string;
   Reason: string;
 }
