@@ -15,7 +15,7 @@ const VALID_AFK_DATA = {
   MessageID: 1056206377569222700,
   ChannelID: 673449065593438200,
   OldName: 'A',
-  Reason: 'B'
+  Reason: 'B',
 };
 
 describe('Add User into AFK', () => {
@@ -28,7 +28,7 @@ describe('Add User into AFK', () => {
   test('AFKData incomplete', () => {
     const AFKData = {
       MessageID: 1056206377569222700,
-      ChannelID: 673449065593438200
+      ChannelID: 673449065593438200,
     };
     expect(http('POST', `${ROUTE}/2/1`, AFKData).statusCode).toStrictEqual(400);
   });
@@ -44,7 +44,7 @@ describe('Get User from AFK', () => {
     expect(http('GET', `${ROUTE}/2/1`).statusCode).toStrictEqual(200);
   });
   test('Guild/User ID not found', () => {
-    expect(http('GET', `${ROUTE}/2/1`).statusCode).toStrictEqual(200);
+    expect(http('GET', `${ROUTE}/2/1`).statusCode).toStrictEqual(404);
   });
 });
 

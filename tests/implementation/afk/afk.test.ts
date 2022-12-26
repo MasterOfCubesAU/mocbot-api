@@ -1,3 +1,4 @@
+import { getAFK, insertAFK, removeAFK } from '@src/afk';
 import DB from '@utils/DBHandler';
 
 // Ensure DB is in a predictable state by clearing it initially, then again after every test
@@ -14,35 +15,32 @@ const VALID_AFK_DATA = {
   MessageID: 1056206377569222700,
   ChannelID: 673449065593438200,
   OldName: 'A',
-  Reason: 'B'
+  Reason: 'B',
 };
 
 describe('Add a user into AFK', () => {
+  const AFKData = {
+    MessageID: 1056206377569222700,
+    ChannelID: 673449065593438200,
+  };
   test('Valid', async () => {
-    expect(await insertAFK(1, 2, VALID_AFK_DATA)).toStrictEqual(
-      {
-        UserID: '1n',
-        GuildID: '2n',
-        MessageID: VALID_AFK_DATA.MessageID,
-        ChannelID: VALID_AFK_DATA.ChannelID,
-        OldName: VALID_AFK_DATA.OldName,
-        Reason: VALID_AFK_DATA.Reason
-      }
-    );
+    expect(await insertAFK(1, 2, VALID_AFK_DATA)).toStrictEqual({
+      UserID: 1,
+      GuildID: 2,
+      MessageID: VALID_AFK_DATA.MessageID,
+      ChannelID: VALID_AFK_DATA.ChannelID,
+      OldName: VALID_AFK_DATA.OldName,
+      Reason: VALID_AFK_DATA.Reason,
+    });
   });
   test('Empty AFKData', async () => {
     await expect(insertAFK(1, 2, {})).rejects.toThrow();
   });
   test('Incomplete AFKData', async () => {
-    const AFKData = {
-      MessageID: 1056206377569222700,
-      ChannelID: 673449065593438200
-    };
     await expect(insertAFK(1, 2, AFKData)).rejects.toThrow();
   });
   test('User already in AFK', async () => {
     await insertAFK(1, 2, VALID_AFK_DATA);
-
     await expect(insertAFK(1, 2, AFKData)).rejects.toThrow();
   });
 });
@@ -51,19 +49,17 @@ describe('Get AFKData', () => {
   test('Valid', async () => {
     await insertAFK(1, 2, VALID_AFK_DATA);
 
-    expect(await getAFK(1, 2)).toStrictEqual(
-      {
-        UserID: '1n',
-        GuildID: '2n',
-        MessageID: VALID_AFK_DATA.MessageID,
-        ChannelID: VALID_AFK_DATA.ChannelID,
-        OldName: VALID_AFK_DATA.OldName,
-        Reason: VALID_AFK_DATA.Reason
-      }
-    );
+    expect(await getAFK(1, 2)).toStrictEqual({
+      UserID: 1,
+      GuildID: 2,
+      MessageID: VALID_AFK_DATA.MessageID,
+      ChannelID: VALID_AFK_DATA.ChannelID,
+      OldName: VALID_AFK_DATA.OldName,
+      Reason: VALID_AFK_DATA.Reason,
+    });
   });
   test('Guild/User ID not found', async () => {
-    await expect(getAFK(1, 2, VALID_AFK_DATA)).rejects.toThrow();
+    await expect(getAFK(1, 2)).rejects.toThrow();
   });
 });
 
