@@ -8,8 +8,8 @@ export interface AFK {
 }
 
 export interface AFKInput {
-  MessageID?: bigint | number;
-  ChannelID?: bigint | number;
+  MessageID?: string;
+  ChannelID?: string;
   OldName?: string;
   Reason?: string;
 }

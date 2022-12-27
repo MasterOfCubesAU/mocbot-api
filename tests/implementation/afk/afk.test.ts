@@ -13,23 +13,23 @@ afterEach(async () => {
 afterAll(() => DB.close());
 
 const VALID_AFK_DATA = {
-  MessageID: BigInt('1056206377569222700'),
-  ChannelID: BigInt('673449065593438200'),
+  MessageID: '1056206377569222700',
+  ChannelID: '673449065593438200',
   OldName: 'A',
   Reason: 'B',
 };
 
 describe('Add a user into AFK', () => {
   const AFKData = {
-    MessageID: BigInt('1056206377569222700'),
-    ChannelID: BigInt('673449065593438200'),
+    MessageID: '1056206377569222700',
+    ChannelID: '673449065593438200',
   };
   test('Valid', async () => {
     expect(await insertAFK(1, 2, VALID_AFK_DATA)).toStrictEqual({
       UserID: '1',
       GuildID: '2',
-      MessageID: VALID_AFK_DATA.MessageID.toString(),
-      ChannelID: VALID_AFK_DATA.ChannelID.toString(),
+      MessageID: VALID_AFK_DATA.MessageID,
+      ChannelID: VALID_AFK_DATA.ChannelID,
       OldName: VALID_AFK_DATA.OldName,
       Reason: VALID_AFK_DATA.Reason,
     });
@@ -53,8 +53,8 @@ describe('Get AFKData', () => {
     expect(await getAFK(1, 2)).toStrictEqual({
       UserID: '1',
       GuildID: '2',
-      MessageID: VALID_AFK_DATA.MessageID.toString(),
-      ChannelID: VALID_AFK_DATA.ChannelID.toString(),
+      MessageID: VALID_AFK_DATA.MessageID,
+      ChannelID: VALID_AFK_DATA.ChannelID,
       OldName: VALID_AFK_DATA.OldName,
       Reason: VALID_AFK_DATA.Reason,
     });

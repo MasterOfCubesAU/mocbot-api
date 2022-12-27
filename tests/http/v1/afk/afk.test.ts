@@ -12,8 +12,8 @@ afterEach(async () => {
 afterAll(() => DB.close());
 
 const VALID_AFK_DATA = {
-  MessageID: 1056206377569222700,
-  ChannelID: 673449065593438200,
+  MessageID: '1056206377569222700',
+  ChannelID: '673449065593438200',
   OldName: 'A',
   Reason: 'B',
 };
@@ -27,8 +27,8 @@ describe('Add User into AFK', () => {
   });
   test('AFKData incomplete', () => {
     const AFKData = {
-      MessageID: 1056206377569222700,
-      ChannelID: 673449065593438200,
+      MessageID: '1056206377569222700',
+      ChannelID: '673449065593438200',
     };
     expect(http('POST', `${ROUTE}/2/1`, AFKData).statusCode).toStrictEqual(400);
   });
