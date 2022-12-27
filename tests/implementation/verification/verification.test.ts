@@ -49,15 +49,15 @@ describe('removeVerification()', () => {
 describe('updateVerification()', () => {
   test('Guild ID not found', async () => {
     await DB.execute('INSERT INTO UserInGuilds (UserID, GuildID) VALUES (?, ?)', [1, 2]);
-    await expect(updateVerification(1, 1, { MessageID: 123, ChannelID: 456 })).rejects.toThrow();
+    await expect(updateVerification(1, 1, { MessageID: '123', ChannelID: '456' })).rejects.toThrow();
   });
   test('User ID not found', async () => {
     await DB.execute('INSERT INTO UserInGuilds (UserID, GuildID) VALUES (?, ?)', [1, 2]);
-    await expect(updateVerification(2, 2, { MessageID: 123, ChannelID: 456 })).rejects.toThrow();
+    await expect(updateVerification(2, 2, { MessageID: '123', ChannelID: '456' })).rejects.toThrow();
   });
   test('Valid', async () => {
     await addVerification(1, 2);
-    await expect(updateVerification(1, 2, { MessageID: 123, ChannelID: 456 })).resolves.not.toThrow();
+    await expect(updateVerification(1, 2, { MessageID: '123', ChannelID: '456' })).resolves.not.toThrow();
   });
   test('Invalid input (empty)', async () => {
     await addVerification(1, 2);
@@ -65,6 +65,6 @@ describe('updateVerification()', () => {
   });
   test('Invalid input (missing one key)', async () => {
     await addVerification(1, 2);
-    await expect(updateVerification(1, 2, { MessageID: 123 })).rejects.toThrow();
+    await expect(updateVerification(1, 2, { MessageID: '123' })).rejects.toThrow();
   });
 });

@@ -64,7 +64,7 @@ export async function updateVerification(userID: bigint | number, guildID: bigin
   if (Object.keys(data).length !== 2 || !('MessageID' in data && 'ChannelID' in data)) {
     throw createErrors(400, 'MessageID and ChannelID not provided');
   }
-  const userGuildID = await getUserGuildID(guildID, userID);
+  const userGuildID = await getUserGuildID(guildID, userID, 'UserGuildVerification');
   const oldData: Verification = await DB.record('SELECT MessageID, ChannelID, UNIX_TIMESTAMP(JoinTime) FROM Verification WHERE UserGuildID = ?', [userGuildID]);
   const newData: Verification = lodash.merge(oldData, data);
   await DB.execute('UPDATE Verification SET MessageID = ?, ChannelID = ? WHERE UserGuildID = ?', [newData.MessageID, newData.ChannelID, userGuildID]);

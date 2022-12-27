@@ -35,10 +35,10 @@ describe('Remove Verification', () => {
 describe('Update Verification', () => {
   test('Valid', () => {
     expect(http('POST', `${ROUTE}/2/1`).statusCode).toStrictEqual(200);
-    expect(http('PATCH', `${ROUTE}/2/1`, { MessageID: 123, ChannelID: 456 }).statusCode).toStrictEqual(200);
+    expect(http('PATCH', `${ROUTE}/2/1`, { MessageID: '123', ChannelID: '456' }).statusCode).toStrictEqual(200);
   });
   test('Invalid Guild/User ID', () => {
-    expect(http('PATCH', `${ROUTE}/2/1`, { MessageID: 123, ChannelID: 456 }).statusCode).toStrictEqual(404);
+    expect(http('PATCH', `${ROUTE}/2/1`, { MessageID: '123', ChannelID: '456' }).statusCode).toStrictEqual(404);
   });
   test('Missing body', () => {
     expect(http('PATCH', `${ROUTE}/2/1`, {}).statusCode).toStrictEqual(400);
