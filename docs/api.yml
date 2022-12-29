@@ -8,7 +8,7 @@ info:
     - The [MOCBOT API](https://github.com/MasterOfCubesAU/mocbot-api) repository
   contact:
     email: masterofcubesau@gmail.com
-  version: 1.1.0
+  version: 1.2.0
 externalDocs:
   description: Find out more about MOCBOT
   url: https://mocbot.masterofcubesau.com
@@ -31,6 +31,8 @@ tags:
     description: User Verification operations
   - name: AFK
     description: User AFK operations
+  - name: Developers
+    description: Developer related operations
 paths:
   /xp/{guild_id}:
     get:
@@ -738,6 +740,22 @@ paths:
           $ref: "#/components/responses/NotAuthorized"
         "404":
           description: Guild/User ID not found
+    get:
+      tags:
+        - Developers
+      summary: Fetches the userIDs of the developers
+      description: |-
+        This route fetches the userIDs of the developers from the database
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: string
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
 components:
   responses:
     NotAuthorized:
