@@ -6,7 +6,7 @@ import { getDevelopers } from '@src/developers';
 const router = express.Router();
 
 router.get(
-  '',
+  '/',
   asyncHandler(async (req: Request, res: Response) => {
     res.json(await getDevelopers());
   })
