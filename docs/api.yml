@@ -8,7 +8,7 @@ info:
     - The [MOCBOT API](https://github.com/MasterOfCubesAU/mocbot-api) repository
   contact:
     email: masterofcubesau@gmail.com
-  version: 1.2.0
+  version: 1.3.0
 externalDocs:
   description: Find out more about MOCBOT
   url: https://mocbot.masterofcubesau.com
@@ -32,7 +32,9 @@ tags:
   - name: AFK
     description: User AFK operations
   - name: Developers
-    description: Developer related operations
+    description: Developer related operation
+  - name: Roles
+    description: Guild Role operations
 paths:
   /xp/{guild_id}:
     get:
@@ -758,6 +760,140 @@ paths:
                   type: string
         '401':
           $ref: '#/components/responses/NotAuthorized'
+  /roles/{guild_id}:
+    post:
+      tags:
+        - Roles
+      summary: Creates a roles lookup table for a server 
+      parameters:
+        - name: guild_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The Guild ID you would like to create roles for
+      requestBody:
+        description: The roles to add for this guild
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Roles"
+      responses:
+        "200":
+          description: OK. Returns the new roles that were added
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Roles"
+        "400":
+          description: Roles were not provided
+        "401":
+          $ref: "#/components/responses/NotAuthorized"
+        "409":
+          description: Roles for the guild already exist
+    get:
+      tags:
+        - Roles
+      summary: Fetches the current roles for a server
+      parameters:
+        - name: guild_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The Guild ID you would like to fetch roles for
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Roles"
+        "401":
+          $ref: "#/components/responses/NotAuthorized"
+        "404":
+          description: Guild ID not found
+    patch:
+      tags:
+        - Roles
+      summary: Updates existing roles for a server
+      requestBody:
+        description: An object with only the roles to update for this guild
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Roles"
+      parameters:
+        - name: guild_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The Guild ID you would like to update roles for
+      responses:
+        "200":
+          description: OK. Returns the new complete roles object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Roles"
+        "400":
+          description: New roles were not provided
+        "404":
+          description: Guild ID not found
+    put:
+      tags:
+        - Roles
+      summary: Replaces an existing roles configuration with a new configuration
+      parameters:
+        - name: guild_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The Guild ID you would like to replace roles for
+      requestBody:
+        description: The roles to set for this guild
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Roles"
+      responses:
+        "200":
+          description: OK. Returns the new roles
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Roles"
+        "400":
+          description: New roles were not provided
+        "404":
+          description: Guild ID not found
+    delete:
+      tags:
+        - Roles
+      summary: Removes a roles configuration entry for a server
+      parameters:
+        - name: guild_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The Guild ID you would like to remove roles for
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmptyObject"
+        "401":
+          $ref: "#/components/responses/NotAuthorized"
+        "404":
+          description: Guild ID not found
 components:
   responses:
     NotAuthorized:
@@ -949,5 +1085,20 @@ components:
           type: string
           description: The reason for the user being AFK
           example: "B"
+    Roles:
+      type: object
+      properties:
+        LevelRoles:
+          type: object
+          example:
+            "1": "1"
+            "2": "2"
+            "3": "3"
+        JoinRoles:
+          type: array
+          items:
+            type: string
+            example: "1"
+ 
 security:
   - APIKey: []
