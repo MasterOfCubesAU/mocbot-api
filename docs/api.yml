@@ -755,9 +755,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items: 
-                  type: string
+                $ref: "#/components/schemas/Developers"
         '401':
           $ref: '#/components/responses/NotAuthorized'
   /roles/{guild_id}:
@@ -1004,6 +1002,7 @@ components:
           example: "124"
     Settings:
       type: object
+      additionalProperties: true
       example:
         setting_1: true
         setting_2: false
@@ -1099,6 +1098,11 @@ components:
           items:
             type: string
             example: "1"
+    Developers:
+      type: array
+      items:
+        type: string
+        example: "1"
  
 security:
   - APIKey: []
