@@ -1,7 +1,10 @@
 name: MOCBOT API
 
 # Controls when the workflow will run
-on: push
+on:
+  pull_request:
+    branches:
+      - main
 
 env:
   HOST: 127.0.0.1

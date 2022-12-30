@@ -7,6 +7,7 @@ import warningsRouter from './warnings';
 import verificationRouter from './verification';
 import afkRouter from './afk';
 import developersRouter from './developers';
+import rolesRouter from './roles';
 
 const router = express.Router();
 
@@ -16,5 +17,6 @@ router.use('/warnings', warningsRouter);
 router.use('/verification', verificationRouter);
 router.use('/afk', afkRouter);
 router.use('/developers', developersRouter);
+router.use('/roles', rolesRouter);
 
 export default router;
