@@ -937,6 +937,13 @@ paths:
             type: integer
           required: true
           description: The guild ID of the guild to create a new lobby in
+      requestBody:
+        description: The data to set for this lobby
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GuildLobbyInput"
       responses:
         "200":
           description: OK
@@ -948,18 +955,26 @@ paths:
           description: Missing data for lobby/no data provided
         "401":
           $ref: "#/components/responses/NotAuthorized"
-  /lobby/{lobby_id}:
+        "409":
+          description: If the user is already a leader of a lobby in that guild
+  /lobby/{guild_id}/{leader_id}:
     get:
       tags:
         - Lobby Guilds
-      summary: Gets lobby data from a given lobby ID
+      summary: Gets lobby data from a given guild ID and leader ID
       parameters:
-        - name: lobby_id
+        - name: guild_id
           in: path
           schema:
             type: integer
           required: true
-          description: The Lobby ID you would like to update data for
+          description: The guild ID of the guild that the lobby belongs to 
+        - name: leader_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The leader ID of the leader that the lobby belongs to 
       responses:
         "200":
           description: OK. Returns the data of the lobby
@@ -970,18 +985,24 @@ paths:
         "401":
           $ref: "#/components/responses/NotAuthorized"
         "404":
-          description: Lobby ID not found
+          description: Lobby not found
     put:
       tags:
         - Lobby Guilds
-      summary: Replaces existing lobby data with new data for a given lobby ID
+      summary: Replaces existing lobby data with new data for a given guild ID and leader ID
       parameters:
-        - name: lobby_id
+        - name: guild_id
           in: path
           schema:
             type: integer
           required: true
-          description: The lobby ID you would like to replace data for
+          description: The guild ID of the guild that the lobby belongs to 
+        - name: leader_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The leader ID of the leader that the lobby belongs to 
       requestBody:
         description: The data to set for this lobby
         required: true
@@ -1001,18 +1022,24 @@ paths:
         "401":
           $ref: "#/components/responses/NotAuthorized"
         "404":
-          description: Lobby ID not found
+          description: Lobby not found
     patch:
       tags:
         - Lobby Guilds
-      summary: Updates existing lobby data with the new provided data for a given lobby ID
+      summary: Updates existing lobby data with the new provided data for a given guild ID and leader ID
       parameters:
-        - name: lobby_id
+        - name: guild_id
           in: path
           schema:
             type: integer
           required: true
-          description: The lobby ID you would like to update data for
+          description: The guild ID of the guild that the lobby belongs to 
+        - name: leader_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The leader ID of the leader that the lobby belongs to 
       requestBody:
         description: The data to update for this lobby
         required: true
@@ -1032,18 +1059,24 @@ paths:
         "401":
           $ref: "#/components/responses/NotAuthorized"
         "404":
-          description: Lobby ID not found
+          description: Lobby not found
     delete:
       tags:
         - Lobby Guilds
-      summary: Deletes existing lobby data with the given lobby ID
+      summary: Deletes existing lobby data with the given guild ID and leader ID
       parameters:
-        - name: lobby_id
+        - name: guild_id
           in: path
           schema:
             type: integer
           required: true
-          description: The lobby ID you would like to update data for
+          description: The guild ID of the guild that the lobby belongs to 
+        - name: leader_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The leader ID of the leader that the lobby belongs to 
       responses:
         "200":
           description: OK
@@ -1054,19 +1087,25 @@ paths:
         "401":
           $ref: "#/components/responses/NotAuthorized"
         "404":
-          description: Lobby ID not found
-  /lobby/{lobby_id}/users:
+          description: Lobby not found
+  /lobby/{guild_id}/{leader_id}/users:
     get:
       tags:
         - Lobby Users
       summary: Gets users in a given lobby
       parameters:
-        - name: lobby_id
+        - name: guild_id
           in: path
           schema:
             type: integer
           required: true
-          description: The Lobby ID you would like to fetch users from
+          description: The guild ID of the guild that the lobby belongs to 
+        - name: leader_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The leader ID of the leader that the lobby belongs to 
       responses:
         "200":
           description: OK. Returns the users in the lobby
@@ -1077,18 +1116,24 @@ paths:
         "401":
           $ref: "#/components/responses/NotAuthorized"
         "404":
-          description: Lobby ID not found
+          description: Lobby not found
     post:
       tags:
         - Lobby Users
       summary: Adds a new user(s) into a given lobby
       parameters:
-        - name: lobby_id
+        - name: guild_id
           in: path
           schema:
             type: integer
           required: true
-          description: The lobby ID you would like to replace data for
+          description: The guild ID of the guild that the lobby belongs to 
+        - name: leader_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The leader ID of the leader that the lobby belongs to 
       requestBody:
         description: The user ID(s) to add into the lobby
         required: true
@@ -1108,18 +1153,24 @@ paths:
         "401":
           $ref: "#/components/responses/NotAuthorized"
         "404":
-          description: Lobby ID not found
+          description: Lobby not found
     put:
       tags:
         - Lobby Users
       summary: Deletes user(s) from a given lobby
       parameters:
-        - name: lobby_id
+        - name: guild_id
           in: path
           schema:
             type: integer
           required: true
-          description: The lobby ID you would like to delete users from
+          description: The guild ID of the guild that the lobby belongs to 
+        - name: leader_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The leader ID of the leader that the lobby belongs to 
       requestBody:
         description: The user ID(s) to delete from the lobby
         required: true
@@ -1133,13 +1184,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/LobbyUsers"
+                $ref: "#/components/schemas/EmptyObject"
         "400":
           description: Users to delete were not provided
         "401":
           $ref: "#/components/responses/NotAuthorized"
         "404":
-          description: Lobby ID not found
+          description: Lobby not found
 
 components:
   responses:
@@ -1385,7 +1436,7 @@ components:
         LeaderID:
           type: string
           description: The user ID of the leader of the lobby
-          example: "A"
+          example: "123"
         InviteOnly:
           type: boolean
           description: If the lobby is invite-only
@@ -1412,7 +1463,7 @@ components:
         LeaderID:
           type: string
           description: The user ID of the leader of the lobby
-          example: "A"
+          example: "123"
         InviteOnly:
           type: boolean
           description: If the lobby is invite-only

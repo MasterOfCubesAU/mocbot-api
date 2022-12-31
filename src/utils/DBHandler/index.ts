@@ -59,8 +59,12 @@ class DatabaseHandler {
    * @param values Array of values to be substituted into SQL Query
    * @returns {void}
    */
-  static async execute(query: string, values?: any | any[] | { [param: string]: any }): Promise<any> {
-    await DatabaseHandler.pool.promise().execute(query, values);
+  static async execute(query: string, values?: any | any[] | { [param: string]: any }, multiple = false): Promise<any> {
+    if (multiple) {
+      await DatabaseHandler.pool.promise().query(query, values);
+    } else {
+      await DatabaseHandler.pool.promise().execute(query, values);
+    }
   }
 
   /**
