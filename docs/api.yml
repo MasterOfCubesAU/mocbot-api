@@ -1152,10 +1152,10 @@ paths:
           $ref: "#/components/responses/NotAuthorized"
         "404":
           description: Lobby not found
-    put:
+    delete:
       tags:
         - Lobby Users
-      summary: Deletes user(s) from a given lobby
+      summary: Deletes a user from a given lobby
       parameters:
         - name: guild_id
           in: path
@@ -1169,13 +1169,12 @@ paths:
             type: integer
           required: true
           description: The leader ID of the leader that the lobby belongs to 
-      requestBody:
-        description: The user ID(s) to delete from the lobby
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/LobbyUsers"
+        - name: user_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The user ID of the user to remove
       responses:
         "200":
           description: OK
@@ -1184,7 +1183,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/EmptyObject"
         "400":
-          description: Users to delete were not provided
+          description: User to delete was not provided
         "401":
           $ref: "#/components/responses/NotAuthorized"
         "404":

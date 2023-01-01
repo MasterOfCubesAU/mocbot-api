@@ -38,7 +38,6 @@ router.delete(
 router.get(
   '/:guild_id/:leader_id/users',
   asyncHandler(async (req: Request, res: Response) => {
-    console.log(req.params.guild_id, req.params.leader_id);
     res.json(await getLobbyUsers(BigInt(req.params.guild_id), BigInt(req.params.leader_id)));
   })
 );
@@ -48,10 +47,10 @@ router.post(
     res.json(await addLobbyUsers(BigInt(req.params.guild_id), BigInt(req.params.leader_id), req.body));
   })
 );
-router.put(
-  '/:guild_id/:leader_id/users',
+router.delete(
+  '/:guild_id/:leader_id/:user_id',
   asyncHandler(async (req: Request, res: Response) => {
-    res.json(await deleteLobbyUsers(BigInt(req.params.guild_id), BigInt(req.params.leader_id), req.body));
+    res.json(await deleteLobbyUsers(BigInt(req.params.guild_id), BigInt(req.params.leader_id), BigInt(req.params.user_id)));
   })
 );
 

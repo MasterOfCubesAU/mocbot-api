@@ -137,11 +137,8 @@ export async function deleteLobby(guildID: bigint | number, leaderID: bigint | n
  * @returns {Promise<string[]>}
  */
 export async function getLobbyUsers(guildID: bigint | number, leaderID: bigint | number): Promise<string[]> {
-  const res: string[] = await DB.column('SELECT UserID FROM LobbyAndUsers WHERE GuildID = ? AND LeaderID = ?', [guildID, leaderID]);
-  if (res.length === 0) {
-    throw createErrors(404, 'No lobby was found for the provided inputs');
-  }
-  return res;
+  const lobbyID = await getLobbyID(guildID, leaderID);
+  return await DB.column('SELECT UserID FROM LobbyUsers WHERE LobbyID = ?', [lobbyID]);
 }
 
 /**
@@ -165,23 +162,56 @@ export async function addLobbyUsers(guildID: bigint | number, leaderID: bigint |
 }
 
 /**
- * Deletes user(s) from a given lobby
+ * Deletes user from a given lobby
  *
  * @param {bigint | number} guildID - the guild ID of the guild that the lobby belongs to
  * @param {bigint | number} leaderID - the user ID of the user who owns the lobby
- * @param {string[]} data - an array of user IDs to delete from the lobby
+ * @param {bigint | number} user_id - a userID to delete from the lobby
  * @throws {createErrors<400>} - if the input array is empty
  * @throws {createErrors<404>} - if the lobby cannot be found
  * @returns {Promise<Record<string, never>>}
  */
-export async function deleteLobbyUsers(guildID: bigint | number, leaderID: bigint | number, data: string[]): Promise<Record<string, never>> {
-  if (data.length === 0) {
+export async function deleteLobbyUsers(guildID: bigint | number, leaderID: bigint | number, user_id: bigint | number): Promise<Record<string, never>> {
+  if (user_id === undefined || null) {
     throw createErrors(400, 'No users were provided');
   }
   const lobbyID = await getLobbyID(guildID, leaderID);
-  const queryArray = data.map((k) => [lobbyID, k]);
-  await DB.execute('DELETE FROM LobbyUsers WHERE (LobbyID, UserID) IN (?)', [queryArray], true);
+  await DB.execute('DELETE FROM LobbyUsers WHERE LobbyID = ? AND UserID = ?', [lobbyID, user_id], true);
+  console.log(await getLobbyUsers(guildID, leaderID));
   return {};
+}
+
+/**
+ * Gets lobby data from a given guild ID and user ID
+ *
+ * @param {bigint | number} guildID - the guild ID of the guild that the lobby belongs to
+ * @param {bigint | number} userID - the user ID of the user who owns the lobby
+ * @throws {createErrors<404>} - if the lobby cannot be found
+ * @returns {Promise<GuildLobby>}
+ */
+export async function getLobbyByUser(guildID: bigint | number, userID: bigint | number): Promise<GuildLobby> {
+  const res: GuildLobby = await DB.record(`SELECT ${selectQuery} FROM LobbyAndGuilds g INNER JOIN LobbyUsers u ON g.LobbyID = u.LobbyID WHERE GuildID = ? AND UserID = ?`, [guildID, userID]);
+  if (Object.keys(res).length === 0) {
+    throw createErrors(404, 'No lobby was found for the provided inputs');
+  }
+  res.InviteOnly = Boolean(res.InviteOnly);
+  return res;
+}
+
+/**
+ * Gets data for all lobbies
+ *
+ * @throws {createErrors<404>} - if no lobbies exist
+ * @returns {Promise<GuildLobby[]>}
+ */
+export async function getAllLobbies(): Promise<GuildLobby[]> {
+  const res: GuildLobby[] = await DB.records(`SELECT ${selectQuery} FROM LobbyAndGuilds`);
+  if (res.length === 0) {
+    throw createErrors(404, 'No lobbies exist');
+  }
+  return res.map((l) => {
+    return { ...l, InviteOnly: Boolean(l.InviteOnly) };
+  });
 }
 
 /**
