@@ -80,7 +80,7 @@ describe('GET lobby by user', () => {
   });
   test('Lobby does not exist with inputs', () => {
     http('POST', `${ROUTE}/${GUILD_ID}`, VALID_LOBBY_INPUT);
-    expect(http('GET', `${ROUTE}/${GUILD_ID}/1`).statusCode).toStrictEqual(404);
+    expect(http('GET', `/v1/lobbies/${GUILD_ID}/1`).statusCode).toStrictEqual(404);
   });
 });
 
