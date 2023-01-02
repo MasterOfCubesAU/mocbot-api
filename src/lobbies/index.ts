@@ -166,17 +166,17 @@ export async function addLobbyUsers(guildID: bigint | number, leaderID: bigint |
  *
  * @param {bigint | number} guildID - the guild ID of the guild that the lobby belongs to
  * @param {bigint | number} leaderID - the user ID of the user who owns the lobby
- * @param {bigint | number} user_id - a userID to delete from the lobby
+ * @param {bigint | number} userID - a userID to delete from the lobby
  * @throws {createErrors<400>} - if the input array is empty
  * @throws {createErrors<404>} - if the lobby cannot be found
  * @returns {Promise<Record<string, never>>}
  */
-export async function deleteLobbyUsers(guildID: bigint | number, leaderID: bigint | number, user_id: bigint | number): Promise<Record<string, never>> {
-  if (user_id === undefined || null) {
+export async function deleteLobbyUsers(guildID: bigint | number, leaderID: bigint | number, userID: bigint | number): Promise<Record<string, never>> {
+  if (userID === undefined || null) {
     throw createErrors(400, 'No users were provided');
   }
   const lobbyID = await getLobbyID(guildID, leaderID);
-  await DB.execute('DELETE FROM LobbyUsers WHERE LobbyID = ? AND UserID = ?', [lobbyID, user_id], true);
+  await DB.execute('DELETE FROM LobbyUsers WHERE LobbyID = ? AND UserID = ?', [lobbyID, userID], true);
   return {};
 }
 
