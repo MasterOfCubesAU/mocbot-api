@@ -76,7 +76,7 @@ describe('GET lobby by user', () => {
   test('Valid', () => {
     http('POST', `${ROUTE}/${GUILD_ID}`, VALID_LOBBY_INPUT);
     expect(http('POST', `${ROUTE}/${GUILD_ID}/${LOBBY_LEADER_ID}/users`, ['1']).statusCode).toStrictEqual(200);
-    expect(http('GET', `${ROUTE}/${GUILD_ID}/1`).statusCode).toStrictEqual(200);
+    expect(http('GET', `${ROUTE}/${GUILD_ID}/${LOBBY_LEADER_ID}/users`).statusCode).toStrictEqual(200);
   });
   test('Lobby does not exist with inputs', () => {
     http('POST', `${ROUTE}/${GUILD_ID}`, VALID_LOBBY_INPUT);
@@ -87,10 +87,10 @@ describe('GET lobby by user', () => {
 describe('GET all lobbies', () => {
   test('Valid', () => {
     expect(http('POST', `${ROUTE}/${GUILD_ID}`, VALID_LOBBY_INPUT).statusCode).toStrictEqual(200);
-    expect(http('GET', `/v1/lobbies`).statusCode).toStrictEqual(200);
+    expect(http('GET', '/v1/lobbies').statusCode).toStrictEqual(200);
   });
   test('No guilds exist', () => {
-    expect(http('GET', `/v1/lobbies`).statusCode).toStrictEqual(404);
+    expect(http('GET', '/v1/lobbies').statusCode).toStrictEqual(404);
   });
 });
 
