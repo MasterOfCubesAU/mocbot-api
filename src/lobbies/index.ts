@@ -177,7 +177,6 @@ export async function deleteLobbyUsers(guildID: bigint | number, leaderID: bigin
   }
   const lobbyID = await getLobbyID(guildID, leaderID);
   await DB.execute('DELETE FROM LobbyUsers WHERE LobbyID = ? AND UserID = ?', [lobbyID, user_id], true);
-  console.log(await getLobbyUsers(guildID, leaderID));
   return {};
 }
 

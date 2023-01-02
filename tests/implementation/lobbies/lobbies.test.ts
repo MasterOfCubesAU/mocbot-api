@@ -1,6 +1,6 @@
 /* eslint-disable quote-props */
 import DB from '@utils/DBHandler';
-import { createLobby, getLobby, getGuildLobbies, setLobby, updateLobby, addLobbyUsers, deleteLobbyUsers, deleteLobby, getLobbyUsers } from '@src/lobbies';
+import { createLobby, getLobby, getGuildLobbies, setLobby, updateLobby, addLobbyUsers, deleteLobbyUsers, deleteLobby, getLobbyUsers, getAllLobbies, getLobbyByUser } from '@src/lobbies';
 
 // Ensure DB is in a predictable state by clearing it initially, then again after every test
 // We then close the DB at the end to remove any open handles
@@ -34,13 +34,23 @@ const LOBBY_LEADER_ID = BigInt(VALID_LOBBY_INPUT.LeaderID);
 
 // Lobby Testing
 
-describe('Get Lobbies', () => {
+describe('Get Lobbies by guild', () => {
   test('Valid', async () => {
     await createLobby(1, VALID_LOBBY_INPUT);
     expect(await getGuildLobbies(1)).toStrictEqual([VALID_LOBBY_OUTPUT]);
   });
   test('Guild ID does not exist', async () => {
     await expect(getGuildLobbies(1)).rejects.toThrow();
+  });
+});
+
+describe('Get all lobbies', () => {
+  test('Valid', async () => {
+    await createLobby(1, VALID_LOBBY_INPUT);
+    expect(await getAllLobbies()).toStrictEqual([VALID_LOBBY_OUTPUT]);
+  });
+  test('Guild ID does not exist', async () => {
+    await expect(getAllLobbies()).rejects.toThrow();
   });
 });
 
@@ -60,13 +70,25 @@ describe('Create Lobby', () => {
   });
 });
 
-describe('Get Lobby', () => {
+describe('Get Lobby by leader ID', () => {
   test('Valid', async () => {
     await createLobby(1, VALID_LOBBY_INPUT);
     expect(await getLobby(1, LOBBY_LEADER_ID)).toStrictEqual(VALID_LOBBY_OUTPUT);
   });
   test('Lobby does not exist', async () => {
     await expect(getLobby(1, LOBBY_LEADER_ID)).rejects.toThrow();
+  });
+});
+
+describe('Get Lobby by user ID', () => {
+  test('Valid', async () => {
+    await createLobby(1, VALID_LOBBY_INPUT);
+    await addLobbyUsers(1, LOBBY_LEADER_ID, ['2', '3']);
+    expect(await getLobbyByUser(1, 2)).toStrictEqual(VALID_LOBBY_OUTPUT);
+  });
+  test('Lobby with that user does not exist', async () => {
+    await createLobby(1, VALID_LOBBY_INPUT);
+    await expect(getLobbyByUser(1, 2)).rejects.toThrow();
   });
 });
 
@@ -184,26 +206,13 @@ describe('Add Users', () => {
 });
 
 describe('Delete Lobby Users', () => {
-  test('Valid (Single)', async () => {
+  test('Valid', async () => {
     await createLobby(1, VALID_LOBBY_INPUT);
     await addLobbyUsers(1, LOBBY_LEADER_ID, ['1', '2', '3', '4', '5']);
-    expect(await deleteLobbyUsers(1, LOBBY_LEADER_ID, ['1'])).toStrictEqual({});
-  });
-  test('Valid (All)', async () => {
-    await createLobby(1, VALID_LOBBY_INPUT);
-    await addLobbyUsers(1, LOBBY_LEADER_ID, ['1', '2', '3', '4', '5']);
-    expect(await deleteLobbyUsers(1, LOBBY_LEADER_ID, ['1', '2', '3', '4', '5'])).toStrictEqual({});
-  });
-  test('Valid (some invalid)', async () => {
-    await createLobby(1, VALID_LOBBY_INPUT);
-    await addLobbyUsers(1, LOBBY_LEADER_ID, ['1', '2', '3', '4', '5']);
-    expect(await deleteLobbyUsers(1, LOBBY_LEADER_ID, ['1', '5', '8', '9'])).toStrictEqual({});
-  });
-  test('No users to delete', async () => {
-    await createLobby(1, VALID_LOBBY_INPUT);
-    await expect(deleteLobbyUsers(1, LOBBY_LEADER_ID, [])).rejects.toThrow();
+    expect(await deleteLobbyUsers(1, LOBBY_LEADER_ID, 1)).toStrictEqual({});
+    expect(await getLobbyUsers(1, LOBBY_LEADER_ID)).toStrictEqual(['2', '3', '4', '5']);
   });
   test('Lobby does not exist', async () => {
-    await expect(deleteLobbyUsers(1, LOBBY_LEADER_ID, ['1', '2', '3', '4', '5'])).rejects.toThrow();
+    await expect(deleteLobbyUsers(1, LOBBY_LEADER_ID, 1)).rejects.toThrow();
   });
 });

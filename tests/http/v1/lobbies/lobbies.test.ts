@@ -36,7 +36,7 @@ const GUILD_ID = VALID_LOBBY_OUTPUT.LeaderID;
 
 // Lobby Testing
 
-describe('GET /lobbies', () => {
+describe('GET /lobbies by guild', () => {
   test('Valid', () => {
     expect(http('POST', `${ROUTE}/${GUILD_ID}`, VALID_LOBBY_INPUT).statusCode).toStrictEqual(200);
     expect(http('GET', `/v1/lobbies/${GUILD_ID}`).statusCode).toStrictEqual(200);
@@ -62,13 +62,35 @@ describe('POST', () => {
   });
 });
 
-describe('GET', () => {
+describe('GET lobby by leader', () => {
   test('Valid', () => {
     http('POST', `${ROUTE}/${GUILD_ID}`, VALID_LOBBY_INPUT);
     expect(http('GET', `${ROUTE}/${GUILD_ID}/${LOBBY_LEADER_ID}`).statusCode).toStrictEqual(200);
   });
   test('Lobby does not exist', () => {
     expect(http('GET', `${ROUTE}/${GUILD_ID}/${LOBBY_LEADER_ID}`).statusCode).toStrictEqual(404);
+  });
+});
+
+describe('GET lobby by user', () => {
+  test('Valid', () => {
+    http('POST', `${ROUTE}/${GUILD_ID}`, VALID_LOBBY_INPUT);
+    expect(http('POST', `${ROUTE}/${GUILD_ID}/${LOBBY_LEADER_ID}/users`, ['1']).statusCode).toStrictEqual(200);
+    expect(http('GET', `${ROUTE}/${GUILD_ID}/1`).statusCode).toStrictEqual(200);
+  });
+  test('Lobby does not exist with inputs', () => {
+    http('POST', `${ROUTE}/${GUILD_ID}`, VALID_LOBBY_INPUT);
+    expect(http('GET', `${ROUTE}/${GUILD_ID}/1`).statusCode).toStrictEqual(404);
+  });
+});
+
+describe('GET all lobbies', () => {
+  test('Valid', () => {
+    expect(http('POST', `${ROUTE}/${GUILD_ID}`, VALID_LOBBY_INPUT).statusCode).toStrictEqual(200);
+    expect(http('GET', `/v1/lobbies`).statusCode).toStrictEqual(200);
+  });
+  test('No guilds exist', () => {
+    expect(http('GET', `/v1/lobbies`).statusCode).toStrictEqual(404);
   });
 });
 
@@ -173,13 +195,9 @@ describe('Delete Lobby Users', () => {
   test('Valid (Single)', () => {
     http('POST', `${ROUTE}/${GUILD_ID}`, VALID_LOBBY_INPUT);
     http('POST', `${ROUTE}/${GUILD_ID}/${LOBBY_LEADER_ID}/users`, ['1', '2', '3', '4', '5']);
-    expect(http('PUT', `${ROUTE}/${GUILD_ID}/${LOBBY_LEADER_ID}/users`, ['1']).statusCode).toStrictEqual(200);
-  });
-  test('No users to delete', () => {
-    http('POST', `${ROUTE}/${GUILD_ID}`, VALID_LOBBY_INPUT);
-    expect(http('PUT', `${ROUTE}/${GUILD_ID}/${LOBBY_LEADER_ID}/users`, []).statusCode).toStrictEqual(400);
+    expect(http('DELETE', `${ROUTE}/${GUILD_ID}/${LOBBY_LEADER_ID}/1`).statusCode).toStrictEqual(200);
   });
   test('Lobby does not exist', () => {
-    expect(http('PUT', `${ROUTE}/${GUILD_ID}/${LOBBY_LEADER_ID}/users`, ['1']).statusCode).toStrictEqual(404);
+    expect(http('DELETE', `${ROUTE}/${GUILD_ID}/${LOBBY_LEADER_ID}/1`).statusCode).toStrictEqual(404);
   });
 });
