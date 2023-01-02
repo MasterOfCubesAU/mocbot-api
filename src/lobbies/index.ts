@@ -136,7 +136,7 @@ export async function deleteLobby(guildID: bigint | number, leaderID: bigint | n
  * @throws {createErrors<404>} - if the lobby cannot be found
  * @returns {Promise<string[]>}
  */
-export async function getLobbyUsers(guildID: bigint | number, leaderID: bigint | number): Promise<string[]> {
+export async function getLobbyUser(guildID: bigint | number, leaderID: bigint | number): Promise<string[]> {
   const lobbyID = await getLobbyID(guildID, leaderID);
   return await DB.column('SELECT UserID FROM LobbyUsers WHERE LobbyID = ?', [lobbyID]);
 }

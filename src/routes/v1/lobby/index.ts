@@ -1,6 +1,6 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler';
-import { createLobby, addLobbyUsers, deleteLobby, deleteLobbyUsers, getLobby, getLobbyUsers, setLobby, updateLobby } from '@src/lobbies';
+import { createLobby, addLobbyUsers, deleteLobby, deleteLobbyUsers, getLobby, getLobbyUser, setLobby, updateLobby } from '@src/lobbies';
 import { Request, Response } from 'express';
 
 const router = express.Router();
@@ -38,7 +38,7 @@ router.delete(
 router.get(
   '/:guild_id/:leader_id/users',
   asyncHandler(async (req: Request, res: Response) => {
-    res.json(await getLobbyUsers(BigInt(req.params.guild_id), BigInt(req.params.leader_id)));
+    res.json(await getLobbyUser(BigInt(req.params.guild_id), BigInt(req.params.leader_id)));
   })
 );
 router.post(
