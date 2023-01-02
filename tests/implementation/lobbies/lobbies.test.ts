@@ -1,6 +1,6 @@
 /* eslint-disable quote-props */
 import DB from '@utils/DBHandler';
-import { createLobby, getLobby, getGuildLobbies, setLobby, updateLobby, addLobbyUsers, deleteLobbyUsers, deleteLobby, getLobbyUsers, getAllLobbies, getLobbyByUser } from '@src/lobbies';
+import { createLobby, getLobby, getGuildLobbies, setLobby, updateLobby, addLobbyUsers, deleteLobbyUser, deleteLobby, getLobbyUsers, getAllLobbies, getLobbyByUser } from '@src/lobbies';
 
 // Ensure DB is in a predictable state by clearing it initially, then again after every test
 // We then close the DB at the end to remove any open handles
@@ -209,10 +209,10 @@ describe('Delete Lobby Users', () => {
   test('Valid', async () => {
     await createLobby(1, VALID_LOBBY_INPUT);
     await addLobbyUsers(1, LOBBY_LEADER_ID, ['1', '2', '3', '4', '5']);
-    expect(await deleteLobbyUsers(1, LOBBY_LEADER_ID, 1)).toStrictEqual({});
+    expect(await deleteLobbyUser(1, LOBBY_LEADER_ID, 1)).toStrictEqual({});
     expect(await getLobbyUsers(1, LOBBY_LEADER_ID)).toStrictEqual(['2', '3', '4', '5']);
   });
   test('Lobby does not exist', async () => {
-    await expect(deleteLobbyUsers(1, LOBBY_LEADER_ID, 1)).rejects.toThrow();
+    await expect(deleteLobbyUser(1, LOBBY_LEADER_ID, 1)).rejects.toThrow();
   });
 });
