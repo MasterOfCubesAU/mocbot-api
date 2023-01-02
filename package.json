@@ -46,6 +46,7 @@
   },
   "dependencies": {
     "@types/express-serve-static-core": "^4.17.31",
+    "chalk": "^4.0.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
