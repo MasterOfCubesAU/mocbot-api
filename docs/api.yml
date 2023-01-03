@@ -8,7 +8,7 @@ info:
     - The [MOCBOT API](https://github.com/MasterOfCubesAU/mocbot-api) repository
   contact:
     email: masterofcubesau@gmail.com
-  version: 1.4.1
+  version: 1.4.2
 externalDocs:
   description: Find out more about MOCBOT
   url: https://mocbot.masterofcubesau.com
@@ -546,6 +546,36 @@ paths:
         "404":
           description: Warning ID not found
   /verification/{guild_id}/{user_id}:
+    get:
+      tags:
+        - Verification
+      summary: Gets verification data for the user
+      description: |-
+        This route fetches the verification data for the specified user
+      parameters:
+        - name: guild_id
+          in: path
+          schema:
+            type: string
+          required: true
+          description: The guild ID of the user
+        - name: user_id
+          in: path
+          schema:
+            type: string
+          required: true
+          description: The user ID of the user
+      responses:
+        "200":
+          description: OK. Returns a Verification object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Verification"
+        "401":
+          $ref: "#/components/responses/NotAuthorized"
+        "404":
+          description: "No verification data from the provided inputs"
     post:
       tags:
         - Verification
@@ -900,6 +930,22 @@ paths:
           $ref: "#/components/responses/NotAuthorized"
         "404":
           description: Guild ID not found
+  /lobbies:
+    get:
+      tags:
+        - Lobby Guilds
+      summary: Fetches all lobbies
+      responses:
+        "200":
+          description: OK. Returns all the lobbies
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GuildLobbies"
+        "401":
+          $ref: "#/components/responses/NotAuthorized"
+        "404":
+          description: No lobbies exist
   /lobbies/{guild_id}:
     get:
       tags:
@@ -952,22 +998,6 @@ paths:
           $ref: "#/components/responses/NotAuthorized"
         "404":
           description: There are no lobbies with these inputs
-  /lobbies:
-    get:
-      tags:
-        - Lobby Guilds
-      summary: Fetches all lobbies
-      responses:
-        "200":
-          description: OK. Returns all the lobbies
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GuildLobbies"
-        "401":
-          $ref: "#/components/responses/NotAuthorized"
-        "404":
-          description: No lobbies exist
   /lobby/{guild_id}:
     post:
       tags:
