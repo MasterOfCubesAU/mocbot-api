@@ -37,6 +37,7 @@ const transports = [
   new winston.transports.DailyRotateFile({
     frequency: '1d',
     filename: 'logs/error.log',
+    datePattern: 'YYYY-MM-DD',
     maxFiles: 7,
     level: 'error',
     format: winstonFileFormat,
@@ -44,6 +45,7 @@ const transports = [
   new winston.transports.DailyRotateFile({
     frequency: '1d',
     filename: 'logs/all.log',
+    datePattern: 'YYYY-MM-DD',
     maxFiles: 7,
     format: winstonFileFormat,
   }),
