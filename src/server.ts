@@ -7,6 +7,7 @@ import asyncHandler from 'express-async-handler';
 import { validateSession } from '@src/auth';
 import { SwaggerTheme } from 'swagger-themes';
 import { morganMiddleware } from '@utils/MorganMiddleware';
+import Logger from '@utils/Logger';
 import { Request, Response, NextFunction } from 'express';
 import chalk from 'chalk';
 
@@ -50,7 +51,9 @@ app.use('/v1', v1Route);
 
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   const statusCode = err.status || err.statusCode || 500;
-  console.log(statusCode === 500 ? chalk.hex('#FF0000').bold(err) : chalk.hex('#FFA500').bold(err.message));
+  if (statusCode === 500) {
+    Logger.error(chalk.hex('#FF0000').bold(err));
+  }
   res.status(statusCode).json({
     error: {
       message: err.message,
@@ -61,9 +64,9 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 
 // Listen
 const server = app.listen(parseInt(process.env.PORT), process.env.HOST, async () => {
-  console.log(`⚡️ Server listening on port ${process.env.PORT} at ${process.env.HOST}`);
+  Logger.debug(`⚡️ Server listening on port ${process.env.PORT} at ${process.env.HOST}`);
 });
 
 process.on('SIGINT', () => {
-  server.close(() => console.log('Shutting down server gracefully.'));
+  server.close(() => Logger.debug('Shutting down server gracefully.'));
 });
