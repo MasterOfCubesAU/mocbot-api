@@ -4,6 +4,8 @@ import { Verification, LockdownInput } from '@interfaces/verification';
 import { createUserGuildID, getUserGuildID } from '@utils/Misc';
 import lodash from 'lodash';
 
+const selectQuery = 'MessageID, ChannelID, UNIX_TIMESTAMP(JoinTime)';
+
 /**
  * Adds a user from a given guild into verification. Putting this user into lock down immediately is possible
  *
@@ -31,6 +33,22 @@ export async function addVerification(userID: bigint | number, guildID: bigint |
     GuildID: guildID.toString(),
     JoinTime: TIME.toString(),
   };
+}
+
+/**
+ * Fetches verification data for the given user
+ *
+ * @param {bigint | number} guildID - the guildID to fetch verification data from
+ * @param {bigint | number} userID - the userID to fetch verification data for
+ * @throws {createErrors<404>} - if verification data could not be found
+ * @returns {Promise<Verification>}
+ */
+export async function getVerification(guildID: bigint | number, userID: bigint | number): Promise<Verification> {
+  const res: Verification = await DB.record(`SELECT ${selectQuery} FROM UserGuildVerification WHERE GuildID = ? AND UserID = ?`, [guildID, userID]);
+  if (Object.keys(res).length === 0) {
+    throw createErrors(404, 'Verification data for this user in this guild does not exit.');
+  }
+  return res;
 }
 
 /**
@@ -65,7 +83,7 @@ export async function updateVerification(userID: bigint | number, guildID: bigin
     throw createErrors(400, 'MessageID and ChannelID not provided');
   }
   const userGuildID = await getUserGuildID(guildID, userID, 'UserGuildVerification');
-  const oldData: Verification = await DB.record('SELECT MessageID, ChannelID, UNIX_TIMESTAMP(JoinTime) FROM Verification WHERE UserGuildID = ?', [userGuildID]);
+  const oldData: Verification = await DB.record(`SELECT ${selectQuery} FROM Verification WHERE UserGuildID = ?`, [userGuildID]);
   const newData: Verification = lodash.merge(oldData, data);
   await DB.execute('UPDATE Verification SET MessageID = ?, ChannelID = ? WHERE UserGuildID = ?', [newData.MessageID, newData.ChannelID, userGuildID]);
   return newData;

@@ -1,4 +1,4 @@
-import { addVerification, removeVerification, updateVerification } from '@src/verification';
+import { addVerification, getVerification, removeVerification, updateVerification } from '@src/verification';
 import { createWarning } from '@src/warnings';
 import DB from '@utils/DBHandler';
 
@@ -26,6 +26,17 @@ describe('addVerification()', () => {
     await expect(addVerification(1, 2)).rejects.toThrow();
   });
 });
+
+describe('getVerification()', () => {
+  test('Valid', async () => {
+    await expect(addVerification(1, 2)).resolves.not.toThrow();
+    await expect(getVerification(2, 1)).resolves.not.toThrow();
+  });
+  test('Guild ID does not exist', async () => {
+    await expect(getVerification(2, 1)).rejects.toThrow();
+  });
+});
+
 describe('removeVerification()', () => {
   test('Guild ID not found', async () => {
     await DB.execute('INSERT INTO UserInGuilds (UserID, GuildID) VALUES (?, ?)', [1, 2]);

@@ -22,6 +22,17 @@ describe('Add Verification', () => {
   });
 });
 
+describe('Get Verification', () => {
+  test('Valid', () => {
+    http('POST', `${ROUTE}/2/1`);
+    const request = http('GET', `${ROUTE}/2/1`);
+    expect(request.statusCode).toStrictEqual(200);
+  });
+  test('Invalid (Guild does not exist)', () => {
+    expect(http('GET', `${ROUTE}/2/1`).statusCode).toStrictEqual(404);
+  });
+});
+
 describe('Remove Verification', () => {
   test('Valid', () => {
     expect(http('POST', `${ROUTE}/2/1`).statusCode).toStrictEqual(200);
