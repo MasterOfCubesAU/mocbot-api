@@ -1,13 +1,15 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-import morgan from 'morgan';
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
 import asyncHandler from 'express-async-handler';
 import { validateSession } from '@src/auth';
-import { Request, Response, NextFunction } from 'express';
 import { SwaggerTheme } from 'swagger-themes';
+import { morganMiddleware } from '@utils/MorganMiddleware';
+import Logger from '@utils/Logger';
+import { Request, Response, NextFunction } from 'express';
+import chalk from 'chalk';
 
 // Import API routes
 import v1Route from '@routes/v1';
@@ -19,7 +21,7 @@ app.use(cors());
 app.use('/public', express.static('public'));
 app.set('trust proxy', true);
 app.set('json replacer', (_: any, value: any) => (typeof value === 'bigint' ? value.toString() + 'n' : value));
-app.use(morgan(process.env.NODE_ENV !== 'production' ? 'dev' : 'common'));
+app.use(morganMiddleware);
 const theme = new SwaggerTheme('v3');
 
 const swaggerOptions = {
@@ -47,11 +49,24 @@ app.use(
 
 app.use('/v1', v1Route);
 
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  const statusCode = err.status || err.statusCode || 500;
+  if (statusCode === 500) {
+    Logger.error(chalk.hex('#FF0000').bold(err));
+  }
+  res.status(statusCode).json({
+    error: {
+      message: err.message,
+    },
+  });
+  return next();
+});
+
 // Listen
 const server = app.listen(parseInt(process.env.PORT), process.env.HOST, async () => {
-  console.log(`⚡️ Server listening on port ${process.env.PORT} at ${process.env.HOST}`);
+  Logger.debug(`⚡️ Server listening on port ${process.env.PORT} at ${process.env.HOST}`);
 });
 
 process.on('SIGINT', () => {
-  server.close(() => console.log('Shutting down server gracefully.'));
+  server.close(() => Logger.debug('Shutting down server gracefully.'));
 });

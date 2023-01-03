@@ -8,7 +8,7 @@ info:
     - The [MOCBOT API](https://github.com/MasterOfCubesAU/mocbot-api) repository
   contact:
     email: masterofcubesau@gmail.com
-  version: 1.4.0
+  version: 1.4.1
 externalDocs:
   description: Find out more about MOCBOT
   url: https://mocbot.masterofcubesau.com
@@ -923,6 +923,51 @@ paths:
           $ref: "#/components/responses/NotAuthorized"
         "404":
           description: There are no lobbies in this guild
+  /lobbies/{guild_id}/{user_id}:
+    get:
+      tags:
+        - Lobby Guilds
+      summary: Fetches a lobby by the guildID and userID
+      parameters:
+        - name: guild_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The Guild ID you would like to fetch lobbies from
+        - name: user_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The user ID in the lobby to search for 
+      responses:
+        "200":
+          description: OK. Returns the relevant lobby
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GuildLobby"
+        "401":
+          $ref: "#/components/responses/NotAuthorized"
+        "404":
+          description: There are no lobbies with these inputs
+  /lobbies:
+    get:
+      tags:
+        - Lobby Guilds
+      summary: Fetches all lobbies
+      responses:
+        "200":
+          description: OK. Returns all the lobbies
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GuildLobbies"
+        "401":
+          $ref: "#/components/responses/NotAuthorized"
+        "404":
+          description: No lobbies exist
   /lobby/{guild_id}:
     post:
       tags:
@@ -1152,10 +1197,10 @@ paths:
           $ref: "#/components/responses/NotAuthorized"
         "404":
           description: Lobby not found
-    put:
+    delete:
       tags:
         - Lobby Users
-      summary: Deletes user(s) from a given lobby
+      summary: Deletes a user from a given lobby
       parameters:
         - name: guild_id
           in: path
@@ -1169,13 +1214,12 @@ paths:
             type: integer
           required: true
           description: The leader ID of the leader that the lobby belongs to 
-      requestBody:
-        description: The user ID(s) to delete from the lobby
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/LobbyUsers"
+        - name: user_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The user ID of the user to remove
       responses:
         "200":
           description: OK
@@ -1184,7 +1228,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/EmptyObject"
         "400":
-          description: Users to delete were not provided
+          description: User to delete was not provided
         "401":
           $ref: "#/components/responses/NotAuthorized"
         "404":
