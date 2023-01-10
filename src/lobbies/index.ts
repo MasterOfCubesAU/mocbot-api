@@ -28,6 +28,7 @@ export async function getGuildLobbies(guildID: bigint | number): Promise<GuildLo
  * @param {bigint | number} guildID - the guildID to make a new lobby in
  * @param {GuildLobbyInput} data - the data for the new lobby
  * @throws {createErrors<400>} - missing data for the new lobby/missing properties in input object
+ * @throws {createErrors<409>} - user already is a lobby leader
  * @returns {Promise<GuildLobby>}
  */
 export async function createLobby(guildID: bigint | number, data: GuildLobbyInput): Promise<GuildLobby> {
@@ -36,9 +37,19 @@ export async function createLobby(guildID: bigint | number, data: GuildLobbyInpu
     throw createErrors(409, 'The user is already a leader of another lobby in this guild!');
   }
 
-  await DB.execute('INSERT INTO Lobbies (GuildID, LeaderID) VALUES (?, ?)', [guildID, data.LeaderID]);
-  const lobbyID = await DB.field('SELECT LAST_INSERT_ID()');
-  await DB.execute('INSERT INTO LobbyDetails VALUES (?, ?, ?, ?, ?, ?)', [lobbyID, data.LobbyName, data.VoiceChannelID, data.TextChannelID, data.RoleID, data.InviteOnly]);
+  const connection = await DB.pool.promise().getConnection();
+  try {
+    connection.query('START TRANSACTION');
+    connection.query('INSERT INTO Lobbies (GuildID, LeaderID) VALUES (?, ?)', [guildID, data.LeaderID]);
+    const [res, fields] = await connection.query('SELECT LobbyID FROM Lobbies WHERE GuildID = ? and LeaderID = ?', [guildID, data.LeaderID]);
+    connection.query('INSERT INTO LobbyDetails VALUES (?, ?, ?, ?, ?, ?)', [res[0][fields[0].name], data.LobbyName, data.VoiceChannelID, data.TextChannelID, data.RoleID, data.InviteOnly]);
+    connection.commit();
+  } catch (err) {
+    connection.rollback();
+  } finally {
+    connection.release();
+  }
+
   return {
     GuildID: guildID.toString(),
     LobbyName: data.LobbyName,
