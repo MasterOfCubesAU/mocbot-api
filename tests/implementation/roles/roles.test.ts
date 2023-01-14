@@ -12,16 +12,16 @@ afterEach(async () => {
 });
 afterAll(() => DB.close());
 
-const VALID_JOIN_ROLES = { JoinRoles: ['1', '2', '3'] };
-const VALID_LEVEL_ROLES = { LevelRoles: { '1': '123', '2': '456', '3': '789' } };
-const COMBINED_ROLES = Object.assign({}, VALID_JOIN_ROLES, VALID_LEVEL_ROLES);
+const VALID_JOIN_ROLES = { JoinRoles: ['1', '2', '3'], LevelRoles: null };
+const VALID_LEVEL_ROLES = { LevelRoles: { '1': '123', '2': '456', '3': '789' }, JoinRoles: null };
+const COMBINED_ROLES = { JoinRoles: ['1', '2', '3'], LevelRoles: { '1': '123', '2': '456', '3': '789' } };
 
 describe('Create Roles', () => {
   test('Valid (JoinRoles)', async () => {
-    expect(await createRoles(1, VALID_JOIN_ROLES)).toStrictEqual(Object.assign({}, VALID_JOIN_ROLES, { LevelRoles: null }));
+    expect(await createRoles(1, VALID_JOIN_ROLES)).toStrictEqual(VALID_JOIN_ROLES);
   });
   test('Valid (LevelRoles)', async () => {
-    expect(await createRoles(1, VALID_LEVEL_ROLES)).toStrictEqual(Object.assign({}, VALID_LEVEL_ROLES, { JoinRoles: null }));
+    expect(await createRoles(1, VALID_LEVEL_ROLES)).toStrictEqual(VALID_LEVEL_ROLES);
   });
   test('Valid (Combined)', async () => {
     expect(await createRoles(1, COMBINED_ROLES)).toStrictEqual(COMBINED_ROLES);
@@ -41,7 +41,7 @@ describe('Create Roles', () => {
 describe('Get Roles', () => {
   test('Valid', async () => {
     await createRoles(1, VALID_LEVEL_ROLES);
-    expect(await getRoles(1)).toStrictEqual(Object.assign({}, VALID_LEVEL_ROLES, { JoinRoles: null }));
+    expect(await getRoles(1)).toStrictEqual(VALID_LEVEL_ROLES);
   });
   test('Guild ID not found', async () => {
     await expect(getRoles(1)).rejects.toThrow();
@@ -51,17 +51,24 @@ describe('Get Roles', () => {
 describe('Update Roles', () => {
   test('Valid (JoinRoles)', async () => {
     await createRoles(1, COMBINED_ROLES);
-    expect(await updateRoles(1, { JoinRoles: ['4', '5', '6'] })).toStrictEqual(Object.assign({}, VALID_LEVEL_ROLES, { JoinRoles: ['1', '2', '3', '4', '5', '6'] }));
+    expect(await updateRoles(1, { JoinRoles: ['4', '5', '6'] })).toStrictEqual(Object.assign({}, VALID_LEVEL_ROLES, { JoinRoles: ['4', '5', '6'] }));
   });
   test('Valid (LevelRoles)', async () => {
     await createRoles(1, COMBINED_ROLES);
-    expect(await updateRoles(1, { LevelRoles: { '1': '246', '2': '8' } })).toStrictEqual(Object.assign({}, VALID_JOIN_ROLES, { LevelRoles: { '1': '246', '2': '8', '3': '789' } }));
+    expect(await updateRoles(1, { LevelRoles: { '1': '246', '2': '8' } })).toStrictEqual(Object.assign({}, VALID_JOIN_ROLES, { LevelRoles: { '1': '246', '2': '8' } }));
   });
   test('Valid (Combined)', async () => {
     await createRoles(1, COMBINED_ROLES);
     expect(await updateRoles(1, { LevelRoles: { '1': '453', '2': '3425' }, JoinRoles: ['100', '200', '300'] })).toStrictEqual({
-      LevelRoles: { '1': '453', '2': '3425', '3': '789' },
-      JoinRoles: ['1', '2', '3', '100', '200', '300'],
+      LevelRoles: { '1': '453', '2': '3425' },
+      JoinRoles: ['100', '200', '300'],
+    });
+  });
+  test('Valid (Setting a single key to null)', async () => {
+    await createRoles(1, COMBINED_ROLES);
+    expect(await updateRoles(1, { LevelRoles: null, JoinRoles: ['100', '200', '300'] })).toStrictEqual({
+      LevelRoles: null,
+      JoinRoles: ['100', '200', '300'],
     });
   });
   test('No roles provided', async () => {
@@ -80,11 +87,11 @@ describe('Update Roles', () => {
 describe('Set Roles', () => {
   test('Valid (JoinRoles)', async () => {
     await createRoles(1, COMBINED_ROLES);
-    expect(await setRoles(1, VALID_JOIN_ROLES)).toStrictEqual(Object.assign({}, VALID_JOIN_ROLES, { LevelRoles: null }));
+    expect(await setRoles(1, VALID_JOIN_ROLES)).toStrictEqual(VALID_JOIN_ROLES);
   });
   test('Valid (LevelRoles)', async () => {
     await createRoles(1, COMBINED_ROLES);
-    expect(await setRoles(1, VALID_LEVEL_ROLES)).toStrictEqual(Object.assign({}, VALID_LEVEL_ROLES, { JoinRoles: null }));
+    expect(await setRoles(1, VALID_LEVEL_ROLES)).toStrictEqual(VALID_LEVEL_ROLES);
   });
   test('Valid (Combined)', async () => {
     await createRoles(1, COMBINED_ROLES);
