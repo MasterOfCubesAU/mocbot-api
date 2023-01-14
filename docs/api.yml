@@ -8,7 +8,7 @@ info:
     - The [MOCBOT API](https://github.com/MasterOfCubesAU/mocbot-api) repository
   contact:
     email: masterofcubesau@gmail.com
-  version: 1.4.2
+  version: 1.4.3
 externalDocs:
   description: Find out more about MOCBOT
   url: https://mocbot.masterofcubesau.com
