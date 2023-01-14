@@ -1,7 +1,6 @@
 import DB from '@utils/DBHandler';
 import createErrors from 'http-errors';
 import { Roles, RolesInput } from '@src/interfaces/roles';
-import lodash from 'lodash';
 
 /**
  * Creates a roles lookup table for a server

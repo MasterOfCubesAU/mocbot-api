@@ -15,7 +15,6 @@ afterAll(() => DB.close());
 
 /* eslint-disable quote-props */
 const VALID_JOIN_ROLES = { JoinRoles: ['1', '2', '3'], LevelRoles: null };
-const VALID_LEVEL_ROLES = { LevelRoles: { '1': '123', '2': '456', '3': '789' }, JoinRoles: null };
 const COMBINED_ROLES = { JoinRoles: ['1', '2', '3'], LevelRoles: { '1': '123', '2': '456', '3': '789' } };
 /* eslint-enable quote-props */
 
