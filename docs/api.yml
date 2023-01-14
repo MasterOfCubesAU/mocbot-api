@@ -788,19 +788,19 @@ paths:
       description: |-
         This route fetches the userIDs of the developers from the database
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Developers"
-        '401':
-          $ref: '#/components/responses/NotAuthorized'
+        "401":
+          $ref: "#/components/responses/NotAuthorized"
   /roles/{guild_id}:
     post:
       tags:
         - Roles
-      summary: Creates a roles lookup table for a server 
+      summary: Creates a roles lookup table for a server
       parameters:
         - name: guild_id
           in: path
@@ -823,7 +823,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Roles"
         "400":
-          description: Roles were not provided
+          description: Client Error, see response body
         "401":
           $ref: "#/components/responses/NotAuthorized"
         "409":
@@ -876,7 +876,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Roles"
         "400":
-          description: New roles were not provided
+          description: Client Error, see response body
         "404":
           description: Guild ID not found
     put:
@@ -905,7 +905,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Roles"
         "400":
-          description: New roles were not provided
+          description: Client Error, see response body
         "404":
           description: Guild ID not found
     delete:
@@ -986,7 +986,7 @@ paths:
           schema:
             type: integer
           required: true
-          description: The user ID in the lobby to search for 
+          description: The user ID in the lobby to search for
       responses:
         "200":
           description: OK. Returns the relevant lobby
@@ -1041,13 +1041,13 @@ paths:
           schema:
             type: integer
           required: true
-          description: The guild ID of the guild that the lobby belongs to 
+          description: The guild ID of the guild that the lobby belongs to
         - name: leader_id
           in: path
           schema:
             type: integer
           required: true
-          description: The leader ID of the leader that the lobby belongs to 
+          description: The leader ID of the leader that the lobby belongs to
       responses:
         "200":
           description: OK. Returns the data of the lobby
@@ -1069,13 +1069,13 @@ paths:
           schema:
             type: integer
           required: true
-          description: The guild ID of the guild that the lobby belongs to 
+          description: The guild ID of the guild that the lobby belongs to
         - name: leader_id
           in: path
           schema:
             type: integer
           required: true
-          description: The leader ID of the leader that the lobby belongs to 
+          description: The leader ID of the leader that the lobby belongs to
       requestBody:
         description: The data to set for this lobby
         required: true
@@ -1106,13 +1106,13 @@ paths:
           schema:
             type: integer
           required: true
-          description: The guild ID of the guild that the lobby belongs to 
+          description: The guild ID of the guild that the lobby belongs to
         - name: leader_id
           in: path
           schema:
             type: integer
           required: true
-          description: The leader ID of the leader that the lobby belongs to 
+          description: The leader ID of the leader that the lobby belongs to
       requestBody:
         description: The data to update for this lobby
         required: true
@@ -1143,13 +1143,13 @@ paths:
           schema:
             type: integer
           required: true
-          description: The guild ID of the guild that the lobby belongs to 
+          description: The guild ID of the guild that the lobby belongs to
         - name: leader_id
           in: path
           schema:
             type: integer
           required: true
-          description: The leader ID of the leader that the lobby belongs to 
+          description: The leader ID of the leader that the lobby belongs to
       responses:
         "200":
           description: OK
@@ -1172,13 +1172,13 @@ paths:
           schema:
             type: integer
           required: true
-          description: The guild ID of the guild that the lobby belongs to 
+          description: The guild ID of the guild that the lobby belongs to
         - name: leader_id
           in: path
           schema:
             type: integer
           required: true
-          description: The leader ID of the leader that the lobby belongs to 
+          description: The leader ID of the leader that the lobby belongs to
       responses:
         "200":
           description: OK. Returns the users in the lobby
@@ -1200,13 +1200,13 @@ paths:
           schema:
             type: integer
           required: true
-          description: The guild ID of the guild that the lobby belongs to 
+          description: The guild ID of the guild that the lobby belongs to
         - name: leader_id
           in: path
           schema:
             type: integer
           required: true
-          description: The leader ID of the leader that the lobby belongs to 
+          description: The leader ID of the leader that the lobby belongs to
       requestBody:
         description: The user ID(s) to add into the lobby
         required: true
@@ -1237,13 +1237,13 @@ paths:
           schema:
             type: integer
           required: true
-          description: The guild ID of the guild that the lobby belongs to 
+          description: The guild ID of the guild that the lobby belongs to
         - name: leader_id
           in: path
           schema:
             type: integer
           required: true
-          description: The leader ID of the leader that the lobby belongs to 
+          description: The leader ID of the leader that the lobby belongs to
         - name: user_id
           in: path
           schema:
@@ -1487,7 +1487,7 @@ components:
       properties:
         GuildID:
           type: string
-          description: The guild ID that the lobby belongs to 
+          description: The guild ID that the lobby belongs to
           example: "123"
         LobbyName:
           type: string
