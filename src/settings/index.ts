@@ -76,11 +76,11 @@ export async function updateSettings(guildID: bigint | number, newSettings: Sett
   }
   const oldSettings: Settings = await getSettings(guildID);
 
-  const objectSettings = Object.fromEntries(Object.entries(newSettings).filter(entry => typeof entry[1] === "object"))
-  const literalSettings = Object.fromEntries(Object.entries(newSettings).filter(entry => typeof entry[1] !== "object"))
+  const objectSettings = Object.fromEntries(Object.entries(newSettings).filter(entry => typeof entry[1] === 'object'));
+  const literalSettings = Object.fromEntries(Object.entries(newSettings).filter(entry => typeof entry[1] !== 'object'));
 
   const newLiteralSettings: Settings = lodash.merge(oldSettings, literalSettings);
-  const allSettings = { ...newLiteralSettings, ...objectSettings }
+  const allSettings = { ...newLiteralSettings, ...objectSettings };
   await DB.execute('UPDATE GuildSettings SET SettingsData = ? WHERE GuildID = ?', [allSettings, guildID]);
   return allSettings;
 }

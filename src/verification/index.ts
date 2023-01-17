@@ -69,7 +69,7 @@ export async function getGuildVerification(guildID: bigint | number): Promise<Ve
   return res;
 }
 
-/** 
+/**
  * Remove a user from verification
  *
  * @param {bigint | number} userID - the userID to add to verification
@@ -101,7 +101,7 @@ export async function updateVerification(userID: bigint | number, guildID: bigin
     throw createErrors(400, 'MessageID and ChannelID not provided');
   }
   const userGuildID = await getUserGuildID(guildID, userID, 'UserGuildVerification');
-  const oldData: Verification = await DB.record(`SELECT MessageID, ChannelID, UNIX_TIMESTAMP(JoinTime) AS JoinTime FROM Verification WHERE UserGuildID = ?`, [userGuildID]);
+  const oldData: Verification = await DB.record('SELECT MessageID, ChannelID, UNIX_TIMESTAMP(JoinTime) AS JoinTime FROM Verification WHERE UserGuildID = ?', [userGuildID]);
   const newData: Verification = lodash.merge(oldData, data);
   await DB.execute('UPDATE Verification SET MessageID = ?, ChannelID = ? WHERE UserGuildID = ?', [newData.MessageID, newData.ChannelID, userGuildID]);
   return newData;
