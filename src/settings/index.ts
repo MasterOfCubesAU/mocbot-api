@@ -75,9 +75,14 @@ export async function updateSettings(guildID: bigint | number, newSettings: Sett
     throw createErrors(400, 'New settings for this guild must be provided.');
   }
   const oldSettings: Settings = await getSettings(guildID);
-  const ALL_SETTINGS: Settings = lodash.merge(oldSettings, newSettings);
-  await DB.execute('UPDATE GuildSettings SET SettingsData = ? WHERE GuildID = ?', [ALL_SETTINGS, guildID]);
-  return ALL_SETTINGS;
+
+  const objectSettings = Object.fromEntries(Object.entries(newSettings).filter(entry => typeof entry[1] === "object"))
+  const literalSettings = Object.fromEntries(Object.entries(newSettings).filter(entry => typeof entry[1] !== "object"))
+
+  const newLiteralSettings: Settings = lodash.merge(oldSettings, literalSettings);
+  const allSettings = { ...newLiteralSettings, ...objectSettings }
+  await DB.execute('UPDATE GuildSettings SET SettingsData = ? WHERE GuildID = ?', [allSettings, guildID]);
+  return allSettings;
 }
 
 /**

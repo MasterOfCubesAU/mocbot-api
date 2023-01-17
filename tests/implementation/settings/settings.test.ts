@@ -58,12 +58,12 @@ describe('Update settings', () => {
     await expect(createSettings(1, { setting1: true, setting2: { a: true, b: false } })).resolves.not.toThrow();
     const FUNC_CALL = expect(updateSettings(1, { setting2: { a: false } }));
 
-    const EXPECTED = { setting1: true, setting2: { a: false, b: false } };
+    const EXPECTED = { setting1: true, setting2: { a: false } };
     FUNC_CALL.resolves.not.toThrow();
     FUNC_CALL.resolves.toStrictEqual(EXPECTED);
   });
   test('Valid (all values)', async () => {
-    const EXPECTED = { setting1: false, setting2: { a: false, b: true } };
+    const EXPECTED = { setting1: false, setting2: { a: true, b: false } };
 
     await expect(createSettings(1, { setting1: true, setting2: { a: true, b: false } })).resolves.not.toThrow();
     const FUNC_CALL = expect(updateSettings(1, EXPECTED));
