@@ -1,6 +1,6 @@
 {
   "name": "mocbot-api",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "API for MOCBOT",
   "main": "src/server.js",
   "scripts": {

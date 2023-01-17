@@ -1,6 +1,6 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler';
-import { addVerification, getVerification, removeVerification, updateVerification } from '@src/verification';
+import { addVerification, getVerification, getGuildVerification, removeVerification, updateVerification } from '@src/verification';
 import { Request, Response } from 'express';
 
 const router = express.Router();
@@ -23,6 +23,13 @@ router.get(
   '/:guild_id/:user_id',
   asyncHandler(async (req: Request, res: Response) => {
     res.json(await getVerification(BigInt(req.params.guild_id), BigInt(req.params.user_id)));
+  })
+);
+
+router.get(
+  '/:guild_id',
+  asyncHandler(async (req: Request, res: Response) => {
+    res.json(await getGuildVerification(BigInt(req.params.guild_id)));
   })
 );
 
