@@ -1,4 +1,4 @@
-import { addVerification, getVerification, removeVerification, updateVerification } from '@src/verification';
+import { addVerification, getGuildVerification, getVerification, removeVerification, updateVerification } from '@src/verification';
 import { createWarning } from '@src/warnings';
 import DB from '@utils/DBHandler';
 
@@ -18,6 +18,8 @@ describe('addVerification()', () => {
     expect(result).toStrictEqual({
       UserID: '1',
       GuildID: '2',
+      MessageID: null,
+      ChannelID: null,
       JoinTime: expect.any(String),
     });
   });
@@ -34,6 +36,32 @@ describe('getVerification()', () => {
   });
   test('Guild ID does not exist', async () => {
     await expect(getVerification(2, 1)).rejects.toThrow();
+  });
+});
+
+describe('getGuildVerification()', () => {
+  test('Valid', async () => {
+    await expect(addVerification(1, 2)).resolves.not.toThrow();
+    await expect(addVerification(2, 2)).resolves.not.toThrow();
+    expect(await getGuildVerification(2)).toStrictEqual([
+      {
+        UserID: '1',
+        GuildID: '2',
+        ChannelID: null,
+        MessageID: null,
+        JoinTime: expect.any(String),
+      },
+      {
+        UserID: '2',
+        GuildID: '2',
+        ChannelID: null,
+        MessageID: null,
+        JoinTime: expect.any(String),
+      }
+    ]);
+  });
+  test('Guild ID does not exist', async () => {
+    await expect(getGuildVerification(2)).rejects.toThrow();
   });
 });
 

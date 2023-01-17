@@ -4,7 +4,7 @@ import { Verification, LockdownInput } from '@interfaces/verification';
 import { createUserGuildID, getUserGuildID } from '@utils/Misc';
 import lodash from 'lodash';
 
-const selectQuery = 'MessageID, ChannelID, UNIX_TIMESTAMP(JoinTime)';
+const selectQuery = 'UserID, GuildID, MessageID, ChannelID, UNIX_TIMESTAMP(JoinTime) AS JoinTime';
 
 /**
  * Adds a user from a given guild into verification. Putting this user into lock down immediately is possible
@@ -31,6 +31,8 @@ export async function addVerification(userID: bigint | number, guildID: bigint |
   return {
     UserID: userID.toString(),
     GuildID: guildID.toString(),
+    MessageID: null,
+    ChannelID: null,
     JoinTime: TIME.toString(),
   };
 }
@@ -46,8 +48,24 @@ export async function addVerification(userID: bigint | number, guildID: bigint |
 export async function getVerification(guildID: bigint | number, userID: bigint | number): Promise<Verification> {
   const res: Verification = await DB.record(`SELECT ${selectQuery} FROM UserGuildVerification WHERE GuildID = ? AND UserID = ?`, [guildID, userID]);
   if (Object.keys(res).length === 0) {
-    throw createErrors(404, 'Verification data for this user in this guild does not exit.');
+    throw createErrors(404, 'Verification data for this user in this guild does not exist.');
   }
+  return res;
+}
+
+/**
+ * Fetches verification data for users in the given guild
+ *
+ * @param {bigint | number} guildID - the guildID to fetch verification data from
+ * @throws {createErrors<404>} - if verification data could not be found
+ * @returns {Promise<Verification>}
+ */
+export async function getGuildVerification(guildID: bigint | number): Promise<Verification[]> {
+  const res: Verification[] = await DB.records(`SELECT ${selectQuery} FROM UserGuildVerification WHERE GuildID = ?`, [guildID]);
+  if (res.length === 0) {
+    throw createErrors(404, 'Verification data for the provided guild does not exist.');
+  }
+
   return res;
 }
 
@@ -83,7 +101,7 @@ export async function updateVerification(userID: bigint | number, guildID: bigin
     throw createErrors(400, 'MessageID and ChannelID not provided');
   }
   const userGuildID = await getUserGuildID(guildID, userID, 'UserGuildVerification');
-  const oldData: Verification = await DB.record(`SELECT ${selectQuery} FROM Verification WHERE UserGuildID = ?`, [userGuildID]);
+  const oldData: Verification = await DB.record('SELECT MessageID, ChannelID, UNIX_TIMESTAMP(JoinTime) AS JoinTime FROM Verification WHERE UserGuildID = ?', [userGuildID]);
   const newData: Verification = lodash.merge(oldData, data);
   await DB.execute('UPDATE Verification SET MessageID = ?, ChannelID = ? WHERE UserGuildID = ?', [newData.MessageID, newData.ChannelID, userGuildID]);
   return newData;

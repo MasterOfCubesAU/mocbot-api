@@ -8,7 +8,7 @@ info:
     - The [MOCBOT API](https://github.com/MasterOfCubesAU/mocbot-api) repository
   contact:
     email: masterofcubesau@gmail.com
-  version: 1.4.2
+  version: 1.4.4
 externalDocs:
   description: Find out more about MOCBOT
   url: https://mocbot.masterofcubesau.com
@@ -572,6 +572,31 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Verification"
+        "401":
+          $ref: "#/components/responses/NotAuthorized"
+        "404":
+          description: "No verification data from the provided inputs"
+  /verification/{guild_id}:
+    get:
+      tags:
+        - Verification
+      summary: Gets verification data for users in the specified guild
+      description: |-
+        This route fetches the verification data for the specified guild
+      parameters:
+        - name: guild_id
+          in: path
+          schema:
+            type: string
+          required: true
+          description: The guild ID to fetch data from
+      responses:
+        "200":
+          description: OK. Returns an array of verification objects
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GuildVerification"
         "401":
           $ref: "#/components/responses/NotAuthorized"
         "404":
@@ -1395,10 +1420,22 @@ components:
           type: string
           description: The ID of the guild the user is in
           example: "169402073404669952"
+        ChannelID:
+          type: string
+          description: The ID of the user
+          example: "123456789"
+        MessageID:
+          type: string
+          description: The ID of the guild the user is in
+          example: "123456789"
         JoinTime:
           type: string
           description: The Unix timestamp at which the user was placed in Verification, in whole number of seconds
           example: "1671727778"
+    GuildVerification:
+      type: array
+      items:
+        $ref: "#/components/schemas/Verification"
     VerificationUpdate:
       type: object
       properties:
