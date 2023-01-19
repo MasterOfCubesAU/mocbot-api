@@ -8,7 +8,7 @@ info:
     - The [MOCBOT API](https://github.com/MasterOfCubesAU/mocbot-api) repository
   contact:
     email: masterofcubesau@gmail.com
-  version: 1.4.4
+  version: 1.4.5
 externalDocs:
   description: Find out more about MOCBOT
   url: https://mocbot.masterofcubesau.com
@@ -23,11 +23,13 @@ tags:
     description: User Warning operations
   - name: Guild Warnings
     description: Guild Warning operations
-  - name: Settings
-    description: Guild Settings operations
   - name: Warnings
     description: General Warning operations
-  - name: Verification
+  - name: Settings
+    description: Guild Settings operations
+  - name: Guild Verification
+    description: Guild Verification operations
+  - name: User Verification
     description: User Verification operations
   - name: AFK
     description: User AFK operations
@@ -44,7 +46,7 @@ paths:
     get:
       tags:
         - Guild XP
-      summary: Fetch All Guild XP
+      summary: Fetch all guild XP
       description: |-
         This route fetches XP data for all users in a guild
       parameters:
@@ -55,20 +57,20 @@ paths:
           required: true
           description: The Guild ID you would like to fetch XP data for
       responses:
-        "200":
+        '200':
           description: OK. Returns a list of User XP objects
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GuildXP"
-        "401":
-          $ref: "#/components/responses/NotAuthorized"
-        "404":
+                $ref: '#/components/schemas/GuildXP'
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
+        '404':
           description: Guild ID not found
     delete:
       tags:
         - Guild XP
-      summary: Remove All Guild XP
+      summary: Remove all guild XP
       description: |-
         This route removes XP data for all users of a guild
       parameters:
@@ -77,17 +79,17 @@ paths:
           schema:
             type: integer
           required: true
-          description: The Guild ID you would like to remove
+          description: The Guild ID you would like to remove XP data for
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/EmptyObject"
-        "401":
-          $ref: "#/components/responses/NotAuthorized"
-        "404":
+                $ref: '#/components/schemas/EmptyObject'
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
+        '404':
           description: Guild ID not found
   /xp/{guild_id}/{user_id}:
     post:
@@ -100,7 +102,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UserXPRequest"
+              $ref: '#/components/schemas/UserXPRequest'
       description: |-
         This route creates a new XP object for a user
       parameters:
@@ -117,15 +119,15 @@ paths:
           required: true
           description: The User ID of the new user
       responses:
-        "200":
+        '200':
           description: OK. Returns the new XP object
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UserXP"
-        "401":
-          $ref: "#/components/responses/NotAuthorized"
-        "409":
+                $ref: '#/components/schemas/UserXP'
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
+        '409':
           description: XP data for this user in this guild already exists
     get:
       tags:
@@ -147,15 +149,15 @@ paths:
           required: true
           description: The User ID you would like to fetch XP data for
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UserXP"
-        "401":
-          $ref: "#/components/responses/NotAuthorized"
-        "404":
+                $ref: '#/components/schemas/UserXP'
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
+        '404':
           description: Guild/User ID not found
     patch:
       tags:
@@ -169,7 +171,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UserXPRequest"
+              $ref: '#/components/schemas/UserXPRequest'
       parameters:
         - name: guild_id
           in: path
@@ -184,17 +186,17 @@ paths:
           required: true
           description: The User ID of the user
       responses:
-        "200":
+        '200':
           description: OK. Returns the users XP object
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UserXP"
-        "400":
+                $ref: '#/components/schemas/UserXP'
+        '400':
           description: New data not provided
-        "401":
-          $ref: "#/components/responses/NotAuthorized"
-        "404":
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
+        '404':
           description: Guild/User ID not found
     put:
       tags:
@@ -219,19 +221,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ReplaceUserXPInput"
+              $ref: '#/components/schemas/ReplaceUserXPInput'
       responses:
-        "200":
+        '200':
           description: OK. Returns the users XP object
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UserXP"
-        "400":
+                $ref: '#/components/schemas/UserXP'
+        '400':
           description: New data not provided/some fields are missing
-        "401":
-          $ref: "#/components/responses/NotAuthorized"
-        "404":
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
+        '404':
           description: Guild/User ID not found
     delete:
       tags:
@@ -253,21 +255,21 @@ paths:
           required: true
           description: The User ID of the user
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/EmptyObject"
-        "401":
-          $ref: "#/components/responses/NotAuthorized"
-        "404":
+                $ref: '#/components/schemas/EmptyObject'
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
+        '404':
           description: Guild/User ID not found
   /settings/{guild_id}:
     post:
       tags:
         - Settings
-      summary: Creates a configuration entry for a server
+      summary: Creates a settings entry for a server
       parameters:
         - name: guild_id
           in: path
@@ -281,24 +283,24 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Settings"
+              $ref: '#/components/schemas/Settings'
       responses:
-        "200":
+        '200':
           description: OK. Returns the new settings that were added
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Settings"
-        "400":
+                $ref: '#/components/schemas/Settings'
+        '400':
           description: Settings were not provided
-        "401":
-          $ref: "#/components/responses/NotAuthorized"
-        "409":
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
+        '409':
           description: Settings for the guild already exist
     get:
       tags:
         - Settings
-      summary: Fetches the current configuration for a server
+      summary: Fetches the current settings for a server
       parameters:
         - name: guild_id
           in: path
@@ -307,27 +309,27 @@ paths:
           required: true
           description: The Guild ID you would like to fetch settings for
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Settings"
-        "401":
-          $ref: "#/components/responses/NotAuthorized"
-        "404":
+                $ref: '#/components/schemas/Settings'
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
+        '404':
           description: Guild ID not found
     patch:
       tags:
         - Settings
-      summary: Updates an existing configuration for a server
+      summary: Updates an existing settings for a server
       requestBody:
         description: An object with only the settings to update for this guild
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Settings"
+              $ref: '#/components/schemas/Settings'
       parameters:
         - name: guild_id
           in: path
@@ -336,22 +338,22 @@ paths:
           required: true
           description: The Guild ID you would like to update settings for
       responses:
-        "200":
-          description: OK. Returns the new complete configuration object
+        '200':
+          description: OK. Returns the new complete settings object
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Settings"
-        "400":
+                $ref: '#/components/schemas/Settings'
+        '400':
           description: New settings was not provided
-        "401":
-          $ref: "#/components/responses/NotAuthorized"
-        "404":
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
+        '404':
           description: Guild ID not found
     put:
       tags:
         - Settings
-      summary: Replaces an existing configuration with a new configuration
+      summary: Replaces an existing settings configuration with a new configuration
       parameters:
         - name: guild_id
           in: path
@@ -365,19 +367,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Settings"
+              $ref: '#/components/schemas/Settings'
       responses:
-        "200":
+        '200':
           description: OK. Returns the new settings
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Settings"
-        "400":
+                $ref: '#/components/schemas/Settings'
+        '400':
           description: New settings were not provided
-        "401":
-          $ref: "#/components/responses/NotAuthorized"
-        "404":
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
+        '404':
           description: Guild ID not found
     delete:
       tags:
@@ -391,15 +393,15 @@ paths:
           required: true
           description: The Guild ID you would like to remove settings for
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/EmptyObject"
-        "401":
-          $ref: "#/components/responses/NotAuthorized"
-        "404":
+                $ref: '#/components/schemas/EmptyObject'
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
+        '404':
           description: Guild ID not found
   /warnings/{guild_id}:
     get:
@@ -416,20 +418,20 @@ paths:
           required: true
           description: The Guild ID you would like to fetch warning data for
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GuildWarnings"
-        "401":
-          $ref: "#/components/responses/NotAuthorized"
-        "404":
+                $ref: '#/components/schemas/GuildWarnings'
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
+        '404':
           description: Guild ID not found
     delete:
       tags:
         - Guild Warnings
-      summary: Removes all server related warnings
+      summary: Removes all warnings in a server
       description: |-
         This route removes all warnings for a given guild
       parameters:
@@ -440,15 +442,15 @@ paths:
           required: true
           description: The Guild ID you would like to remove warning data for
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/EmptyObject"
-        "401":
-          $ref: "#/components/responses/NotAuthorized"
-        "404":
+                $ref: '#/components/schemas/EmptyObject'
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
+        '404':
           description: Guild ID not found
   /warnings/{guild_id}/{user_id}:
     post:
@@ -463,7 +465,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UserWarningRequest"
+              $ref: '#/components/schemas/UserWarningRequest'
       parameters:
         - name: guild_id
           in: path
@@ -478,24 +480,24 @@ paths:
           required: true
           description: The User ID of the user
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UserWarning"
-        "400":
+                $ref: '#/components/schemas/UserWarning'
+        '400':
           description: Reason or AdminID is missing
-        "401":
-          $ref: "#/components/responses/NotAuthorized"
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UserWarning"
+                $ref: '#/components/schemas/UserWarning'
     get:
       tags:
         - User Warnings
-      summary: Fetch User Warnings
+      summary: Fetch a user's warnings
       description: |-
         This route fetches all warnings for a user in a given guild
       parameters:
@@ -512,43 +514,68 @@ paths:
           required: true
           description: The User ID you would like to fetch warning data for
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UserWarnings"
-        "401":
-          $ref: "#/components/responses/NotAuthorized"
-        "404":
+                $ref: '#/components/schemas/UserWarnings'
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
+        '404':
           description: Guild/User ID not found
   /warnings/{warning_id}:
     delete:
       tags:
         - Warnings
-      summary: This route will delete a given warning
+      summary: Deletes a given warning by warning ID
       parameters:
         - name: warning_id
           in: path
           schema:
             type: string
           required: true
-          description: The Warning ID you would like to delete
+          description: The Warning ID of the warning you would like to delete
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/EmptyObject"
-        "401":
-          $ref: "#/components/responses/NotAuthorized"
-        "404":
+                $ref: '#/components/schemas/EmptyObject'
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
+        '404':
           description: Warning ID not found
+  /verification/{guild_id}:
+    get:
+      tags:
+        - Guild Verification
+      summary: Gets verification data for users in the specified guild
+      description: |-
+        This route fetches the verification data for the specified guild
+      parameters:
+        - name: guild_id
+          in: path
+          schema:
+            type: string
+          required: true
+          description: The guild ID to fetch data from
+      responses:
+        '200':
+          description: OK. Returns an array of verification objects
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GuildVerification'
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
+        '404':
+          description: 'No verification data from the provided inputs'
   /verification/{guild_id}/{user_id}:
     get:
       tags:
-        - Verification
+        - User Verification
       summary: Gets verification data for the user
       description: |-
         This route fetches the verification data for the specified user
@@ -566,44 +593,19 @@ paths:
           required: true
           description: The user ID of the user
       responses:
-        "200":
+        '200':
           description: OK. Returns a Verification object
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Verification"
-        "401":
-          $ref: "#/components/responses/NotAuthorized"
-        "404":
-          description: "No verification data from the provided inputs"
-  /verification/{guild_id}:
-    get:
-      tags:
-        - Verification
-      summary: Gets verification data for users in the specified guild
-      description: |-
-        This route fetches the verification data for the specified guild
-      parameters:
-        - name: guild_id
-          in: path
-          schema:
-            type: string
-          required: true
-          description: The guild ID to fetch data from
-      responses:
-        "200":
-          description: OK. Returns an array of verification objects
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GuildVerification"
-        "401":
-          $ref: "#/components/responses/NotAuthorized"
-        "404":
-          description: "No verification data from the provided inputs"
+                $ref: '#/components/schemas/Verification'
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
+        '404':
+          description: 'No verification data from the provided inputs'
     post:
       tags:
-        - Verification
+        - User Verification
       summary: Puts the user in Verification
       description: |-
         This route puts the specified user into verification
@@ -613,7 +615,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/VerificationUpdate"
+              $ref: '#/components/schemas/VerificationUpdate'
       parameters:
         - name: guild_id
           in: path
@@ -628,19 +630,19 @@ paths:
           required: true
           description: The User ID of the user
       responses:
-        "200":
+        '200':
           description: OK. Returns a Verification object
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Verification"
-        "401":
-          $ref: "#/components/responses/NotAuthorized"
-        "409":
-          description: "User already in verification"
+                $ref: '#/components/schemas/Verification'
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
+        '409':
+          description: 'User already in verification'
     patch:
       tags:
-        - Verification
+        - User Verification
       summary: Places this user into lock down
       description: |-
         This route puts the specified user into lock down, requiring manual verification
@@ -650,7 +652,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/VerificationUpdate"
+              $ref: '#/components/schemas/VerificationUpdate'
       parameters:
         - name: guild_id
           in: path
@@ -665,19 +667,19 @@ paths:
           required: true
           description: The User ID of the user
       responses:
-        "200":
+        '200':
           description: OK. Returns the Verification object
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Verification"
-        "401":
-          $ref: "#/components/responses/NotAuthorized"
-        "404":
+                $ref: '#/components/schemas/Verification'
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
+        '404':
           description: Guild/User ID not found
     delete:
       tags:
-        - Verification
+        - User Verification
       summary: Remove a user from verification
       description: |-
         This route will remove a user from verification
@@ -695,15 +697,15 @@ paths:
           required: true
           description: The User ID of the user
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/EmptyObject"
-        "401":
-          $ref: "#/components/responses/NotAuthorized"
-        "404":
+                $ref: '#/components/schemas/EmptyObject'
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
+        '404':
           description: Guild/User ID not found
   /afk/{guild_id}/{user_id}:
     get:
@@ -726,15 +728,15 @@ paths:
           required: true
           description: The User ID of the user
       responses:
-        "200":
+        '200':
           description: OK. Returns an AFK object
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AFK"
-        "401":
-          $ref: "#/components/responses/NotAuthorized"
-        "404":
+                $ref: '#/components/schemas/AFK'
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
+        '404':
           description: Guild/UserID is not found
     post:
       tags:
@@ -748,7 +750,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/AFKRequest"
+              $ref: '#/components/schemas/AFKRequest'
       parameters:
         - name: guild_id
           in: path
@@ -763,18 +765,18 @@ paths:
           required: true
           description: The User ID of the user
       responses:
-        "200":
+        '200':
           description: OK. Returns an AFK object
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AFK"
-        "400":
+                $ref: '#/components/schemas/AFK'
+        '400':
           description: If AFKData not provided/some AFKData missing
-        "401":
-          $ref: "#/components/responses/NotAuthorized"
-        "409":
-          description: "User already has AFK data in the specified guild"
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
+        '409':
+          description: 'User already has AFK data in the specified guild'
     delete:
       tags:
         - AFK
@@ -795,32 +797,32 @@ paths:
           required: true
           description: The User ID of the user
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/EmptyObject"
-        "401":
-          $ref: "#/components/responses/NotAuthorized"
-        "404":
+                $ref: '#/components/schemas/EmptyObject'
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
+        '404':
           description: Guild/User ID not found
   /developers:
     get:
       tags:
         - Developers
-      summary: Fetches the userIDs of the developers
+      summary: Fetches the user IDs of the developers
       description: |-
         This route fetches the userIDs of the developers from the database
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Developers"
-        "401":
-          $ref: "#/components/responses/NotAuthorized"
+                $ref: '#/components/schemas/Developers'
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
   /roles/{guild_id}:
     post:
       tags:
@@ -839,19 +841,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Roles"
+              $ref: '#/components/schemas/Roles'
       responses:
-        "200":
+        '200':
           description: OK. Returns the new roles that were added
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Roles"
-        "400":
+                $ref: '#/components/schemas/Roles'
+        '400':
           description: Client Error, see response body
-        "401":
-          $ref: "#/components/responses/NotAuthorized"
-        "409":
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
+        '409':
           description: Roles for the guild already exist
     get:
       tags:
@@ -865,15 +867,15 @@ paths:
           required: true
           description: The Guild ID you would like to fetch roles for
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Roles"
-        "401":
-          $ref: "#/components/responses/NotAuthorized"
-        "404":
+                $ref: '#/components/schemas/Roles'
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
+        '404':
           description: Guild ID not found
     patch:
       tags:
@@ -885,7 +887,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Roles"
+              $ref: '#/components/schemas/Roles'
       parameters:
         - name: guild_id
           in: path
@@ -894,15 +896,15 @@ paths:
           required: true
           description: The Guild ID you would like to update roles for
       responses:
-        "200":
+        '200':
           description: OK. Returns the new complete roles object
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Roles"
-        "400":
+                $ref: '#/components/schemas/Roles'
+        '400':
           description: Client Error, see response body
-        "404":
+        '404':
           description: Guild ID not found
     put:
       tags:
@@ -921,17 +923,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Roles"
+              $ref: '#/components/schemas/Roles'
       responses:
-        "200":
+        '200':
           description: OK. Returns the new roles
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Roles"
-        "400":
+                $ref: '#/components/schemas/Roles'
+        '400':
           description: Client Error, see response body
-        "404":
+        '404':
           description: Guild ID not found
     delete:
       tags:
@@ -945,15 +947,15 @@ paths:
           required: true
           description: The Guild ID you would like to remove roles for
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/EmptyObject"
-        "401":
-          $ref: "#/components/responses/NotAuthorized"
-        "404":
+                $ref: '#/components/schemas/EmptyObject'
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
+        '404':
           description: Guild ID not found
   /lobbies:
     get:
@@ -961,15 +963,15 @@ paths:
         - Lobby Guilds
       summary: Fetches all lobbies
       responses:
-        "200":
+        '200':
           description: OK. Returns all the lobbies
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GuildLobbies"
-        "401":
-          $ref: "#/components/responses/NotAuthorized"
-        "404":
+                $ref: '#/components/schemas/GuildLobbies'
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
+        '404':
           description: No lobbies exist
   /lobbies/{guild_id}:
     get:
@@ -984,15 +986,15 @@ paths:
           required: true
           description: The Guild ID you would like to fetch all lobbies from
       responses:
-        "200":
+        '200':
           description: OK. Returns the lobbies in the guild
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GuildLobbies"
-        "401":
-          $ref: "#/components/responses/NotAuthorized"
-        "404":
+                $ref: '#/components/schemas/GuildLobbies'
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
+        '404':
           description: There are no lobbies in this guild
   /lobbies/{guild_id}/{user_id}:
     get:
@@ -1013,15 +1015,15 @@ paths:
           required: true
           description: The user ID in the lobby to search for
       responses:
-        "200":
+        '200':
           description: OK. Returns the relevant lobby
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GuildLobby"
-        "401":
-          $ref: "#/components/responses/NotAuthorized"
-        "404":
+                $ref: '#/components/schemas/GuildLobby'
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
+        '404':
           description: There are no lobbies with these inputs
   /lobby/{guild_id}:
     post:
@@ -1041,19 +1043,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/GuildLobbyInput"
+              $ref: '#/components/schemas/GuildLobbyInput'
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GuildLobby"
-        "400":
+                $ref: '#/components/schemas/GuildLobby'
+        '400':
           description: Missing data for lobby/no data provided
-        "401":
-          $ref: "#/components/responses/NotAuthorized"
-        "409":
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
+        '409':
           description: If the user is already a leader of a lobby in that guild
   /lobby/{guild_id}/{leader_id}:
     get:
@@ -1074,15 +1076,15 @@ paths:
           required: true
           description: The leader ID of the leader that the lobby belongs to
       responses:
-        "200":
+        '200':
           description: OK. Returns the data of the lobby
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GuildLobby"
-        "401":
-          $ref: "#/components/responses/NotAuthorized"
-        "404":
+                $ref: '#/components/schemas/GuildLobby'
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
+        '404':
           description: Lobby not found
     put:
       tags:
@@ -1107,19 +1109,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/GuildLobbyInput"
+              $ref: '#/components/schemas/GuildLobbyInput'
       responses:
-        "200":
+        '200':
           description: OK. Returns the new data for the lobby
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GuildLobby"
-        "400":
+                $ref: '#/components/schemas/GuildLobby'
+        '400':
           description: New data was not provided/data missing
-        "401":
-          $ref: "#/components/responses/NotAuthorized"
-        "404":
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
+        '404':
           description: Lobby not found
     patch:
       tags:
@@ -1144,19 +1146,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/GuildLobbyInput"
+              $ref: '#/components/schemas/GuildLobbyInput'
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GuildLobby"
-        "400":
+                $ref: '#/components/schemas/GuildLobby'
+        '400':
           description: New data was not provided
-        "401":
-          $ref: "#/components/responses/NotAuthorized"
-        "404":
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
+        '404':
           description: Lobby not found
     delete:
       tags:
@@ -1176,15 +1178,15 @@ paths:
           required: true
           description: The leader ID of the leader that the lobby belongs to
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/EmptyObject"
-        "401":
-          $ref: "#/components/responses/NotAuthorized"
-        "404":
+                $ref: '#/components/schemas/EmptyObject'
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
+        '404':
           description: Lobby not found
   /lobby/{guild_id}/{leader_id}/users:
     get:
@@ -1205,15 +1207,15 @@ paths:
           required: true
           description: The leader ID of the leader that the lobby belongs to
       responses:
-        "200":
+        '200':
           description: OK. Returns the users in the lobby
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/LobbyUsers"
-        "401":
-          $ref: "#/components/responses/NotAuthorized"
-        "404":
+                $ref: '#/components/schemas/LobbyUsers'
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
+        '404':
           description: Lobby not found
     post:
       tags:
@@ -1238,19 +1240,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/LobbyUsers"
+              $ref: '#/components/schemas/LobbyUsers'
       responses:
-        "200":
+        '200':
           description: OK. Returns the new users added into the lobby
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/LobbyUsers"
-        "400":
+                $ref: '#/components/schemas/LobbyUsers'
+        '400':
           description: No new data was provided
-        "401":
-          $ref: "#/components/responses/NotAuthorized"
-        "404":
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
+        '404':
           description: Lobby not found
     delete:
       tags:
@@ -1276,17 +1278,17 @@ paths:
           required: true
           description: The user ID of the user to remove
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/EmptyObject"
-        "400":
+                $ref: '#/components/schemas/EmptyObject'
+        '400':
           description: User to delete was not provided
-        "401":
-          $ref: "#/components/responses/NotAuthorized"
-        "404":
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
+        '404':
           description: Lobby not found
 
 components:
@@ -1304,57 +1306,57 @@ components:
     GuildXP:
       type: array
       items:
-        $ref: "#/components/schemas/UserXP"
+        $ref: '#/components/schemas/UserXP'
     UserXP:
       type: object
       properties:
         UserID:
           type: string
           description: The user ID
-          example: "1"
+          example: '1'
         GuildID:
           type: string
           description: The guild ID of the user
-          example: "1"
+          example: '1'
         XP:
           type: string
           description: The current XP value
-          example: "100"
+          example: '100'
         Level:
           type: string
           description: The current level
-          example: "1"
+          example: '1'
         XPLock:
           type: string
           description: The Unix timestamp at which this user can start gaining XP from messages, in whole number of seconds
-          example: "1671727778"
+          example: '1671727778'
         VoiceChannelXPLock:
           type: string
           description: The Unix timestamp at which this user can start gaining XP from voice activity, in whole number of seconds
-          example: "1671727784"
+          example: '1671727784'
     ReplaceUserXPInput:
       type: object
       properties:
         XP:
           type: string
           description: The new XP value
-          example: "100"
+          example: '100'
         Level:
           type: string
           description: The new level
-          example: "1"
+          example: '1'
         XPLock:
           type: string
           description: The Unix timestamp at which this user can start gaining XP from messages, in whole number of seconds
-          example: "1671727778"
+          example: '1671727778'
         VoiceChannelXPLock:
           type: string
           description: The Unix timestamp at which this user can start gaining XP from voice activity, in whole number of seconds
-          example: "1671727784"
+          example: '1671727784'
     GuildWarnings:
       type: array
       items:
-        $ref: "#/components/schemas/UserWarning"
+        $ref: '#/components/schemas/UserWarning'
     UserWarning:
       type: object
       properties:
@@ -1365,38 +1367,38 @@ components:
         UserID:
           type: string
           description: The User ID of the warning
-          example: "1"
+          example: '1'
         GuildID:
           type: string
           description: The Guild ID where the warning was issued
-          example: "1"
+          example: '1'
         Reason:
           type: string
           description: The reason behind the warning
-          example: "Chat Spam"
+          example: 'Chat Spam'
         Time:
           type: string
           description: The Unix timestamp at which the user was warned, in whole number of seconds
-          example: "1671727778"
+          example: '1671727778'
         AdminID:
           type: string
           description: The ID of the administrator who distributed the warning
-          example: "381"
+          example: '381'
     UserWarnings:
       type: array
       items:
-        $ref: "#/components/schemas/UserWarning"
+        $ref: '#/components/schemas/UserWarning'
     UserWarningRequest:
       type: object
       properties:
         reason:
           type: string
           description: The reason behind the warning
-          example: "Chat Spamming"
+          example: 'Chat Spamming'
         adminID:
           type: string
           description: The ID of the administrator who distributed the warning
-          example: "124"
+          example: '124'
     Settings:
       type: object
       additionalProperties: true
@@ -1407,92 +1409,92 @@ components:
     UserXPRequest:
       type: object
       example:
-        XP: "100"
-        VoiceChannelXPLock: "16717274013"
+        XP: '100'
+        VoiceChannelXPLock: '16717274013'
     Verification:
       type: object
       properties:
         UserID:
           type: string
           description: The ID of the user
-          example: "231230403053092864"
+          example: '231230403053092864'
         GuildID:
           type: string
           description: The ID of the guild the user is in
-          example: "169402073404669952"
+          example: '169402073404669952'
         ChannelID:
           type: string
           description: The ID of the user
-          example: "123456789"
+          example: '123456789'
         MessageID:
           type: string
           description: The ID of the guild the user is in
-          example: "123456789"
+          example: '123456789'
         JoinTime:
           type: string
           description: The Unix timestamp at which the user was placed in Verification, in whole number of seconds
-          example: "1671727778"
+          example: '1671727778'
     GuildVerification:
       type: array
       items:
-        $ref: "#/components/schemas/Verification"
+        $ref: '#/components/schemas/Verification'
     VerificationUpdate:
       type: object
       properties:
         MessageID:
           type: string
           description: The ID of the lock down approval message
-          example: "1056206377569222656"
+          example: '1056206377569222656'
         ChannelID:
           type: string
           description: The ID of the lock down approvals channel
-          example: "673449065593438238"
+          example: '673449065593438238'
     AFKRequest:
       type: object
       properties:
         MessageID:
           type: string
           description: The Message ID of the AFK message sent by the bot
-          example: "1056206377569222656"
+          example: '1056206377569222656'
         ChannelID:
           type: string
           description: The Channel ID of the AFK message sent by the bot
-          example: "673449065593438238"
+          example: '673449065593438238'
         OldName:
           type: string
           description: The old name of the user
-          example: "A"
+          example: 'A'
         Reason:
           type: string
           description: The reason for the user being AFK
-          example: "B"
+          example: 'B'
     AFK:
       type: object
       properties:
         UserID:
           type: string
           description: The ID of the user
-          example: "231230403053092864"
+          example: '231230403053092864'
         GuildID:
           type: string
           description: The ID of the guild the user is in
-          example: "169402073404669952"
+          example: '169402073404669952'
         MessageID:
           type: string
           description: The Message ID of the AFK message sent by the bot
-          example: "1056206377569222656"
+          example: '1056206377569222656'
         ChannelID:
           type: string
           description: The Channel ID of the AFK message sent by the bot
-          example: "673449065593438238"
+          example: '673449065593438238'
         OldName:
           type: string
           description: The old name of the user
-          example: "A"
+          example: 'A'
         Reason:
           type: string
           description: The reason for the user being AFK
-          example: "B"
+          example: 'B'
     Roles:
       type: object
       properties:
@@ -1500,52 +1502,52 @@ components:
           type: object
           additionalProperties: true
           example:
-            "1": "1"
-            "2": "2"
-            "3": "3"
+            '1': '1'
+            '2': '2'
+            '3': '3'
         JoinRoles:
           type: array
           additionalProperties: true
           items:
             type: string
-            example: "1"
+            example: '1'
     Developers:
       type: array
       items:
         type: string
-        example: "1"
+        example: '1'
     LobbyUsers:
       type: array
       items:
         type: string
-        example: "1"
+        example: '1'
     GuildLobby:
       type: object
       properties:
         GuildID:
           type: string
           description: The guild ID that the lobby belongs to
-          example: "123"
+          example: '123'
         LobbyName:
           type: string
           description: The name of the lobby
-          example: "ABC"
+          example: 'ABC'
         VoiceChannelID:
           type: string
           description: The ID of the voice channel of the lobby
-          example: "123"
+          example: '123'
         TextChannelID:
           type: string
           description: The ID of the text channel of the lobby
-          example: "123"
+          example: '123'
         RoleID:
           type: string
           description: The ID of the role associated with the lobby
-          example: "123"
+          example: '123'
         LeaderID:
           type: string
           description: The user ID of the leader of the lobby
-          example: "123"
+          example: '123'
         InviteOnly:
           type: boolean
           description: If the lobby is invite-only
@@ -1556,23 +1558,23 @@ components:
         LobbyName:
           type: string
           description: The name of the lobby
-          example: "ABC"
+          example: 'ABC'
         VoiceChannelID:
           type: string
           description: The ID of the voice channel of the lobby
-          example: "123"
+          example: '123'
         TextChannelID:
           type: string
           description: The ID of the text channel of the lobby
-          example: "123"
+          example: '123'
         RoleID:
           type: string
           description: The ID of the role associated with the lobby
-          example: "123"
+          example: '123'
         LeaderID:
           type: string
           description: The user ID of the leader of the lobby
-          example: "123"
+          example: '123'
         InviteOnly:
           type: boolean
           description: If the lobby is invite-only
@@ -1580,6 +1582,6 @@ components:
     GuildLobbies:
       type: array
       items:
-        $ref: "#/components/schemas/GuildLobby"
+        $ref: '#/components/schemas/GuildLobby'
 security:
   - APIKey: []

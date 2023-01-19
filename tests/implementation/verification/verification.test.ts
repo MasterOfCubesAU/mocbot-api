@@ -57,7 +57,7 @@ describe('getGuildVerification()', () => {
         ChannelID: null,
         MessageID: null,
         JoinTime: expect.any(String),
-      }
+      },
     ]);
   });
   test('Guild ID does not exist', async () => {
@@ -96,7 +96,7 @@ describe('updateVerification()', () => {
   });
   test('Valid', async () => {
     await addVerification(1, 2);
-    await expect(updateVerification(1, 2, { MessageID: '123', ChannelID: '456' })).resolves.not.toThrow();
+    expect(await updateVerification(1, 2, { MessageID: '123', ChannelID: '456' })).toStrictEqual({ UserID: '1', GuildID: '2', MessageID: '123', ChannelID: '456', JoinTime: expect.any(String) });
   });
   test('Invalid input (empty)', async () => {
     await addVerification(1, 2);
