@@ -1,5 +1,5 @@
 import DB from '@utils/DBHandler';
-import { createSettings, getSettings, setSettings, deleteSettings, updateSettings } from '@src/settings';
+import { createSettings, getGuildSettings, getAllSettings, setSettings, deleteSettings, updateSettings } from '@src/settings';
 
 // Ensure DB is in a predictable state by clearing it initially, then again after every test
 // We then close the DB at the end to remove any open handles
@@ -24,14 +24,28 @@ describe('Create settings', () => {
   });
 });
 
-describe('Get settings', () => {
+describe('Get guild settings', () => {
   test('Valid', async () => {
     await expect(createSettings(1, { setting1: true })).resolves.not.toThrow();
-    await expect(getSettings(1)).resolves.not.toThrow();
-    expect(await getSettings(1)).toStrictEqual({ setting1: true });
+    await expect(getGuildSettings(1)).resolves.not.toThrow();
+    expect(await getGuildSettings(1)).toStrictEqual({ setting1: true });
   });
   test('Guild ID does not exist', async () => {
-    await expect(getSettings(1)).rejects.toThrow();
+    await expect(getGuildSettings(1)).rejects.toThrow();
+  });
+});
+
+describe('Get all settings', () => {
+  test('Valid', async () => {
+    await expect(createSettings(1, { setting1: true })).resolves.not.toThrow();
+    await expect(createSettings(2, { setting2: true })).resolves.not.toThrow();
+    expect(await getAllSettings()).toStrictEqual([
+      { GuildID: '1', SettingsData: { setting1: true } },
+      { GuildID: '2', SettingsData: { setting2: true } },
+    ]);
+  });
+  test('Guild ID does not exist', async () => {
+    await expect(getAllSettings()).rejects.toThrow();
   });
 });
 
@@ -84,7 +98,7 @@ describe('Delete settings', () => {
   test('Valid', async () => {
     await expect(createSettings(1, { setting1: true })).resolves.not.toThrow();
     await expect(deleteSettings(1)).resolves.not.toThrow();
-    await expect(getSettings(1)).rejects.toThrow();
+    await expect(getGuildSettings(1)).rejects.toThrow();
   });
   test('Guild ID does not exist', async () => {
     await expect(deleteSettings(1)).rejects.toThrow();

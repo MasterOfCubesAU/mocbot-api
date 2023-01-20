@@ -31,7 +31,7 @@ describe('POST', () => {
   });
 });
 
-describe('GET', () => {
+describe('GET Guild', () => {
   test('Valid', () => {
     // Create an entry
     expect(http('POST', `${ROUTE}/1`, { setting1: true }).statusCode).toStrictEqual(200);
@@ -41,6 +41,20 @@ describe('GET', () => {
   });
   test('Invalid (Guild does not exist)', () => {
     expect(http('GET', `${ROUTE}/1`).statusCode).toStrictEqual(404);
+  });
+});
+
+describe('GET All', () => {
+  test('Valid', () => {
+    // Create an entry
+    expect(http('POST', `${ROUTE}/1`, { setting1: true }).statusCode).toStrictEqual(200);
+    expect(http('POST', `${ROUTE}/2`, { setting2: true }).statusCode).toStrictEqual(200);
+    // We expect to fetch it with no issues
+    const request = http('GET', `${ROUTE}`);
+    expect(request.statusCode).toStrictEqual(200);
+  });
+  test('Invalid (no guilds in database)', () => {
+    expect(http('GET', `${ROUTE}`).statusCode).toStrictEqual(404);
   });
 });
 
