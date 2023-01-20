@@ -52,7 +52,7 @@ export async function getGuildSettings(guildID: bigint | number): Promise<Settin
 export async function getAllSettings(): Promise<AllSettings[]> {
   const res: AllSettings[] = await DB.records('SELECT GuildID, SettingsData FROM GuildSettings');
   if (res.length === 0) {
-    throw createErrors(404, 'Settings for this guild do not exist.');
+    throw createErrors(404, 'No server settings exist in the database.');
   }
   return res;
 }

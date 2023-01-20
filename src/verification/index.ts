@@ -58,12 +58,27 @@ export async function getVerification(guildID: bigint | number, userID: bigint |
  *
  * @param {bigint | number} guildID - the guildID to fetch verification data from
  * @throws {createErrors<404>} - if verification data could not be found
- * @returns {Promise<Verification>}
+ * @returns {Promise<Verification[]>}
  */
 export async function getGuildVerification(guildID: bigint | number): Promise<Verification[]> {
   const res: Verification[] = await DB.records(`SELECT ${selectQuery} FROM UserGuildVerification WHERE GuildID = ?`, [guildID]);
   if (res.length === 0) {
     throw createErrors(404, 'Verification data for the provided guild does not exist.');
+  }
+
+  return res;
+}
+
+/**
+ * Fetches verification data for all users in verification
+ *
+ * @throws {createErrors<404>} - if there are no users in verification in the database
+ * @returns {Promise<Verification[]>}
+ */
+export async function getAllVerification(): Promise<Verification[]> {
+  const res: Verification[] = await DB.records(`SELECT ${selectQuery} FROM UserGuildVerification`);
+  if (res.length === 0) {
+    throw createErrors(404, 'There are no users in verification in the database.');
   }
 
   return res;

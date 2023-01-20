@@ -8,7 +8,7 @@ info:
     - The [MOCBOT API](https://github.com/MasterOfCubesAU/mocbot-api) repository
   contact:
     email: masterofcubesau@gmail.com
-  version: 1.4.6
+  version: 1.4.7
 externalDocs:
   description: Find out more about MOCBOT
   url: https://mocbot.masterofcubesau.com
@@ -29,6 +29,8 @@ tags:
     description: Guild Settings operations
   - name: Settings
     description: Other Settings operations
+  - name: Verification
+    description: General Verification operations
   - name: Guild Verification
     description: Guild Verification operations
   - name: User Verification
@@ -565,6 +567,23 @@ paths:
           $ref: '#/components/responses/NotAuthorized'
         '404':
           description: Warning ID not found
+  /verification:
+    get:
+      tags:
+        - Verification
+      summary: Gets all verification data of all users in verification
+      description: This route fetches the verification data for all users in verification
+      responses:
+        '200':
+          description: OK. Returns an array of verification objects
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllVerification'
+        '401':
+          $ref: '#/components/responses/NotAuthorized'
+        '404':
+          description: 'No users in verification'
   /verification/{guild_id}:
     get:
       tags:
@@ -585,7 +604,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GuildVerification'
+                $ref: '#/components/schemas/AllVerification'
         '401':
           $ref: '#/components/responses/NotAuthorized'
         '404':
@@ -1463,7 +1482,7 @@ components:
           type: string
           description: The Unix timestamp at which the user was placed in Verification, in whole number of seconds
           example: '1671727778'
-    GuildVerification:
+    AllVerification:
       type: array
       items:
         $ref: '#/components/schemas/Verification'
