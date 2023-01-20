@@ -44,6 +44,17 @@ describe('Get Guild Verification', () => {
   });
 });
 
+describe('Get All Verification', () => {
+  test('Valid', () => {
+    http('POST', `${ROUTE}/2/1`);
+    const request = http('GET', `${ROUTE}`);
+    expect(request.statusCode).toStrictEqual(200);
+  });
+  test('Invalid (No data exists)', () => {
+    expect(http('GET', `${ROUTE}`).statusCode).toStrictEqual(404);
+  });
+});
+
 describe('Remove Verification', () => {
   test('Valid', () => {
     expect(http('POST', `${ROUTE}/2/1`).statusCode).toStrictEqual(200);
