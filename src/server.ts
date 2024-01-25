@@ -38,7 +38,7 @@ app.get('/', (req: Request, res: Response) => {
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(YAML.load('docs/api.yml'), swaggerOptions));
 app.get('/healthcheck', (req, res) => {
   res.send('OK!');
-})
+});
 
 // All routes below this are authenticated
 app.use(
